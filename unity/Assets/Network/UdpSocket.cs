@@ -19,6 +19,12 @@ namespace HiSocket
         private int timeOut = 5000;//5s
         public bool IsConnected { get { return client.Client != null && client.Client.Connected; } }
 
+        public UdpSocket()
+        {
+            client = new UdpClient();
+            buffer = new byte[bufferSize];
+        }
+
         public void Close()
         {
             if (IsConnected)
