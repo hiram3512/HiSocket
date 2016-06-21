@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace HiSocket
 {
-    public class UdpSocket : ISocket, IDisposable
+    internal class UdpSocket : ISocket, IDisposable
     {
         private int bufferSize = 1024;
         private string ip;

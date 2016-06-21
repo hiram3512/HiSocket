@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace HiSocket
 {
-    public class TcpSocket : ISocket, IDisposable
+    internal class TcpSocket : ISocket, IDisposable
     {
         private int bufferSize = 1024;
         private string ip;
