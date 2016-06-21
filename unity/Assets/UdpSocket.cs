@@ -7,24 +7,25 @@ using System;
 using System.Net.Sockets;
 using UnityEngine;
 
-namespace HiTCP
+namespace HiSocket
 {
-    public class SocketClient : ISocket, IDisposable
+    public class UdpSocket : ISocket, IDisposable
     {
         private int bufferSize = 1024;
         private string ip;
         private int port;
         public byte[] buffer;
-        private TcpClient client;
+        private UdpClient client;
         private int timeOut = 5000;//5s
-        public bool IsConnected { get { return client.Client != null && client.Connected; } }
+        public bool IsConnected { get { return client.Client != null && client.Client.Connected; } }
 
-        public SocketClient()
+        public void Close()
         {
-            client = new TcpClient();
-            client.NoDelay = true;
-            client.SendTimeout = client.ReceiveTimeout = timeOut;
-            buffer = new byte[bufferSize];
+            if (IsConnected)
+            {
+                client.Close();
+                client = null;
+            }
         }
 
         public void Connect(string paramIp, int paramPort, Action paramEventHandler = null)
@@ -33,7 +34,7 @@ namespace HiTCP
             port = paramPort;
             try
             {
-                client.BeginConnect(ip, port, new AsyncCallback(delegate (IAsyncResult ar)
+                client.Client.BeginConnect(ip, port, new AsyncCallback(delegate (IAsyncResult ar)
                 {
                     try
                     {
@@ -55,20 +56,9 @@ namespace HiTCP
             }
         }
 
-        public void Send(byte[] param)
+        public void Dispose()
         {
-            client.Client.BeginSend(param, 0, param.Length, SocketFlags.None, new AsyncCallback(delegate (IAsyncResult ar)
-                 {
-                     try
-                     {
-                         TcpClient tempTcpClient = (TcpClient)ar.AsyncState;
-                         tempTcpClient.Client.EndSend(ar);
-                     }
-                     catch (Exception e)
-                     {
-                         Debug.LogError(e.ToString());
-                     }
-                 }), client);
+            //throw new NotImplementedException();
         }
 
         public void Receive(IAsyncResult ar)
@@ -79,7 +69,9 @@ namespace HiTCP
                 int temp = tempTcpClient.Client.EndReceive(ar);
                 if (temp > 0)
                 {
+                    //
                     //handle buffer
+                    //
                     Array.Clear(buffer, 0, buffer.Length);
                     client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
                 }
@@ -88,21 +80,23 @@ namespace HiTCP
             {
                 Debug.LogError(e.ToString());
             }
-
         }
 
-        public void Close()
+        public void Send(byte[] param)
         {
-            if (IsConnected)
+            client.Client.BeginSend(param, 0, param.Length, SocketFlags.None, new AsyncCallback(delegate (IAsyncResult ar)
             {
-                client.Close();
-                client = null;
-            }
-        }
-
-        public void Dispose()
-        {
-            //throw new NotImplementedException();
+                try
+                {
+                    TcpClient tempTcpClient = (TcpClient)ar.AsyncState;
+                    tempTcpClient.Client.EndSend(ar);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.ToString());
+                }
+            }), client);
         }
     }
+
 }
