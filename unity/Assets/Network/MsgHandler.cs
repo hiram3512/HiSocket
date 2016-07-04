@@ -69,7 +69,7 @@ namespace HiSocket
             {
                 while (receiveQueue.Count>0)
                 {
-                    //handle socket packge
+                    MsgManager.ReceiveMsg((byte[])receiveQueue.Dequeue());
                 }
             }
         }

@@ -28,7 +28,11 @@ namespace HiSocket
 
         public static void ReceiveMsg(byte[] param)
         {
-            int tempKey = BitConverter.ToUInt16(param, 0);
+            
+
+            int tempKey = 00000000000000000000;//havent finished, will parse user's protocal
+
+
             if (msgDic.ContainsKey(tempKey))
             {
                 Debug.LogWarning("dic donnt contain this key: " + tempKey + "make sure you have register it in advance");
