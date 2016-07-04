@@ -17,20 +17,22 @@ namespace HiSocket
         public byte[] buffer;
         private TcpClient client;
         private int timeOut = 5000;//5s
+        private MsgHandler msgHandler;
         public bool IsConnected { get { return client.Client != null && client.Connected; } }
 
         public TcpSocket()
         {
             client = new TcpClient();
-            client.NoDelay = true;
-            client.SendTimeout = client.ReceiveTimeout = timeOut;
             buffer = new byte[bufferSize];
+            msgHandler = new MsgHandler(this);
         }
 
         public void Connect(string paramIp, int paramPort, Action paramEventHandler = null)
         {
             ip = paramIp;
             port = paramPort;
+            client.NoDelay = true;
+            client.SendTimeout = client.ReceiveTimeout = timeOut;
             try
             {
                 client.BeginConnect(ip, port, new AsyncCallback(delegate (IAsyncResult ar)
@@ -79,7 +81,7 @@ namespace HiSocket
                 int temp = tempTcpClient.Client.EndReceive(ar);
                 if (temp > 0)
                 {
-                    //handle buffer
+                    msgHandler.Receive(buffer, temp);
                     Array.Clear(buffer, 0, buffer.Length);
                     client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
                 }

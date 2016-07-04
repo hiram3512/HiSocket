@@ -16,11 +16,12 @@ namespace HiSocket
         private MemoryStream ms;
         private BinaryReader br;
         private long remainingBytesSize { get { return ms.Length - ms.Position; } }
+        private ISocket iSocket;
 
 
-
-        public MsgHandler()
+        public MsgHandler(ISocket param)
         {
+            iSocket = param;
             sendQueue = new Queue();
             receiveQueue = new Queue();
             ms = new MemoryStream();
@@ -34,7 +35,7 @@ namespace HiSocket
             {
                 while (sendQueue.Count>0)
                 {
-                    //send
+                    iSocket.Send((byte[])sendQueue.Dequeue());
                 }
             }
         }
