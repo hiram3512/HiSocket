@@ -7,7 +7,7 @@ using System;
 using System.Net.Sockets;
 using UnityEngine;
 
-namespace HiSocket
+namespace HiSocket.Tcp
 {
     internal class TcpSocket : ISocket, IDisposable
     {

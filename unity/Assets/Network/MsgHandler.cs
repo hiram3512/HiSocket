@@ -7,7 +7,7 @@ using System;
 using System.Collections;
 using System.IO;
 
-namespace HiSocket
+namespace HiSocket.Tcp
 {
     internal class MsgHandler
     {
@@ -45,10 +45,10 @@ namespace HiSocket
             ms.Seek(0, SeekOrigin.End);
             ms.Write(paramBytes, 0, paramLength);
             ms.Seek(0, SeekOrigin.Begin);
-            while (remainingBytesSize > MsgDefine.Length)
+            while (remainingBytesSize > sizeof(ushort))
             {
                 UInt16 tempMsgLength = br.ReadUInt16();
-                ms.Position -= MsgDefine.Length;
+                ms.Position -= sizeof(ushort);
                 if (remainingBytesSize >= tempMsgLength)
                 {
                     byte[] tempBytes = br.ReadBytes(tempMsgLength);

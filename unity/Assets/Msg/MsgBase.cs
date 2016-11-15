@@ -10,7 +10,17 @@ namespace HiSocket.Tcp
     public class MsgBase : IMsg
     {
         private int readIndex;
+        /// <summary>
+        /// 只包含消息体(不包含长度+协议id)
+        /// </summary>
         private byte[] bytesForReadArray;
+
+        /// <summary>
+        /// 整个套接字内容(长度+协议+消息体)
+        /// 1.长度执行flush时自动处理,
+        /// 2.需要调用write接口写入协议
+        /// 3.需要调用write接口写入消息体
+        /// </summary>
         private List<byte> bytesForWriteList = new List<byte>();
 
         public MsgBase()
@@ -104,6 +114,7 @@ namespace HiSocket.Tcp
             throw new Exception("Can not find type" + typeof(T));
         }
         #endregion
+
         public void Write<T>(T paramValue)
         {
             if (paramValue is byte)
@@ -182,6 +193,13 @@ namespace HiSocket.Tcp
                 throw new Exception("Can not find type" + typeof(T));
             }
         }
+
+        public void Flush()
+        {
+            uint tempLength = (uint)bytesForWriteList.Count;
+            byte[] tempBytes = BitConverter.GetBytes(tempLength);
+            bytesForWriteList.InsertRange(0, tempBytes);
+        }
     }
 }
 
@@ -189,12 +207,13 @@ namespace HiSocket.Tcp
 namespace HiSocket.Tcp
 {
     /// <summary>
-    /// 消息由以下几部分组成:消息长度(ushort)+消息协议(ushort)+具体消息内容
+    /// 消息由以下几部分组成:消息长度(uint)+消息协议(ushort)+消息内容
     /// 消息长度是整个套接字的长度(也包含前两位消息长度的占用字节长度)
     /// </summary>
     public interface IMsg
     {
         void Write<T>(T paramValue);
         T Read<T>(int paramLength);
+        void Flush();
     }
 }
