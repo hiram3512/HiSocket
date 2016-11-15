@@ -12,7 +12,7 @@ namespace HiSocket.Tcp
 {
     public class MsgManager
     {
-        public delegate void MsgEventHandler(MsgBase param);
+        public delegate void MsgEventHandler(Msg param);
         private static Dictionary<int, MsgEventHandler> msgDic = new Dictionary<int, MsgEventHandler>();
 
 
@@ -39,8 +39,8 @@ namespace HiSocket.Tcp
                 Debug.LogWarning("dic donnt contain this key: " + tempKey + "make sure you have register it in advance");
                 return;
             }
-            MsgBase tempMsgBase = new MsgBase(param);
-            msgDic[tempKey](tempMsgBase);
+            Msg tempMsg = new Msg(param);
+            msgDic[tempKey](tempMsg);
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace HiSocket.Tcp
 {
-    public class MsgBase : IMsg
+    public class Msg : IMsg
     {
         private int readIndex;
         /// <summary>
@@ -23,24 +23,17 @@ namespace HiSocket.Tcp
         /// </summary>
         private List<byte> bytesForWriteList = new List<byte>();
 
-        public MsgBase()
+        public Msg()
         {
             bytesForWriteList = new List<byte>();
         }
 
         #region Read
-        public MsgBase(byte[] paramBytes)
+        public Msg(byte[] paramBytes)
         {
             readIndex = sizeof(uint) + sizeof(ushort);
             bytesForReadArray = paramBytes;
         }
-        /// <summary>
-        /// 读取消息体内容(长度+协议后的消息体内容)
-        /// 读取sting类型需要传入长度
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="paramLength">读取string类型长度</param>
-        /// <returns></returns>
         public T Read<T>(int paramLength = 0)
         {
             if (readIndex >= bytesForReadArray.Length)
@@ -205,16 +198,3 @@ namespace HiSocket.Tcp
 }
 
 
-namespace HiSocket.Tcp
-{
-    /// <summary>
-    /// 消息由以下几部分组成:消息长度(uint)+消息协议(ushort)+消息内容
-    /// 消息长度是整个套接字的长度(也包含前两位消息长度的占用字节长度)
-    /// </summary>
-    public interface IMsg
-    {
-        void Write<T>(T paramValue);
-        T Read<T>(int paramLength);
-        void Flush();
-    }
-}
