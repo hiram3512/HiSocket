@@ -33,7 +33,7 @@ namespace HiSocket.Tcp
             sendQueue.Enqueue(param);
             lock (this)
             {
-                while (sendQueue.Count>0)
+                while (sendQueue.Count > 0)
                 {
                     iSocket.Send((byte[])sendQueue.Dequeue());
                 }
@@ -45,10 +45,10 @@ namespace HiSocket.Tcp
             ms.Seek(0, SeekOrigin.End);
             ms.Write(paramBytes, 0, paramLength);
             ms.Seek(0, SeekOrigin.Begin);
-            while (remainingBytesSize > sizeof(ushort))
+            while (remainingBytesSize > sizeof(uint))
             {
                 UInt16 tempMsgLength = br.ReadUInt16();
-                ms.Position -= sizeof(ushort);
+                ms.Position -= sizeof(uint);
                 if (remainingBytesSize >= tempMsgLength)
                 {
                     byte[] tempBytes = br.ReadBytes(tempMsgLength);
@@ -57,9 +57,9 @@ namespace HiSocket.Tcp
                 else
                     break;
             }
-            byte[] tempLeftBytes = br.ReadBytes((int) remainingBytesSize);
+            byte[] tempLeftBytes = br.ReadBytes((int)remainingBytesSize);
             ms.SetLength(0);
-            ms.Write(tempLeftBytes,0,tempLeftBytes.Length);
+            ms.Write(tempLeftBytes, 0, tempLeftBytes.Length);
             Receive();
         }
 
@@ -67,7 +67,7 @@ namespace HiSocket.Tcp
         {
             lock (this)
             {
-                while (receiveQueue.Count>0)
+                while (receiveQueue.Count > 0)
                 {
                     MsgManager.ReceiveMsg((byte[])receiveQueue.Dequeue());
                 }

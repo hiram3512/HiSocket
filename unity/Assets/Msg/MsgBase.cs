@@ -11,7 +11,7 @@ namespace HiSocket.Tcp
     {
         private int readIndex;
         /// <summary>
-        /// 只包含消息体(不包含长度+协议id)
+        /// 整个套接字内容(包含长度+协议id)
         /// </summary>
         private byte[] bytesForReadArray;
 
@@ -31,10 +31,11 @@ namespace HiSocket.Tcp
         #region Read
         public MsgBase(byte[] paramBytes)
         {
-            readIndex = 0;
+            readIndex = sizeof(uint) + sizeof(ushort);
             bytesForReadArray = paramBytes;
         }
         /// <summary>
+        /// 读取消息体内容(长度+协议后的消息体内容)
         /// 读取sting类型需要传入长度
         /// </summary>
         /// <typeparam name="T"></typeparam>

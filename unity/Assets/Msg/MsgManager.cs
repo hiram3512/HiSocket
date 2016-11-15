@@ -33,11 +33,7 @@ namespace HiSocket.Tcp
 
         public static void ReceiveMsg(byte[] param)
         {
-            byte[] tempProto = new byte[sizeof(ushort)];
-            Array.Copy(param);
-
-            var tempKey = 00;
-
+            ushort tempKey = BitConverter.ToUInt16(param, 0);
             if (!msgDic.ContainsKey(tempKey))
             {
                 Debug.LogWarning("dic donnt contain this key: " + tempKey + "make sure you have register it in advance");
