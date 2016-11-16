@@ -9,18 +9,18 @@ using UnityEngine;
 
 namespace HiSocket.Tcp
 {
-    internal class TcpSocket : ISocket, IDisposable
+    internal class SocketTcp : ISocket
     {
-        private int bufferSize = 1024;
+        public int bufferSize = 8 * 1024;
         private string ip;
         private int port;
         public byte[] buffer;
         private TcpClient client;
         private int timeOut = 5000;//5s
         private MsgHandler msgHandler;
-        public bool IsConnected { get { return client.Client != null && client.Connected; } }
+        public bool IsConnected { get { return client != null && client.Client != null && client.Connected; } }
 
-        public TcpSocket()
+        public SocketTcp()
         {
             client = new TcpClient();
             buffer = new byte[bufferSize];
@@ -100,11 +100,6 @@ namespace HiSocket.Tcp
                 client.Close();
                 client = null;
             }
-        }
-
-        public void Dispose()
-        {
-            //throw new NotImplementedException();
         }
     }
 }

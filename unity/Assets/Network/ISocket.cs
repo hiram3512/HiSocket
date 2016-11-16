@@ -13,15 +13,15 @@ namespace HiSocket.Tcp
         /// if connected or not
         /// </summary>
         bool IsConnected { get; }
-        
+
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="paramIp"></param>
+        /// <param name="paramIP"></param>
         /// <param name="paramPort"></param>
         /// <param name="paramEventHandler">success connect call back</param>
-        void Connect(string paramIp, int paramPort, Action paramEventHandler = null);
-        
+        void Connect(string paramIP, int paramPort, Action paramEventHandler = null);
+
         /// <summary>
         /// send data to server
         /// </summary>

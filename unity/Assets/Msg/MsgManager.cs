@@ -13,15 +13,13 @@ namespace HiSocket.Tcp
     public class MsgManager
     {
         public delegate void MsgEventHandler(Msg param);
-        private static Dictionary<int, MsgEventHandler> msgDic = new Dictionary<int, MsgEventHandler>();
-
-
+        private static Dictionary<uint, MsgEventHandler> msgDic = new Dictionary<uint, MsgEventHandler>();
         /// <summary>
         /// 注册消息回调事件
         /// </summary>
         /// <param name="paramKey">协议</param>
         /// <param name="paramHandler">事件</param>
-        public static void Register(int paramKey, MsgEventHandler paramHandler)
+        public static void Register(uint paramKey, MsgEventHandler paramHandler)
         {
             if (msgDic.ContainsKey(paramKey))
             {
