@@ -5,6 +5,7 @@
 
 using System;
 using System.Net.Sockets;
+using System.Threading;
 using UnityEngine;
 
 namespace HiSocket.Tcp
@@ -18,6 +19,9 @@ namespace HiSocket.Tcp
         private TcpClient client;
         private int timeOut = 5000;//5s
         private MsgHandler msgHandler;
+        private Thread sendThread;
+        private Thread receiveThread;
+
         public bool IsConnected { get { return client != null && client.Client != null && client.Connected; } }
 
         public SocketTcp()
@@ -25,6 +29,9 @@ namespace HiSocket.Tcp
             client = new TcpClient();
             buffer = new byte[bufferSize];
             msgHandler = new MsgHandler(this);
+
+            sendThread = new Thread(SendThread);
+            receiveThread = new Thread(ReceiveThread);
         }
 
         public void Connect(string paramIp, int paramPort, Action paramEventHandler = null)
@@ -100,6 +107,16 @@ namespace HiSocket.Tcp
                 client.Close();
                 client = null;
             }
+        }
+
+        private void SendThread()
+        {
+
+        }
+
+        private void ReceiveThread()
+        {
+            client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
         }
     }
 }
