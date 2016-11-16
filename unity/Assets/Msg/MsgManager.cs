@@ -12,8 +12,16 @@ namespace HiSocket.Tcp
 {
     public class MsgManager
     {
+        public static ISocket iSocket { get; private set; }
         public delegate void MsgEventHandler(Msg param);
         private static Dictionary<uint, MsgEventHandler> msgDic = new Dictionary<uint, MsgEventHandler>();
+
+
+        public static void Init(ISocket param)
+        {
+            iSocket = param;
+        }
+
         /// <summary>
         /// 注册消息回调事件
         /// </summary>

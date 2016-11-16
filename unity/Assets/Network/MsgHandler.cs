@@ -26,6 +26,7 @@ namespace HiSocket.Tcp
             receiveQueue = new Queue();
             ms = new MemoryStream();
             br = new BinaryReader(ms);
+            MsgManager.Init(param);
         }
 
         public void Send(byte[] param)

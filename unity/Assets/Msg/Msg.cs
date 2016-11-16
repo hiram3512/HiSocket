@@ -193,6 +193,11 @@ namespace HiSocket.Tcp
             uint tempLength = (uint)bytesForWriteList.Count;
             byte[] tempBytes = BitConverter.GetBytes(tempLength);
             bytesForWriteList.InsertRange(0, tempBytes);
+            byte[] tempData = bytesForWriteList.ToArray();
+            if (MsgManager.iSocket.IsConnected)
+                MsgManager.iSocket.Send(tempData);
+            else
+                throw new Exception("socket havent connected");
         }
     }
 }
