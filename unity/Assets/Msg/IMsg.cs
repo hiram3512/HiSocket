@@ -19,7 +19,7 @@ namespace HiSocket.Tcp
         /// <typeparam name="T"></typeparam>
         /// <param name="paramLength">读取string类型长度</param>
         /// <returns></returns>
-        T Read<T>(int paramLength);
+        T Read<T>(int paramLength = 0);
 
         void Flush();
     }

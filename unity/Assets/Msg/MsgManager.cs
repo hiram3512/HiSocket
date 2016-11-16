@@ -13,7 +13,7 @@ namespace HiSocket.Tcp
     public class MsgManager
     {
         public static ISocket iSocket { get; private set; }
-        public delegate void MsgEventHandler(Msg param);
+        public delegate void MsgEventHandler(IMsg param);
         private static Dictionary<uint, MsgEventHandler> msgDic = new Dictionary<uint, MsgEventHandler>();
 
 
