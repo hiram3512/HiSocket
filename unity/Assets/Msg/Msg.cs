@@ -198,6 +198,7 @@ namespace HiSocket.Tcp
                 MsgManager.iSocket.Send(tempData);
             else
                 throw new Exception("socket havent connected");
+
         }
     }
 }

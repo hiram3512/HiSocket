@@ -3,7 +3,6 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 using UnityEngine;
-using System.Collections;
 using HiSocket.Tcp;
 
 public class Example : MonoBehaviour
@@ -45,6 +44,8 @@ public class Example : MonoBehaviour
     {
         int temp1 = param.Read<int>();//100
         string temp2 = param.Read<string>(5);//"hello"
+
+        Debug.Log(temp1 + temp2);
     }
 
 }
