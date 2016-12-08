@@ -4,6 +4,7 @@
 //*********************************************************************
 
 using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace HiSocket.Tcp
     internal class SocketTcp : ISocket
     {
         public int bufferSize = 8 * 1024;
-        private string ip;
+        private IPAddress address;
         private int port;
         public byte[] buffer;
         private TcpClient client;
@@ -26,7 +27,10 @@ namespace HiSocket.Tcp
 
         public SocketTcp()
         {
-            client = new TcpClient();
+            if (Socket.OSSupportsIPv6)
+                client = new TcpClient(AddressFamily.InterNetworkV6);
+            else
+                client = new TcpClient(AddressFamily.InterNetwork);
             buffer = new byte[bufferSize];
             msgHandler = new MsgHandler(this);
 
@@ -34,15 +38,21 @@ namespace HiSocket.Tcp
             receiveThread = new Thread(ReceiveThread);
         }
 
-        public void Connect(string paramIp, int paramPort, Action paramEventHandler = null)
+        /// <summary>
+        /// 开始连接服务器(异步连接)
+        /// </summary>
+        /// <param name="paramAddress">连接服务器域名(强烈推荐域名)</param>
+        /// <param name="paramPort">连接端口</param>
+        /// <param name="paramEventHandler">连接成功后的回调事件(可空)</param>
+        public void Connect(string paramAddress, int paramPort, Action paramEventHandler = null)
         {
-            ip = paramIp;
+            address = GetIPAddress(paramAddress); ;
             port = paramPort;
             client.NoDelay = true;
             client.SendTimeout = client.ReceiveTimeout = timeOut;
             try
             {
-                client.BeginConnect(ip, port, new AsyncCallback(delegate (IAsyncResult ar)
+                client.BeginConnect(address, port, new AsyncCallback(delegate (IAsyncResult ar)
                 {
                     try
                     {
@@ -63,6 +73,19 @@ namespace HiSocket.Tcp
                 Debug.LogError(e.ToString());
             }
         }
+
+        private IPAddress GetIPAddress(string param)
+        {
+            IPAddress[] temp = Dns.GetHostAddresses(param);
+            if (temp.Length >= 2)
+                throw new Exception("this domain links to multiple ip, please check server dns");
+            if (temp[0] != null)
+                return temp[0];
+            throw new Exception("Cannt find this domain's ip address");
+        }
+
+
+
 
         public void Send(byte[] param)
         {
@@ -104,6 +127,7 @@ namespace HiSocket.Tcp
         {
             if (IsConnected)
             {
+                client.Client.Shutdown(SocketShutdown.Both);
                 client.Close();
                 client = null;
             }
