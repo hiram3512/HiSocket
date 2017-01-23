@@ -7,7 +7,6 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using UnityEngine;
 
 namespace HiSocket.Tcp
 {
@@ -18,7 +17,7 @@ namespace HiSocket.Tcp
         private int port;
         public byte[] buffer;
         private TcpClient client;
-        private int timeOut = 5000;//5s
+        private int timeOut = 5000;//5s:收发超时时间
         private MsgHandler msgHandler;
         private Thread sendThread;
         private Thread receiveThread;
@@ -66,13 +65,13 @@ namespace HiSocket.Tcp
                     {
                         if (paramEventHandler != null)
                             paramEventHandler(false);
-                        Debug.LogError(e.ToString());
+                        throw new Exception(e.ToString());
                     }
                 }), client);
             }
             catch (Exception e)
             {
-                Debug.LogError(e.ToString());
+                throw new Exception(e.ToString());
             }
         }
 
@@ -91,6 +90,10 @@ namespace HiSocket.Tcp
 
         public void Send(byte[] param)
         {
+            if (!IsConnected)
+            {
+                throw new Exception("this msg send failed, please make sure you have already connected");
+            }
             client.Client.BeginSend(param, 0, param.Length, SocketFlags.None, new AsyncCallback(delegate (IAsyncResult ar)
                  {
                      try
@@ -100,7 +103,7 @@ namespace HiSocket.Tcp
                      }
                      catch (Exception e)
                      {
-                         Debug.LogError(e.ToString());
+                         throw new Exception(e.ToString());
                      }
                  }), client);
         }
@@ -120,7 +123,7 @@ namespace HiSocket.Tcp
             }
             catch (Exception e)
             {
-                Debug.LogError(e.ToString());
+                throw new Exception(e.ToString());
             }
 
         }
@@ -133,6 +136,7 @@ namespace HiSocket.Tcp
                 client.Close();
                 client = null;
             }
+
         }
 
         private void SendThread()
