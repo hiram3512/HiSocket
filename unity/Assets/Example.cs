@@ -38,10 +38,16 @@ public class Example : MonoBehaviour
 
     }
 
-    //连接成功
-    void OnConnect()
+    /// <summary>
+    /// 连接成功或失败
+    /// </summary>
+    /// <param name="param">成功or失败</param>
+    void OnConnect(bool param)
     {
-        Debug.Log("connect server success");
+        if (param)
+            Debug.Log("connect server success");
+        else
+            Debug.Log("connect server failed");
     }
 
 

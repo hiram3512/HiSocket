@@ -44,7 +44,7 @@ namespace HiSocket.Tcp
         /// <param name="paramAddress">连接服务器域名(强烈推荐域名)</param>
         /// <param name="paramPort">连接端口</param>
         /// <param name="paramEventHandler">连接成功后的回调事件(可空)</param>
-        public void Connect(string paramAddress, int paramPort, Action paramEventHandler = null)
+        public void Connect(string paramAddress, int paramPort, Action<bool> paramEventHandler = null)
         {
             address = GetIPAddress(paramAddress); ;
             port = paramPort;
@@ -59,11 +59,13 @@ namespace HiSocket.Tcp
                         TcpClient tempTcpClient = (TcpClient)ar.AsyncState;
                         tempTcpClient.EndConnect(ar);
                         if (paramEventHandler != null)
-                            paramEventHandler();
+                            paramEventHandler(true);
                         client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
                     }
                     catch (Exception e)
                     {
+                        if (paramEventHandler != null)
+                            paramEventHandler(false);
                         Debug.LogError(e.ToString());
                     }
                 }), client);

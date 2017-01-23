@@ -20,7 +20,7 @@ namespace HiSocket.Tcp
         /// <param name="paramAddress"></param>
         /// <param name="paramPort"></param>
         /// <param name="paramEventHandler">success connect call back</param>
-        void Connect(string paramAddress, int paramPort, Action paramEventHandler = null);
+        void Connect(string paramAddress, int paramPort, Action<bool> paramEventHandler = null);
 
         /// <summary>
         /// send data to server
