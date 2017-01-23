@@ -35,6 +35,7 @@ namespace HiSocket.Tcp
 
             sendThread = new Thread(SendThread);
             receiveThread = new Thread(ReceiveThread);
+
         }
 
         /// <summary>
@@ -146,7 +147,7 @@ namespace HiSocket.Tcp
 
         private void ReceiveThread()
         {
-            client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
+            //client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
         }
     }
 }

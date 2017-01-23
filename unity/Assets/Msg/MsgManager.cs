@@ -47,6 +47,9 @@ namespace HiSocket.Tcp
             }
             Msg tempMsg = new Msg(param);
             msgDic[tempKey](tempMsg);
+            //待完成:...
+            //引擎tick维护接收数据
+            //保证所有信息都可以更新组件
         }
     }
 }
