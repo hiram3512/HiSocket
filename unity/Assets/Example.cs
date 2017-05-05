@@ -6,9 +6,8 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 
-using System;
-using UnityEngine;
 using HiSocket.Tcp;
+using UnityEngine;
 
 public class Example : MonoBehaviour
 {
@@ -16,8 +15,14 @@ public class Example : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        //regeste msg and used for receive msg
+        //register msg and used for receive msg
         MsgManager.Register(110, OnMsg110);
+        //
+        // you can register many callback here
+        //
+
+
+
 
         //connect(prefer host names)
         SocketTcp socket = new SocketTcp();
@@ -29,6 +34,7 @@ public class Example : MonoBehaviour
         //write msg's body
         temp.Write<int>(100);
         temp.Write("hello");
+        //flush msg and send it out
         temp.Flush();
     }
 
