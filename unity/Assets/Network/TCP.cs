@@ -8,9 +8,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace HiSocket.Tcp
+namespace HiSocket.TCP
 {
-    internal class SocketTcp : ISocket
+    internal class TCP : ISocket
     {
         public int bufferSize = 8 * 1024;
         private IPAddress address;
@@ -24,7 +24,7 @@ namespace HiSocket.Tcp
 
         public bool IsConnected { get { return client != null && client.Client != null && client.Connected; } }
 
-        public SocketTcp()
+        public TCP()
         {
             if (Socket.OSSupportsIPv6)
                 client = new TcpClient(AddressFamily.InterNetworkV6);

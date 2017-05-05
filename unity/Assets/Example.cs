@@ -6,7 +6,7 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 
-using HiSocket.Tcp;
+using HiSocket.TCP;
 using UnityEngine;
 
 public class Example : MonoBehaviour
@@ -25,7 +25,7 @@ public class Example : MonoBehaviour
 
 
         //connect(prefer host names)
-        SocketTcp socket = new SocketTcp();
+        TCP socket = new TCP();
         socket.Connect("www.baidu.com", 111, OnConnect);
 
         // send msg

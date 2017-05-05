@@ -5,7 +5,7 @@
 
 using System;
 
-namespace HiSocket.Tcp
+namespace HiSocket.TCP
 {
     public interface ISocket
     {

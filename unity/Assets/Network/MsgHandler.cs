@@ -7,7 +7,7 @@ using System;
 using System.Collections;
 using System.IO;
 
-namespace HiSocket.Tcp
+namespace HiSocket.TCP
 {
     internal class MsgHandler
     {
