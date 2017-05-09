@@ -12,7 +12,7 @@ namespace HiSocket.TCP
 {
     internal class TCP : ISocket
     {
-        public int bufferSize = 8 * 1024;
+        public int bufferSize = 8 * 1024 * 16;//16k
         private IPAddress address;
         private int port;
         public byte[] buffer;
@@ -92,9 +92,6 @@ namespace HiSocket.TCP
                 return temp[0];
             throw new Exception("Cannt find this domain's ip address");
         }
-
-
-
 
         public void Send(byte[] param)
         {
