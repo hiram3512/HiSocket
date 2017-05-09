@@ -23,6 +23,12 @@ namespace HiSocket.TCP
         void Connect(string paramAddress, int paramPort, Action<bool> paramEventHandler = null);
 
         /// <summary>
+        /// Ping
+        /// </summary>
+        /// <returns>返回ping值</returns>
+        long Ping();
+
+        /// <summary>
         /// send data to server
         /// </summary>
         /// <param name="param"></param>

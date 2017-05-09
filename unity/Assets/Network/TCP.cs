@@ -19,8 +19,8 @@ namespace HiSocket.TCP
         private TcpClient client;
         private int timeOut = 5000;//5s:收发超时时间
         private MsgHandler msgHandler;
-        private Thread sendThread;
-        private Thread receiveThread;
+        //private Thread sendThread;
+        //private Thread receiveThread;
 
         public bool IsConnected { get { return client != null && client.Client != null && client.Connected; } }
 
@@ -33,8 +33,8 @@ namespace HiSocket.TCP
             buffer = new byte[bufferSize];
             msgHandler = new MsgHandler(this);
 
-            sendThread = new Thread(SendThread);
-            receiveThread = new Thread(ReceiveThread);
+            //sendThread = new Thread(SendThread);
+            //receiveThread = new Thread(ReceiveThread);
 
         }
 
@@ -46,7 +46,7 @@ namespace HiSocket.TCP
         /// <param name="paramEventHandler">连接成功后的回调事件(可空)</param>
         public void Connect(string paramAddress, int paramPort, Action<bool> paramEventHandler = null)
         {
-            address = GetIPAddress(paramAddress); ;
+            address = GetIPAddress(paramAddress);
             port = paramPort;
             client.NoDelay = true;
             client.SendTimeout = client.ReceiveTimeout = timeOut;
@@ -59,7 +59,7 @@ namespace HiSocket.TCP
                         TcpClient tempTcpClient = (TcpClient)ar.AsyncState;
                         tempTcpClient.EndConnect(ar);
                         if (paramEventHandler != null)
-                            paramEventHandler(true);
+                            paramEventHandler(ar.IsCompleted);
                         client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
                     }
                     catch (Exception e)
@@ -74,6 +74,13 @@ namespace HiSocket.TCP
             {
                 throw new Exception(e.ToString());
             }
+        }
+
+        public long Ping()
+        {
+            System.Net.NetworkInformation.Ping tempPing = new System.Net.NetworkInformation.Ping();
+            System.Net.NetworkInformation.PingReply temPingReply = tempPing.Send(address);
+            return temPingReply.RoundtripTime;
         }
 
         private IPAddress GetIPAddress(string param)
