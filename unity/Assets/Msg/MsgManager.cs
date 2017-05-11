@@ -7,8 +7,9 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using HiSocket.TCP;
 
-namespace HiSocket.TCP
+namespace HiSocket
 {
     public class MsgManager
     {

@@ -2,7 +2,7 @@
 // Description:
 // Author: hiramtan@live.com
 //*********************************************************************
-namespace HiSocket.TCP
+namespace HiSocket
 {
     /// <summary>
     /// 消息由以下几部分组成:消息长度(uint)+消息协议(ushort)+消息内容

@@ -1,13 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
-using HiSocket;
+﻿//*********************************************************************
+// Description:
+// Author: hiramtan@live.com
+//*********************************************************************
 using ProtoBuf;
+using System.IO;
 
 namespace HiSocket.Protobuf
 {
-    public class test : Singleton<test>, IProtobuf
+    internal class Protobuf : Singleton<Protobuf>, IProtobuf
     {
         public byte[] Serialize<T>(T param)
         {
@@ -25,7 +25,6 @@ namespace HiSocket.Protobuf
                 T t = Serializer.Deserialize<T>(stream);
                 return t;
             }
-            throw new System.NotImplementedException();
         }
     }
 }

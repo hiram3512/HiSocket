@@ -1,5 +1,7 @@
-﻿
-
+﻿//*********************************************************************
+// Description:
+// Author: hiramtan@live.com
+//*********************************************************************
 namespace HiSocket
 {
     public class Singleton<T> where T : new()

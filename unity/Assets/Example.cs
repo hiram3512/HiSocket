@@ -6,6 +6,7 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 
+using HiSocket;
 using HiSocket.TCP;
 using UnityEngine;
 

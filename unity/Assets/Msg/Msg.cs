@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace HiSocket.TCP
+namespace HiSocket
 {
     public class Msg : IMsg
     {
