@@ -4,53 +4,91 @@
 //*********************************************************************
 
 using System;
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using HiSocket.TCP;
+using System.Text;
 
-namespace HiSocket
+namespace HiSocket.Tcp
 {
     public class MsgManager
     {
-        public static ISocket iSocket { get; private set; }
-        public delegate void MsgEventHandler(IMsg param);
-        private static Dictionary<uint, MsgEventHandler> msgDic = new Dictionary<uint, MsgEventHandler>();
-
-
-        public static void Init(ISocket param)
+        public static MsgManager Instance
         {
-            iSocket = param;
+            get
+            {
+                if (instance == null)
+                    instance = new MsgManager();
+                return instance;
+            }
+        }
+        private static MsgManager instance;
+        public delegate void msgEventHandler(MsgBase paramMsg);
+        public Dictionary<int, msgEventHandler> commonDic = new Dictionary<int, msgEventHandler>();
+        public Dictionary<string, msgEventHandler> protobufDic = new Dictionary<string, msgEventHandler>();
+        private MsgHandler msgHandler;
+        public void Init(MsgHandler param)
+        {
+            msgHandler = param;
+        }
+        public void RegisterMsg(string paramKey, msgEventHandler paramMsgHandler)
+        {
+            if (protobufDic.ContainsKey(paramKey))
+                return;
+            protobufDic.Add(paramKey, paramMsgHandler);
+        }
+        public void RegisterMsg(int paramKey, msgEventHandler paramMsgHandler)
+        {
+            if (commonDic.ContainsKey(paramKey))
+                return;
+            commonDic.Add(paramKey, paramMsgHandler);
+        }
+        public void SendMsg(byte[] param)
+        {
+            msgHandler.Send(param);
+        }
+        //public void SendLuaMsg(string paramName)
+        //{
+        //    msgHandler.Send(param);
+        //}
+        public void ReceiveMsg(byte[] paramBytes)
+        {
+            paramBytes = UnZip(paramBytes);
+            int id = (UInt16)BitConverter.ToUInt16(paramBytes, 0);
+            if (id == MsgDefine.protobufID)
+            {
+                int length = MsgDefine.id + MsgDefine.order + MsgDefine.time;
+                string name = GetString(paramBytes, length);
+                if (!protobufDic.ContainsKey(name))
+                    return;
+                MsgProtobuf msg = new MsgProtobuf(paramBytes);
+                protobufDic[name](msg);
+            }
+            else
+            {
+                if (!commonDic.ContainsKey(id))
+                    return;
+                MsgBytes msg = new MsgBytes(paramBytes);
+                commonDic[id](msg);
+            }
+        }
+        private string GetString(byte[] paramBytes, int paramIndex)
+        {
+            int length = 0;
+            for (int i = 0; i < paramBytes.Length - paramIndex; i++)
+            {
+                if (paramBytes[paramIndex + i + 1] == 0)
+                {
+                    length = paramIndex + i;
+                    break;
+                }
+            }
+            string value = Encoding.UTF8.GetString(paramBytes, paramIndex, length);
+            return value;
         }
 
-        /// <summary>
-        /// 注册消息回调事件
-        /// </summary>
-        /// <param name="paramKey">协议</param>
-        /// <param name="paramHandler">事件</param>
-        public static void Register(uint paramKey, MsgEventHandler paramHandler)
+        private byte[] UnZip(byte[] param)
         {
-            if (msgDic.ContainsKey(paramKey))
-            {
-                Debug.LogWarning("dic already contain this key: " + paramKey);
-                return;
-            }
-            msgDic.Add(paramKey, paramHandler);
-        }
-
-        public static void ReceiveMsg(byte[] param)
-        {
-            ushort tempKey = BitConverter.ToUInt16(param, 0);
-            if (!msgDic.ContainsKey(tempKey))
-            {
-                Debug.LogWarning("dic donnt contain this key: " + tempKey + "make sure you have register it in advance");
-                return;
-            }
-            Msg tempMsg = new Msg(param);
-            msgDic[tempKey](tempMsg);
-            //待完成:...
-            //引擎tick维护接收数据
-            //保证所有信息都可以更新组件
+            //添加反解压逻辑
+            return null;
         }
     }
 }

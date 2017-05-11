@@ -6,10 +6,11 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using HiSocket.Tcp;
 
 namespace HiSocket.TCP
 {
-    internal class TCP : ISocket
+    public class TCP : Singleton<TCP>, ISocket
     {
         public int bufferSize = 8 * 1024 * 16;//16k
         private IPAddress address;
