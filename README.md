@@ -26,7 +26,7 @@ unity对第二第三第四都提供支持,唯独不支持第一条.第四条被�
 [![](http://note.youdao.com/yws/public/resource/e5a82e19c36d60bd66f6b5ec40c50ae7/xmlnote/DD03AB53B6A34D99A703BB5219D16ADC/7730)](http://note.youdao.com/yws/public/resource/e5a82e19c36d60bd66f6b5ec40c50ae7/xmlnote/DD03AB53B6A34D99A703BB5219D16ADC/7730)
 
 说的很明确,推荐域名,然后通过addressfamily选择合适的ipv4或ipv6,下面就通过tcpclient具体处理ipv6支持.
-``` c sharp
+``` c#
             if (Socket.OSSupportsIPv6)
                 client = new TcpClient(AddressFamily.InterNetworkV6);
             else
