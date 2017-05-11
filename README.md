@@ -1,10 +1,12 @@
 # HiSocket.TCP_unity
 
 haven't finished 
-
+### To Do List
 - [x] ipv6支持
-- [] 主线程连接
+- [x] 主线程连接
 - [] 多线程连接
+- [] protobuf
+- [x] aes加密
 
 
 
