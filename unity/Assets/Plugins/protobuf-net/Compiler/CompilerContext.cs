@@ -53,13 +53,22 @@ namespace ProtoBuf.Compiler
         public static ProtoSerializer BuildSerializer(IProtoSerializer head, TypeModel model)
         {
             Type type = head.ExpectedType;
-            CompilerContext ctx = new CompilerContext(type, true, true, model, typeof(object));
-            ctx.LoadValue(ctx.InputValue);
-            ctx.CastFromObject(type);
-            ctx.WriteNullCheckedTail(type, head, null);
-            ctx.Emit(OpCodes.Ret);
-            return (ProtoSerializer)ctx.method.CreateDelegate(
-                typeof(ProtoSerializer));
+            try
+            {
+                CompilerContext ctx = new CompilerContext(type, true, true, model, typeof(object));
+                ctx.LoadValue(ctx.InputValue);
+                ctx.CastFromObject(type);
+                ctx.WriteNullCheckedTail(type, head, null);
+                ctx.Emit(OpCodes.Ret);
+                return (ProtoSerializer)ctx.method.CreateDelegate(
+                    typeof(ProtoSerializer));
+            }
+            catch (Exception ex)
+            {
+                string name = type.FullName;
+                if(string.IsNullOrEmpty(name)) name = type.Name;
+                throw new InvalidOperationException("It was not possible to prepare a serializer for: " + name, ex);
+            }
         }
         /*public static ProtoCallback BuildCallback(IProtoTypeSerializer head)
         {
@@ -999,22 +1008,79 @@ namespace ProtoBuf.Compiler
 
         public void Switch(CodeLabel[] jumpTable)
         {
-            Label[] labels = new Label[jumpTable.Length];
-#if DEBUG_COMPILE
-            StringBuilder sb = new StringBuilder(OpCodes.Switch.ToString());
-#endif
-            for (int i = 0; i < labels.Length; i++)
-            {
-                labels[i] = jumpTable[i].Value;
-#if DEBUG_COMPILE
-                sb.Append("; ").Append(i).Append("=>").Append(jumpTable[i].Index);
-#endif
-            }
+            const int MAX_JUMPS = 128;
 
-            il.Emit(OpCodes.Switch, labels);
+            if (jumpTable.Length <= MAX_JUMPS)
+            {
+                // simple case
+                Label[] labels = new Label[jumpTable.Length];
+                for (int i = 0; i < labels.Length; i++)
+                {
+                    labels[i] = jumpTable[i].Value;
+                }
 #if DEBUG_COMPILE
-            Helpers.DebugWriteLine(sb.ToString());
+                Helpers.DebugWriteLine(OpCodes.Switch.ToString());
 #endif
+                il.Emit(OpCodes.Switch, labels);
+            }
+            else
+            {
+                // too many to jump easily (especially on Android) - need to split up (note: uses a local pulled from the stack)
+                using (Local val = GetLocalWithValue(MapType(typeof(int)), null))
+                {
+                    int count = jumpTable.Length, offset = 0;
+                    int blockCount = count / MAX_JUMPS;
+                    if ((count % MAX_JUMPS) != 0) blockCount++;
+
+                    Label[] blockLabels = new Label[blockCount];
+                    for (int i = 0; i < blockCount; i++)
+                    {
+                        blockLabels[i] = il.DefineLabel();
+                    }
+                    CodeLabel endOfSwitch = DefineLabel();
+                    
+                    LoadValue(val);
+                    LoadValue(MAX_JUMPS);
+                    Emit(OpCodes.Div);
+#if DEBUG_COMPILE
+                Helpers.DebugWriteLine(OpCodes.Switch.ToString());
+#endif
+                    il.Emit(OpCodes.Switch, blockLabels);
+                    Branch(endOfSwitch, false);
+
+                    Label[] innerLabels = new Label[MAX_JUMPS];
+                    for (int blockIndex = 0; blockIndex < blockCount; blockIndex++)
+                    {
+                        il.MarkLabel(blockLabels[blockIndex]);
+
+                        int itemsThisBlock = Math.Min(MAX_JUMPS, count);
+                        count -= itemsThisBlock;
+                        if (innerLabels.Length != itemsThisBlock) innerLabels = new Label[itemsThisBlock];
+
+                        int subtract = offset;
+                        for (int j = 0; j < itemsThisBlock; j++)
+                        {
+                            innerLabels[j] = jumpTable[offset++].Value;
+                        }
+                        LoadValue(val);
+                        if (subtract != 0) // switches are always zero-based
+                        {
+                            LoadValue(subtract);
+                            Emit(OpCodes.Sub);
+                        }
+#if DEBUG_COMPILE
+                        Helpers.DebugWriteLine(OpCodes.Switch.ToString());
+#endif
+                        il.Emit(OpCodes.Switch, innerLabels);
+                        if (count != 0)
+                        { // force default to the very bottom
+                            Branch(endOfSwitch, false);
+                        }
+                    }
+                    Helpers.DebugAssert(count == 0, "Should use exactly all switch items");
+                    MarkLabel(endOfSwitch);
+                }
+            }
         }
 
         internal void EndFinally()

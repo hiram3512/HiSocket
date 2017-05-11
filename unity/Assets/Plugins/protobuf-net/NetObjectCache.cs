@@ -35,7 +35,10 @@ namespace ProtoBuf
             }
 
             object tmp = list[key];
-            if(tmp == null) throw new ProtoException("A deferred key does not have a value yet");
+            if (tmp == null)
+            {
+                throw new ProtoException("A deferred key does not have a value yet");
+            }
             return tmp;
         }
 
@@ -228,5 +231,16 @@ namespace ProtoBuf
 #endif
 
 #endif
+
+        internal void Clear()
+        {
+            trapStartIndex = 0;
+            rootObject = null;
+            if (underlyingList != null) underlyingList.Clear();
+            if (stringKeys != null) stringKeys.Clear();
+#if !CF && !PORTABLE
+            if (objectKeys != null) objectKeys.Clear();
+#endif
+        }
     }
 }

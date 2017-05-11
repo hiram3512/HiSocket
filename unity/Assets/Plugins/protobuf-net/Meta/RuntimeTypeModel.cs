@@ -409,23 +409,17 @@ namespace ProtoBuf.Meta
             Type underlyingType = ResolveProxies(type);
             return underlyingType == null ? null : FindWithoutAdd(underlyingType);
         }
-        sealed class MetaTypeFinder : BasicList.IPredicate
+
+        static readonly BasicList.MatchPredicate
+            MetaTypeFinder = new BasicList.MatchPredicate(MetaTypeFinderImpl),
+            BasicTypeFinder = new BasicList.MatchPredicate(BasicTypeFinderImpl);
+        static bool MetaTypeFinderImpl(object value, object ctx)
         {
-            private readonly Type type;
-            public MetaTypeFinder(Type type) { this.type = type; }
-            public bool IsMatch(object obj)
-            {
-                return ((MetaType)obj).Type == type;
-            }
+            return ((MetaType)value).Type == (Type)ctx;
         }
-        sealed class BasicTypeFinder : BasicList.IPredicate
+        static bool BasicTypeFinderImpl(object value, object ctx)
         {
-            private readonly Type type;
-            public BasicTypeFinder(Type type) { this.type = type; }
-            public bool IsMatch(object obj)
-            {
-                return ((BasicType)obj).Type == type;
-            }
+            return ((BasicType)value).Type == (Type)ctx;
         }
 
         private void WaitOnLock(MetaType type)
@@ -456,8 +450,7 @@ namespace ProtoBuf.Meta
         }
         internal IProtoSerializer TryGetBasicTypeSerializer(Type type)
         {
-            BasicList.IPredicate predicate = new BasicTypeFinder(type);
-            int idx = basicTypes.IndexOf(predicate);
+            int idx = basicTypes.IndexOf(BasicTypeFinder, type);
 
             if (idx >= 0) return ((BasicType)basicTypes[idx]).Serializer;
 
@@ -465,7 +458,7 @@ namespace ProtoBuf.Meta
             { // don't need a full model lock for this
 
                 // double-checked
-                idx = basicTypes.IndexOf(predicate);
+                idx = basicTypes.IndexOf(BasicTypeFinder, type);
                 if (idx >= 0) return ((BasicType)basicTypes[idx]).Serializer;
 
                 WireType defaultWireType;
@@ -482,8 +475,7 @@ namespace ProtoBuf.Meta
 
         internal int FindOrAddAuto(Type type, bool demand, bool addWithContractOnly, bool addEvenIfAutoDisabled)
         {
-            MetaTypeFinder predicate = new MetaTypeFinder(type);
-            int key = types.IndexOf(predicate);
+            int key = types.IndexOf(MetaTypeFinder, type);
             MetaType metaType;
 
             // the fast happy path: meta-types we've already seen
@@ -512,8 +504,7 @@ namespace ProtoBuf.Meta
             Type underlyingType = ResolveProxies(type);
             if (underlyingType != null)
             {
-                predicate = new MetaTypeFinder(underlyingType);
-                key = types.IndexOf(predicate);
+                key = types.IndexOf(MetaTypeFinder, underlyingType);
                 type = underlyingType; // if new added, make it reflect the underlying type
             }
 
@@ -545,7 +536,7 @@ namespace ProtoBuf.Meta
                     bool weAdded = false;
 
                     // double-checked
-                    int winner = types.IndexOf(predicate);
+                    int winner = types.IndexOf(MetaTypeFinder, type);
                     if (winner < 0)
                     {
                         ThrowIfFrozen();
@@ -1066,19 +1057,6 @@ namespace ProtoBuf.Meta
             return Compile(options);
         }
 
-        sealed class StringFinder : BasicList.IPredicate
-        {
-            private readonly string value;
-            public StringFinder(string value)
-            {
-                this.value = value;
-            }
-            bool BasicList.IPredicate.IsMatch(object obj)
-            {
-                return value == (string)obj;
-            }
-        }
-
         /// <summary>
         /// Fully compiles the current model into a static-compiled serialization dll
         /// (the serialization dll still requires protobuf-net for support services).
@@ -1157,7 +1135,7 @@ namespace ProtoBuf.Meta
             int knownTypesCategory;
             FieldBuilder knownTypes;
             Type knownTypesLookupType;
-            WriteGetKeyImpl(type, hasInheritance, methodPairs, ilVersion, out il, out knownTypesCategory, out knownTypes, out knownTypesLookupType);
+            WriteGetKeyImpl(type, hasInheritance, methodPairs, ilVersion, assemblyName, out il, out knownTypesCategory, out knownTypes, out knownTypesLookupType);
 
             Compiler.CompilerContext ctx = WriteSerializeDeserialize(assemblyName, type, methodPairs, ilVersion, ref il);
 
@@ -1217,7 +1195,7 @@ namespace ProtoBuf.Meta
                 case KnownTypes_Dictionary:
                     {
                         Compiler.CompilerContext.LoadValue(il, types.Count);
-                        LocalBuilder loc = il.DeclareLocal(knownTypesLookupType);
+                        //LocalBuilder loc = il.DeclareLocal(knownTypesLookupType);
                         il.Emit(OpCodes.Newobj, knownTypesLookupType.GetConstructor(new Type[] { MapType(typeof(int)) }));
                         il.Emit(OpCodes.Stsfld, knownTypes);
                         int typeIndex = 0;
@@ -1286,18 +1264,18 @@ namespace ProtoBuf.Meta
             il = Override(type, "Serialize");
             Compiler.CompilerContext ctx = new Compiler.CompilerContext(il, false, true, methodPairs, this, ilVersion, assemblyName, MapType(typeof(object)));
             // arg0 = this, arg1 = key, arg2=obj, arg3=dest
-            Label[] jumpTable = new Label[types.Count];
+            Compiler.CodeLabel[] jumpTable = new Compiler.CodeLabel[types.Count];
             for (int i = 0; i < jumpTable.Length; i++)
             {
-                jumpTable[i] = il.DefineLabel();
+                jumpTable[i] = ctx.DefineLabel();
             }
             il.Emit(OpCodes.Ldarg_1);
-            il.Emit(OpCodes.Switch, jumpTable);
+            ctx.Switch(jumpTable);
             ctx.Return();
             for (int i = 0; i < jumpTable.Length; i++)
             {
                 SerializerPair pair = methodPairs[i];
-                il.MarkLabel(jumpTable[i]);
+                ctx.MarkLabel(jumpTable[i]);
                 il.Emit(OpCodes.Ldarg_2);
                 ctx.CastFromObject(pair.Type.Type);
                 il.Emit(OpCodes.Ldarg_3);
@@ -1310,16 +1288,16 @@ namespace ProtoBuf.Meta
             // arg0 = this, arg1 = key, arg2=obj, arg3=source
             for (int i = 0; i < jumpTable.Length; i++)
             {
-                jumpTable[i] = il.DefineLabel();
+                jumpTable[i] = ctx.DefineLabel();
             }
             il.Emit(OpCodes.Ldarg_1);
-            il.Emit(OpCodes.Switch, jumpTable);
+            ctx.Switch(jumpTable);
             ctx.LoadNullRef();
             ctx.Return();
             for (int i = 0; i < jumpTable.Length; i++)
             {
                 SerializerPair pair = methodPairs[i];
-                il.MarkLabel(jumpTable[i]);
+                ctx.MarkLabel(jumpTable[i]);
                 Type keyType = pair.Type.Type;
                 if (keyType.IsValueType)
                 {
@@ -1341,11 +1319,12 @@ namespace ProtoBuf.Meta
         }
 
         private const int KnownTypes_Array = 1, KnownTypes_Dictionary = 2, KnownTypes_Hashtable = 3, KnownTypes_ArrayCutoff = 20;
-        private void WriteGetKeyImpl(TypeBuilder type, bool hasInheritance, SerializerPair[] methodPairs, Compiler.CompilerContext.ILVersion ilVersion, out ILGenerator il, out int knownTypesCategory, out FieldBuilder knownTypes, out Type knownTypesLookupType)
+        private void WriteGetKeyImpl(TypeBuilder type, bool hasInheritance, SerializerPair[] methodPairs, Compiler.CompilerContext.ILVersion ilVersion, string assemblyName, out ILGenerator il, out int knownTypesCategory, out FieldBuilder knownTypes, out Type knownTypesLookupType)
         {
 
             il = Override(type, "GetKeyImpl");
-
+            Compiler.CompilerContext ctx = new Compiler.CompilerContext(il, false, false, methodPairs, this, ilVersion, assemblyName, MapType(typeof(System.Type), true));
+            
             if (types.Count <= KnownTypes_ArrayCutoff)
             {
                 knownTypesCategory = KnownTypes_Array;
@@ -1396,14 +1375,14 @@ namespace ProtoBuf.Meta
                                 }
                                 else
                                 {   // add a new unique label
-                                    getKeyLabels.Add(il.DefineLabel());
+                                    getKeyLabels.Add(ctx.DefineLabel());
                                     lastKey = methodPairs[i].BaseKey;
                                 }
                             }
-                            Label[] subtypeLabels = new Label[getKeyLabels.Count];
+                            Compiler.CodeLabel[] subtypeLabels = new Compiler.CodeLabel[getKeyLabels.Count];
                             getKeyLabels.CopyTo(subtypeLabels, 0);
 
-                            il.Emit(OpCodes.Switch, subtypeLabels);
+                            ctx.Switch(subtypeLabels);
                             il.Emit(OpCodes.Ldloc_0); // not a sub-type; use the original value
                             il.Emit(OpCodes.Ret);
 
@@ -1425,7 +1404,7 @@ namespace ProtoBuf.Meta
                                             break;
                                         }
                                     }
-                                    il.MarkLabel(subtypeLabels[i]);
+                                    ctx.MarkLabel(subtypeLabels[i]);
                                     Compiler.CompilerContext.LoadValue(il, keyIndex);
                                     il.Emit(OpCodes.Ret);
                                 }
@@ -1623,9 +1602,8 @@ namespace ProtoBuf.Meta
                         string privelegedAssemblyName = privelegedAssemblyObj as string;
                         if (privelegedAssemblyName == assemblyName || Helpers.IsNullOrEmpty(privelegedAssemblyName)) continue; // ignore
 
-                        if (internalAssemblies.IndexOf(new StringFinder(privelegedAssemblyName)) >= 0) continue; // seen it before
+                        if (internalAssemblies.IndexOfString(privelegedAssemblyName) >= 0) continue; // seen it before
                         internalAssemblies.Add(privelegedAssemblyName);
-
 
                         CustomAttributeBuilder builder = new CustomAttributeBuilder(
                             internalsVisibleToAttribType.GetConstructor(new Type[] { MapType(typeof(string)) }),

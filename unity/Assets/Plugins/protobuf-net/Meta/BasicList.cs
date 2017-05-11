@@ -16,6 +16,11 @@ namespace ProtoBuf.Meta
         {
             head.RemoveLastWithMutate();
         }
+
+        public void Clear()
+        {
+            head.Clear();
+        }
     }
     internal class BasicList : IEnumerable
     {
@@ -139,6 +144,14 @@ namespace ProtoBuf.Meta
                 return new Node(newData, length);
             }
 
+            internal int IndexOfString(string value)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    if ((string)value == (string)data[i]) return i;
+                }
+                return -1;
+            }
             internal int IndexOfReference(object instance)
             {
                 for (int i = 0; i < length; i++)
@@ -148,11 +161,11 @@ namespace ProtoBuf.Meta
                   // to be a reference check
                 return -1;
             }
-            internal int IndexOf(IPredicate predicate)
+            internal int IndexOf(MatchPredicate predicate, object ctx)
             {
                 for (int i = 0; i < length; i++)
                 {
-                    if (predicate.IsMatch(data[i])) return i;
+                    if (predicate(data[i], ctx)) return i;
                 }
                 return -1;
             }
@@ -164,21 +177,31 @@ namespace ProtoBuf.Meta
                     Array.Copy(data, 0, array, offset, length);
                 }
             }
+
+            internal void Clear()
+            {
+                if(data != null)
+                {
+                    Array.Clear(data, 0, data.Length);
+                }
+                length = 0;
+            }
         }
 
-        internal int IndexOf(IPredicate predicate)
+        internal int IndexOf(MatchPredicate predicate, object ctx)
         {
-            return head.IndexOf(predicate);
+            return head.IndexOf(predicate, ctx);
+        }
+        internal int IndexOfString(string value)
+        {
+            return head.IndexOfString(value);
         }
         internal int IndexOfReference(object instance)
         {
             return head.IndexOfReference(instance);
         }
 
-        internal interface IPredicate
-        {
-            bool IsMatch(object obj);
-        }
+        internal delegate bool MatchPredicate(object value, object ctx);
 
         internal bool Contains(object value)
         {
