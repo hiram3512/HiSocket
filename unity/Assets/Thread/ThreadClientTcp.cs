@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace HiSocket.TCP
 {
-    internal class ThreadTCP : TCP
+    internal class ThreadClientTcp : ClientTcp
     {
 
     }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
-using HiSocket.Tcp;
 
 namespace HiSocket
 {
@@ -11,12 +10,12 @@ namespace HiSocket
         private Queue receiveQueue;
         private MemoryStream stream;
         private BinaryReader reader;
-        private TCP.TCP client;
+        private TCP.ClientTcp client;
         private long remainingBytes
         {
             get { return stream.Length - stream.Position; }
         }
-        public MsgHandler(TCP.TCP param)
+        public MsgHandler(TCP.ClientTcp param)
         {
             client = param;
             sendQueue = new Queue();

@@ -3,9 +3,7 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 using System;
-using System.Collections.Generic;
 using System.Text;
-using HiSocket.Tcp;
 
 namespace HiSocket
 {
@@ -13,7 +11,7 @@ namespace HiSocket
     {
         public MsgBytes(UInt16 param) : base()
         {
-            id = param;
+            protoID = param;
         }
         public MsgBytes(byte[] param) : base(param)
         {
@@ -21,7 +19,7 @@ namespace HiSocket
         }
         public void Flush()
         {
-            Flush(id);
+            Flush(protoID);
         }
 
         #region Read

@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using HiSocket.Tcp;
 
 namespace HiSocket
 {
@@ -13,7 +12,7 @@ namespace HiSocket
     {
         private UInt16 length;
         private UInt16 flag = 0;
-        protected UInt16 id = 0;
+        protected UInt16 protoID = 0;
         private UInt32 order = 0;
         private UInt32 time = 0;
         protected int index;
@@ -41,7 +40,7 @@ namespace HiSocket
             byte[] b2 = BitConverter.GetBytes(flag);
             b2.CopyTo(buffer, index);
             index += MsgDefine.flag;
-            byte[] b3 = BitConverter.GetBytes(id);
+            byte[] b3 = BitConverter.GetBytes(protoID);
             b3.CopyTo(buffer, index);
             index += MsgDefine.id;
             byte[] b4 = BitConverter.GetBytes(order);

@@ -6,11 +6,10 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using HiSocket.Tcp;
 
 namespace HiSocket.TCP
 {
-    public class TCP : Singleton<TCP>, ISocket
+    public class ClientTcp : Singleton<ClientTcp>, ISocket
     {
         public int bufferSize = 8 * 1024 * 16;//16k
         private IPAddress address;
@@ -24,7 +23,7 @@ namespace HiSocket.TCP
 
         public bool IsConnected { get { return client != null && client.Client != null && client.Connected; } }
 
-        public TCP()
+        public ClientTcp()
         {
             if (Socket.OSSupportsIPv6)
                 client = new TcpClient(AddressFamily.InterNetworkV6);

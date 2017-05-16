@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HiSocket.Tcp
+namespace HiSocket
 {
     public class MsgManager
     {

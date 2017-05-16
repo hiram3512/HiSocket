@@ -2,7 +2,7 @@
 // Description:
 // Author: hiramtan@live.com
 //*********************************************************************
-namespace HiSocket.Tcp
+namespace HiSocket
 {
     public interface IMsg
     {
