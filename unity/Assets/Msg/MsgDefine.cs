@@ -13,7 +13,7 @@ public class MsgDefine
     public const int order = 4;
     public const int time = 4;
 
-    public const int protobufID = 2000;
+    public const int protobufID = 2000;//2000 is used for protobuf msg
     public const int protobufNameLength = 32;
     public const int protobufBodyLength = 2;
 }

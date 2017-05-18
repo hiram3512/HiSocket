@@ -6,6 +6,8 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 
+
+
 using HiSocket;
 using HiSocket.TCP;
 using UnityEngine;
@@ -16,13 +18,14 @@ public class Example : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        //register msg and used for receive msg
+        //register bytes msg and used for receive msg
         MsgManager.Instance.RegisterMsg(110, OnMsg110);
 
         //
         // you can register many callback here
         //
 
+        //protobuf msg don't need regist, because it's default proto id is 2000 and it defined in msgdefine.cs
 
 
 
