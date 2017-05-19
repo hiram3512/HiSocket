@@ -8,26 +8,29 @@ using System.Collections.Generic;
 
 namespace HiSocket
 {
-    public abstract class MsgBase
+    public abstract class MsgBase : IMsg
     {
-        private UInt16 length;
-        private UInt16 flag = 0;
-        protected UInt16 protoID = 0;
-        private UInt32 order = 0;
-        private UInt32 time = 0;
+        public UInt16 length { get; private set; }
+
         protected int index;
         protected byte[] buffer;
-        protected List<byte> list;
+        protected List<byte> list = new List<byte>();
+        /// <summary>
+        /// 用于创建消息
+        /// </summary>
         protected MsgBase()
         {
-            list = new List<byte>();
         }
+        /// <summary>
+        /// 用于解析消息
+        /// </summary>
+        /// <param name="param"></param>
         public MsgBase(byte[] param)
         {
             buffer = param;
-            index = MsgDefine.length + MsgDefine.flag + MsgDefine.id + MsgDefine.order + MsgDefine.time;
+            index = sizeof(UInt16);//接口IMsg中Length占用字节长度
         }
-        protected void Flush(UInt16 param)
+        public virtual void Flush()
         {
             int size = MsgDefine.length + MsgDefine.flag + MsgDefine.id +
                        MsgDefine.order + MsgDefine.time + list.Count;

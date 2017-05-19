@@ -2,7 +2,6 @@
 // Description:
 // Author: hiramtan@live.com
 //*********************************************************************
-
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -12,14 +11,16 @@ namespace HiSocket.TCP
     public class ClientTcp : Singleton<ClientTcp>, ISocket
     {
         public bool IsConnected { get { return client != null && client.Client != null && client.Connected; } }
+
         public int bufferSize = 8 * 1024 * 16;//16k is default setting
-        private int timeOut = 5000;//5s:收发超时时间
+        public int timeOut = 5000;//5s:收发超时时间
 
         private TcpClient client;
         private IPAddress address;
         private int port;
         private byte[] buffer;
         private MsgHandler msgHandler;
+
         //private Thread sendThread;
         //private Thread receiveThread;
 
@@ -50,8 +51,7 @@ namespace HiSocket.TCP
         {
             address = GetIPAddress(paramAddress);
             port = paramPort;
-
-            bool tempIsConnect = false;
+            bool tempIsConnectSuccess = false;
             try
             {
                 client.BeginConnect(address, port, new AsyncCallback(delegate (IAsyncResult ar)
@@ -60,8 +60,8 @@ namespace HiSocket.TCP
                     {
                         TcpClient tempTcpClient = (TcpClient)ar.AsyncState;
                         tempTcpClient.EndConnect(ar);
-                        tempIsConnect = ar.IsCompleted;
-                        if (tempIsConnect) Connected();
+                        tempIsConnectSuccess = ar.IsCompleted;
+                        if (tempIsConnectSuccess) ConnectSuccess();
                     }
                     catch (Exception e)
                     {
@@ -73,7 +73,7 @@ namespace HiSocket.TCP
             {
                 throw new Exception(e.ToString());
             }
-            return tempIsConnect;
+            return tempIsConnectSuccess;
         }
 
         public long Ping()
@@ -93,15 +93,14 @@ namespace HiSocket.TCP
             throw new Exception("Cannt find this domain's ip address");
         }
 
-
-        private void Connected()
+        private void ConnectSuccess()
         {
             client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
         }
 
-
-        public void Send(byte[] param)
+        public bool Send(byte[] param)
         {
+            bool tempIsSendSuccess = false;
             if (!IsConnected)
             {
                 throw new Exception("this msg send failed, please make sure you have already connected");
@@ -112,15 +111,17 @@ namespace HiSocket.TCP
                      {
                          TcpClient tempTcpClient = (TcpClient)ar.AsyncState;
                          tempTcpClient.Client.EndSend(ar);
+                         tempIsSendSuccess = ar.IsCompleted;
                      }
                      catch (Exception e)
                      {
                          throw new Exception(e.ToString());
                      }
                  }), client);
+            return tempIsSendSuccess;
         }
 
-        public void Receive(IAsyncResult ar)
+        private void Receive(IAsyncResult ar)
         {
             try
             {
@@ -137,7 +138,6 @@ namespace HiSocket.TCP
             {
                 throw new Exception(e.ToString());
             }
-
         }
 
         public void Close()
@@ -148,7 +148,6 @@ namespace HiSocket.TCP
                 client.Close();
                 client = null;
             }
-
         }
 
         private void SendThread()
@@ -158,7 +157,7 @@ namespace HiSocket.TCP
 
         private void ReceiveThread()
         {
-            //client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
+
         }
     }
 }

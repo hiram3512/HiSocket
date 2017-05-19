@@ -1,5 +1,5 @@
 ﻿//*********************************************************************
-// Description:
+// Description:连接，消息收发，关闭
 // Author: hiramtan@live.com
 //*********************************************************************
 
@@ -32,13 +32,13 @@ namespace HiSocket.TCP
         /// send data to server
         /// </summary>
         /// <param name="param"></param>
-        void Send(byte[] param);
+        bool Send(byte[] param);
 
-        /// <summary>
-        /// receive data from server 
-        /// </summary>
-        /// <param name="ar"></param>
-        void Receive(IAsyncResult ar);
+        ///// <summary>
+        ///// receive data from server 
+        ///// </summary>
+        ///// <param name="ar"></param>
+        //void Receive(IAsyncResult ar);
 
         /// <summary>
         /// disconnect with server

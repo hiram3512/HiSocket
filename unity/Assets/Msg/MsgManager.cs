@@ -3,24 +3,17 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 
+//#define ByteMsg
+#define ProtobufMsg
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace HiSocket
 {
-    public class MsgManager
+    public class MsgManager : Singleton<MsgManager>
     {
-        public static MsgManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = new MsgManager();
-                return instance;
-            }
-        }
-        private static MsgManager instance;
         public delegate void msgEventHandler(MsgBase paramMsg);
         public Dictionary<int, msgEventHandler> commonDic = new Dictionary<int, msgEventHandler>();
         public Dictionary<string, msgEventHandler> protobufDic = new Dictionary<string, msgEventHandler>();
@@ -45,50 +38,62 @@ namespace HiSocket
         {
             msgHandler.Send(param);
         }
-        //public void SendLuaMsg(string paramName)
-        //{
-        //    msgHandler.Send(param);
-        //}
+
         public void ReceiveMsg(byte[] paramBytes)
         {
             paramBytes = UnZip(paramBytes);
-            int id = (UInt16)BitConverter.ToUInt16(paramBytes, 0);
-            if (id == MsgDefine.protobufID)
+
+#if ByteMsg
+            ParseByte(paramBytes);
+#elif ProtobufMsg
+            ParseProtobuf(paramBytes);
+#endif
+        }
+
+        private void ParseByte(byte[] param)
+        {
+
+            int tempProtocal = BitConverter.ToUInt16(param, 0);
+            if (commonDic.ContainsKey(tempProtocal))
             {
-                int length = MsgDefine.id + MsgDefine.order + MsgDefine.time;
-                string name = GetString(paramBytes, length);
-                if (!protobufDic.ContainsKey(name))
-                    return;
-                MsgProtobuf msg = new MsgProtobuf(paramBytes);
-                protobufDic[name](msg);
+                MsgByte msg = new MsgByte(param);
+                commonDic[tempProtocal](msg);
             }
             else
             {
-                if (!commonDic.ContainsKey(id))
-                    return;
-                MsgBytes msg = new MsgBytes(paramBytes);
-                commonDic[id](msg);
+                throw new Exception("Haven't registe this this message: " + tempProtocal);
             }
         }
-        private string GetString(byte[] paramBytes, int paramIndex)
+
+        private void ParseProtobuf(byte[] param)
         {
-            int length = 0;
-            for (int i = 0; i < paramBytes.Length - paramIndex; i++)
+            int tempNameLength = BitConverter.ToUInt16(param, 0);
+            string tempName = Encoding.UTF8.GetString(param, 2, tempNameLength);
+            string tempObjectName = "HiSocket." + tempName;
+            MsgProtobuf tempMsg = System.Activator.CreateInstance(System.Type.GetType(tempObjectName)) as MsgProtobuf;
+            if (tempMsg == null)
+                throw new Exception("Create object failed");
+
+
+            if (protobufDic.ContainsKey(tempName))
             {
-                if (paramBytes[paramIndex + i + 1] == 0)
-                {
-                    length = paramIndex + i;
-                    break;
-                }
+                MsgProtobuf msg = new MsgProtobuf(param);
+                protobufDic[tempName](msg);
             }
-            string value = Encoding.UTF8.GetString(paramBytes, paramIndex, length);
-            return value;
+            else
+            {
+                throw new Exception("Haven't registe this this message: " + tempName);
+            }
         }
 
         private byte[] UnZip(byte[] param)
         {
             //添加反解压逻辑
-            return null;
+            //
+
+
+            //
+            return param;
         }
     }
 }

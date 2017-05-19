@@ -7,23 +7,34 @@ using System.Text;
 
 namespace HiSocket
 {
-    public class MsgBytes : MsgBase,IMsg
+    public class MsgByte : MsgBase, IByteMsg
     {
-        public MsgBytes(UInt16 param) : base()
+        public ushort protocal { get; private set; }
+
+        /// <summary>
+        /// 用于创建消息(构造函数写入协议id)
+        /// </summary>
+        /// <param name="param"></param>
+        public MsgByte(UInt16 param) : base()
         {
-            protoID = param;
+            protocal = param;
         }
-        public MsgBytes(byte[] param) : base(param)
+        /// <summary>
+        /// 用于解析消息
+        /// </summary>
+        /// <param name="param"></param>
+        public MsgByte(byte[] param) : base(param)
         {
 
         }
         public void Flush()
         {
-            Flush(protoID);
+            byte[] temp = BitConverter.GetBytes(protocal);
+            list.InsertRange(0, temp);
+            base.Flush();
         }
 
         #region Read
-
         public T Read<T>(int _length = 0)
         {
             T value = default(T);

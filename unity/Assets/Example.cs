@@ -36,7 +36,7 @@ public class Example : MonoBehaviour
 
 
         // send byte msg
-        MsgBytes tempMsg1 = new MsgBytes(110);//110 is proto id
+        MsgByte tempMsg1 = new MsgByte(110);//110 is proto id
         //write msg's body
         tempMsg1.Write<int>(100);
         tempMsg1.Write("hello");
@@ -63,7 +63,7 @@ public class Example : MonoBehaviour
 
     void OnMsg110(MsgBase param)
     {
-        var test = param as MsgBytes;
+        var test = param as MsgByte;
         int temp1 = test.Read<int>(); //100
         string temp2 = test.Read<string>(5); //"hello"
 

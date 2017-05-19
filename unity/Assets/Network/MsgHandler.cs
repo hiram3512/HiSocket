@@ -29,20 +29,18 @@ namespace HiSocket
             stream.Seek(0, SeekOrigin.End);
             stream.Write(paramBytes, 0, paramLength);
             stream.Seek(0, SeekOrigin.Begin);
-            while (remainingBytes > MsgDefine.length)
+            var tempMsgLength = sizeof(UInt16);//接口IMsg中Length占用字节长度
+            while (remainingBytes > tempMsgLength)
             {
                 UInt16 msgLength = reader.ReadUInt16();
-                msgLength += MsgDefine.flag;
                 if (remainingBytes >= msgLength)
                 {
-                    stream.Position += MsgDefine.flag;
-                    msgLength -= MsgDefine.flag;
                     byte[] bytes = reader.ReadBytes(msgLength);
                     receiveQueue.Enqueue(bytes);
                 }
                 else
                 {
-                    stream.Position -= MsgDefine.length;
+                    stream.Position -= tempMsgLength;
                     break;
                 }
             }
