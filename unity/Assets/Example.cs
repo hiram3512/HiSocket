@@ -14,34 +14,28 @@ using UnityEngine;
 
 public class Example : MonoBehaviour
 {
-
     // Use this for initialization
     void Start()
     {
-        //register bytes msg and used for receive msg
+        //registe bytes msg
         MsgManager.Instance.RegisterMsg(110, OnByteMsg);
         //you can registe many msg here
         //....
 
-
-        MsgManager.Instance.RegisterMsg(typeof(TestProtobufStruct).FullName,OnProtobufMsg);
-
-
-
+        //registe protobuf msg
+        MsgManager.Instance.RegisterMsg(typeof(TestProtobufStruct).FullName, OnProtobufMsg);
+        //....
 
         //connect(prefer host names)
         ClientTcp socket = new ClientTcp();
         bool tempIsConnect = socket.Connect("www.baidu.com", 111);
         Debug.Log(tempIsConnect);
 
-
         // send byte msg
         MsgByte tempMsg1 = new MsgByte(110);//110 is proto id
         tempMsg1.Write<int>(100);//write msg's body
         tempMsg1.Write("hello");//write msg's body
         tempMsg1.Flush();//send
-
-
 
         //send protobuf msg
         TestProtobufStruct testProtobufStruct = new TestProtobufStruct();
@@ -77,7 +71,6 @@ public class Example : MonoBehaviour
         Debug.Log(temp1 + temp2);
     }
 }
-
 public class TestProtobufStruct
 {
     public int x;
