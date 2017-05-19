@@ -9,32 +9,16 @@ namespace HiSocket
 {
     public class MsgByte : MsgBase, IByteMsg
     {
-        public ushort protocal { get; private set; }
-
-        /// <summary>
-        /// 用于创建消息(构造函数写入协议id)
-        /// </summary>
-        /// <param name="param"></param>
-        public MsgByte(UInt16 param) : base()
-        {
-            protocal = param;
-        }
+        #region Read
         /// <summary>
         /// 用于解析消息
         /// </summary>
         /// <param name="param"></param>
         public MsgByte(byte[] param) : base(param)
         {
-
-        }
-        public void Flush()
-        {
-            byte[] temp = BitConverter.GetBytes(protocal);
-            list.InsertRange(0, temp);
-            base.Flush();
+            index += sizeof(UInt16);//接口IByteMsg中协议占用字节长度
         }
 
-        #region Read
         public T Read<T>(int _length = 0)
         {
             T value = default(T);
@@ -109,6 +93,16 @@ namespace HiSocket
         }
         #endregion
 
+        #region  Write
+        public ushort protocal { get; private set; }
+        /// <summary>
+        /// 用于创建消息(构造函数写入协议id)
+        /// </summary>
+        /// <param name="param"></param>
+        public MsgByte(UInt16 param) : base()
+        {
+            protocal = param;
+        }
         public void Write<T>(T paramValue)
         {
             if (paramValue is byte)
@@ -187,5 +181,12 @@ namespace HiSocket
                 throw new Exception("Can not find type" + typeof(T));
             }
         }
+        public void Flush()
+        {
+            byte[] temp = BitConverter.GetBytes(protocal);
+            list.InsertRange(0, temp);
+            base.Flush();
+        }
+        #endregion
     }
 }

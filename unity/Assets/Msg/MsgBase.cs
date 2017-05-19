@@ -28,7 +28,7 @@ namespace HiSocket
         public MsgBase(byte[] param)
         {
             buffer = param;
-            index = sizeof(UInt16);//接口IMsg中Length占用字节长度
+            index += sizeof(UInt16);//接口IMsg中Length占用字节长度
         }
         public virtual void Flush()
         {
