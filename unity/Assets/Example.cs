@@ -19,13 +19,13 @@ public class Example : MonoBehaviour
     void Start()
     {
         //register bytes msg and used for receive msg
-        MsgManager.Instance.RegisterMsg(110, OnMsg110);
+        MsgManager.Instance.RegisterMsg(110, OnByteMsg);
+        //you can registe many msg here
+        //....
 
-        //
-        // you can register many callback here
-        //
 
-        //protobuf msg don't need regist, because it's default proto id is 2000 and it defined in msgdefine.cs
+        MsgManager.Instance.RegisterMsg(typeof(TestProtobufStruct).FullName,OnProtobufMsg);
+
 
 
 
@@ -37,22 +37,19 @@ public class Example : MonoBehaviour
 
         // send byte msg
         MsgByte tempMsg1 = new MsgByte(110);//110 is proto id
-        //write msg's body
-        tempMsg1.Write<int>(100);
-        tempMsg1.Write("hello");
-        //flush msg and send it out
-        tempMsg1.Flush();
+        tempMsg1.Write<int>(100);//write msg's body
+        tempMsg1.Write("hello");//write msg's body
+        tempMsg1.Flush();//send
 
 
 
         //send protobuf msg
         TestProtobufStruct testProtobufStruct = new TestProtobufStruct();
         testProtobufStruct.x = 100;
-        testProtobufStruct.y = 200;
+        testProtobufStruct.y = "hello";
         MsgProtobuf tempMsg2 = new MsgProtobuf();
         tempMsg2.Write(testProtobufStruct);
-        tempMsg2.Flush();
-
+        tempMsg2.Flush();//send
     }
 
     // Update is called once per frame
@@ -61,7 +58,7 @@ public class Example : MonoBehaviour
 
     }
 
-    void OnMsg110(MsgBase param)
+    void OnByteMsg(MsgBase param)
     {
         var test = param as MsgByte;
         int temp1 = test.Read<int>(); //100
@@ -69,10 +66,20 @@ public class Example : MonoBehaviour
 
         Debug.Log(temp1 + temp2);
     }
+
+    void OnProtobufMsg(MsgBase param)
+    {
+        var test = param as MsgProtobuf;
+        var test2 = test.Read<TestProtobufStruct>();
+
+        int temp1 = test2.x;//100
+        string temp2 = test2.y;//"hello"
+        Debug.Log(temp1 + temp2);
+    }
 }
 
 public class TestProtobufStruct
 {
     public int x;
-    public int y;
+    public string y;
 }
