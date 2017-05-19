@@ -16,16 +16,18 @@ haven't finished
 ####
 概述:
 -------------
-
-###消息定义概述：
+###
+消息定义概述：
+-------------
 支持传统字节消息和Protobuf消息。
-
 
 字节消息定义：
 
-
 [![](http://thumbnail0.baidupcs.com/thumbnail/6398bce33555603ea4de884c2cf06066?fid=506779508-250528-903135732718103&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-jgUTBtjtO7dvLqnrSDqjVURa%2B6E%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212607178404885154&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/6398bce33555603ea4de884c2cf06066?fid=506779508-250528-903135732718103&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-jgUTBtjtO7dvLqnrSDqjVURa%2B6E%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212607178404885154&dp-callid=0&size=c710_u400&quality=100)
 
+Protobuf消息定义：
+
+[![](http://thumbnail0.baidupcs.com/thumbnail/c3a4ad9b6c552e132d7b0f75ff63a69c?fid=506779508-250528-81367493888917&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-tG6DZISWFd6HyGaPTnsGBrWTRNA%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212675482775317065&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/c3a4ad9b6c552e132d7b0f75ff63a69c?fid=506779508-250528-81367493888917&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-tG6DZISWFd6HyGaPTnsGBrWTRNA%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212675482775317065&dp-callid=0&size=c710_u400&quality=100)
 
 
 
