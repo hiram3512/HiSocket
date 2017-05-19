@@ -34,6 +34,12 @@ namespace HiSocket
         #endregion
 
         #region write
+
+        public MsgProtobuf()
+        {
+
+        }
+
         public ushort nameLength { get; private set; }
         public string name { get; private set; }
         public void Write<T>(T param)
@@ -50,7 +56,7 @@ namespace HiSocket
                 return stream.ToArray();
             }
         }
-        public void Flush()
+        public override void Flush()
         {
             byte[] tempName = Encoding.UTF8.GetBytes(name);
             list.InsertRange(0, tempName);

@@ -181,7 +181,7 @@ namespace HiSocket
                 throw new Exception("Can not find type" + typeof(T));
             }
         }
-        public void Flush()
+        public override void Flush()
         {
             byte[] temp = BitConverter.GetBytes(protocal);
             list.InsertRange(0, temp);
