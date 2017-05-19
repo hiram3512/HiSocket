@@ -7,13 +7,11 @@ using System;
 
 namespace HiSocket
 {
-    public interface IMsg
+    public interface IByteMsg : IMsg
     {
         /// <summary>
-        /// 使用无符号16位int标识整个消息的长度（ushort）
+        /// 使用无符号16位int标识消息协议
         /// </summary>
-        UInt16 length { get; }
-
-        void Flush();
+        UInt16 protocal { get; }
     }
 }

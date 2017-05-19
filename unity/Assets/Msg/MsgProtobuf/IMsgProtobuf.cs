@@ -2,18 +2,19 @@
 // Description:
 // Author: hiramtan@live.com
 //*********************************************************************
-
 using System;
 
 namespace HiSocket
 {
-    public interface IMsg
+    public interface IProtobufMsg : IMsg
     {
         /// <summary>
-        /// 使用无符号16位int标识整个消息的长度（ushort）
+        /// 标识类名长度
         /// </summary>
-        UInt16 length { get; }
-
-        void Flush();
+        UInt16 nameLength { get; }
+        /// <summary>
+        /// 类名
+        /// </summary>
+        string name { get; }
     }
 }
