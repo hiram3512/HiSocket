@@ -5,48 +5,22 @@
 using ProtoBuf;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace HiSocket
 {
-    public class MsgProtobuf : MsgBase, IMsg
+    public class MsgProtobuf : MsgBase, IProtobufMsg
     {
-        protected string protobufName;
-        protected UInt16 protobufLength;
-        protected byte[] protobufBody;
-        public MsgProtobuf() : base()
-        {
-            protoID = MsgDefine.protobufID;
-        }
+        #region  read
+
         public MsgProtobuf(byte[] param) : base(param)
-        { }
-        public void Flush()
         {
-            Flush(MsgDefine.protobufID);
-        }
-        public void Write<T>(T param)
-        {
-            protobufName = typeof(T).FullName;
-            byte[] name = GetBytes(protobufName, MsgDefine.protobufNameLength);
-            list.AddRange(name);
-            using (MemoryStream stream = new MemoryStream())
-            {
-                Serializer.Serialize<T>(stream, param);
-                protobufBody = stream.ToArray();
-                protobufLength = (UInt16)protobufBody.Length;
-            }
-            byte[] length = BitConverter.GetBytes(protobufLength);
-            list.AddRange(length);
-            list.AddRange(protobufBody);
+
         }
         public T Read<T>()
         {
-            index += MsgDefine.protobufNameLength;
-            int length = (int)BitConverter.ToInt16(buffer, index);
-            index += MsgDefine.protobufBodyLength;
-            byte[] protocol = new byte[length];
-            Array.Copy(buffer, index, protocol, 0, protocol.Length);
-            return Deserialize<T>(protocol);
+            return Deserialize<T>(buffer);
         }
         private T Deserialize<T>(byte[] param)
         {
@@ -57,15 +31,35 @@ namespace HiSocket
                 return obj;
             }
         }
-        private byte[] GetBytes(string paramString, int paramCount)
-        {
-            byte[] bytes = new byte[paramCount];
-            byte[] temp = Encoding.UTF8.GetBytes(paramString);
-            temp.CopyTo(bytes, 0);
-            return bytes;
-        }
-    }
+        #endregion
 
+        #region write
+        public ushort nameLength { get; private set; }
+        public string name { get; private set; }
+        public void Write<T>(T param)
+        {
+            name = typeof(T).FullName;
+            nameLength = (ushort)Encoding.UTF8.GetBytes(name).Length;
+            list = Serialize(param).ToList();
+        }
+        private byte[] Serialize<T>(T t)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                Serializer.Serialize<T>(stream, t);
+                return stream.ToArray();
+            }
+        }
+        public void Flush()
+        {
+            byte[] tempName = Encoding.UTF8.GetBytes(name);
+            list.InsertRange(0, tempName);
+            byte[] tempNameLength = BitConverter.GetBytes(nameLength);
+            list.InsertRange(0, tempNameLength);
+            base.Flush();
+        }
+        #endregion
+    }
 }
 
 

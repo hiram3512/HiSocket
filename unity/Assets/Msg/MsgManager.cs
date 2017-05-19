@@ -39,24 +39,29 @@ namespace HiSocket
             msgHandler.Send(param);
         }
 
-        public void ReceiveMsg(byte[] paramBytes)
+        public void ReceiveMsg(byte[] param)
         {
-            paramBytes = UnZip(paramBytes);
-
+            param = UnZip(param);
+            int tempLength = sizeof(UInt16);//接口IMsg中Length占用字节长度
+            byte[] tempBytesNoLength = new byte[param.Length - tempLength];
+            Array.Copy(param, tempLength, tempBytesNoLength, 0, tempBytesNoLength.Length);
 #if ByteMsg
-            ParseByte(paramBytes);
+            ParseByte(tempBytesNoLength);
 #elif ProtobufMsg
-            ParseProtobuf(paramBytes);
+            ParseProtobuf(tempBytesNoLength);
 #endif
         }
 
         private void ParseByte(byte[] param)
         {
-
             int tempProtocal = BitConverter.ToUInt16(param, 0);
             if (commonDic.ContainsKey(tempProtocal))
             {
-                MsgByte msg = new MsgByte(param);
+                int tempLength = sizeof(UInt16);//接口IByteMsg中协议占用字节长度
+                byte[] tempBytesOnlyBody = new byte[param.Length - tempLength];
+                Array.Copy(param, tempLength, tempBytesOnlyBody, 0, tempBytesOnlyBody.Length);
+
+                MsgByte msg = new MsgByte(tempBytesOnlyBody);
                 commonDic[tempProtocal](msg);
             }
             else
@@ -67,16 +72,22 @@ namespace HiSocket
 
         private void ParseProtobuf(byte[] param)
         {
-            int tempNameLength = BitConverter.ToUInt16(param, 0);
-            string tempName = Encoding.UTF8.GetString(param, 2, tempNameLength);
-            string tempObjectName = "HiSocket." + tempName;
-            MsgProtobuf tempMsg = System.Activator.CreateInstance(System.Type.GetType(tempObjectName)) as MsgProtobuf;
-            if (tempMsg == null)
-                throw new Exception("Create object failed");
+            int tempNameLength = BitConverter.ToUInt16(param, 0);//接口IProtobufMsg中名字占用字节长度
+            int tempLength1 = sizeof(UInt16);//接口IProtobufMsg中名字占用字节长度
+            string tempName = Encoding.UTF8.GetString(param, tempLength1, tempNameLength);//名字长度
+            int tempLength2 = sizeof(UInt16) + tempNameLength;//接口IProtobufMsg中名字占用字节长度+接口IProtobufMsg中名字占用字节长度
+
+            //string tempObjectName = "HiSocket." + tempName;
+            //MsgProtobuf tempMsg = System.Activator.CreateInstance(System.Type.GetType(tempObjectName)) as MsgProtobuf;
+            //if (tempMsg == null)
+            //    throw new Exception("Create object failed");
 
 
             if (protobufDic.ContainsKey(tempName))
             {
+                byte[] tempBytesOnlyBody = new byte[param.Length - tempLength2];
+                Array.Copy(param, tempLength2, tempBytesOnlyBody, 0, tempBytesOnlyBody.Length);
+
                 MsgProtobuf msg = new MsgProtobuf(param);
                 protobufDic[tempName](msg);
             }

@@ -9,6 +9,7 @@ namespace HiSocket
 {
     public class MsgByte : MsgBase, IByteMsg
     {
+        private int index;
         #region Read
         /// <summary>
         /// 用于解析消息
@@ -16,7 +17,6 @@ namespace HiSocket
         /// <param name="param"></param>
         public MsgByte(byte[] param) : base(param)
         {
-            index += sizeof(UInt16);//接口IByteMsg中协议占用字节长度
         }
 
         public T Read<T>(int _length = 0)
