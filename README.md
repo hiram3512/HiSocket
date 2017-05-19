@@ -43,7 +43,9 @@ unity对第二第三第四都提供支持,唯独不支持第一条.第四条被�
                 client = new TcpClient(AddressFamily.InterNetwork);
 ```
 
+#### 套接字说明
 
+[![](http://thumbnail0.baidupcs.com/thumbnail/b41e074d472d4cd7930043ea3cb19efa?fid=506779508-250528-670073707873836&time=1495162800&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-pqRAa4V046tHuwu3HAjn74BaXi0%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3211386981383397550&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/b41e074d472d4cd7930043ea3cb19efa?fid=506779508-250528-670073707873836&time=1495162800&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-pqRAa4V046tHuwu3HAjn74BaXi0%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3211386981383397550&dp-callid=0&size=c710_u400&quality=100)
 
 ***********
 **未完待续**
