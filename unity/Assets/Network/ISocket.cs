@@ -15,12 +15,12 @@ namespace HiSocket.TCP
         bool IsConnected { get; }
 
         /// <summary>
-        /// 
+        /// Connect to server
         /// </summary>
-        /// <param name="paramAddress"></param>
+        /// <param name="paramAddress">domain name is recommend</param>
         /// <param name="paramPort"></param>
-        /// <param name="paramEventHandler">success connect call back</param>
-        void Connect(string paramAddress, int paramPort, Action<bool> paramEventHandler = null);
+        /// <returns>Return if success or not</returns>
+        bool Connect(string paramAddress, int paramPort);
 
         /// <summary>
         /// Ping

@@ -31,8 +31,8 @@ public class Example : MonoBehaviour
 
         //connect(prefer host names)
         ClientTcp socket = new ClientTcp();
-        socket.Connect("www.baidu.com", 111, OnConnect);
-
+        bool tempIsConnect = socket.Connect("www.baidu.com", 111);
+        Debug.Log(tempIsConnect);
 
 
         // send byte msg
@@ -60,19 +60,6 @@ public class Example : MonoBehaviour
     {
 
     }
-
-    /// <summary>
-    /// 连接成功或失败
-    /// </summary>
-    /// <param name="param">成功or失败</param>
-    void OnConnect(bool param)
-    {
-        if (param)
-            Debug.Log("connect server success");
-        else
-            Debug.Log("connect server failed");
-    }
-
 
     void OnMsg110(MsgBase param)
     {

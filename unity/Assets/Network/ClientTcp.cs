@@ -11,17 +11,17 @@ namespace HiSocket.TCP
 {
     public class ClientTcp : Singleton<ClientTcp>, ISocket
     {
-        public int bufferSize = 8 * 1024 * 16;//16k
+        public bool IsConnected { get { return client != null && client.Client != null && client.Connected; } }
+        public int bufferSize = 8 * 1024 * 16;//16k is default setting
+        private int timeOut = 5000;//5s:收发超时时间
+
+        private TcpClient client;
         private IPAddress address;
         private int port;
-        public byte[] buffer;
-        private TcpClient client;
-        private int timeOut = 5000;//5s:收发超时时间
+        private byte[] buffer;
         private MsgHandler msgHandler;
         //private Thread sendThread;
         //private Thread receiveThread;
-
-        public bool IsConnected { get { return client != null && client.Client != null && client.Connected; } }
 
         public ClientTcp()
         {
@@ -29,12 +29,15 @@ namespace HiSocket.TCP
                 client = new TcpClient(AddressFamily.InterNetworkV6);
             else
                 client = new TcpClient(AddressFamily.InterNetwork);
+
+            client.NoDelay = true;
+            client.SendTimeout = client.ReceiveTimeout = timeOut;
+
             buffer = new byte[bufferSize];
             msgHandler = new MsgHandler(this);
 
             //sendThread = new Thread(SendThread);
             //receiveThread = new Thread(ReceiveThread);
-
         }
 
         /// <summary>
@@ -43,12 +46,12 @@ namespace HiSocket.TCP
         /// <param name="paramAddress">连接服务器域名(强烈推荐域名)</param>
         /// <param name="paramPort">连接端口</param>
         /// <param name="paramEventHandler">连接成功后的回调事件(可空)</param>
-        public void Connect(string paramAddress, int paramPort, Action<bool> paramEventHandler = null)
+        public bool Connect(string paramAddress, int paramPort)
         {
             address = GetIPAddress(paramAddress);
             port = paramPort;
-            client.NoDelay = true;
-            client.SendTimeout = client.ReceiveTimeout = timeOut;
+
+            bool tempIsConnect = false;
             try
             {
                 client.BeginConnect(address, port, new AsyncCallback(delegate (IAsyncResult ar)
@@ -57,14 +60,11 @@ namespace HiSocket.TCP
                     {
                         TcpClient tempTcpClient = (TcpClient)ar.AsyncState;
                         tempTcpClient.EndConnect(ar);
-                        if (paramEventHandler != null)
-                            paramEventHandler(ar.IsCompleted);
-                        client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
+                        tempIsConnect = ar.IsCompleted;
+                        if (tempIsConnect) Connected();
                     }
                     catch (Exception e)
                     {
-                        if (paramEventHandler != null)
-                            paramEventHandler(false);
                         throw new Exception(e.ToString());
                     }
                 }), client);
@@ -73,6 +73,7 @@ namespace HiSocket.TCP
             {
                 throw new Exception(e.ToString());
             }
+            return tempIsConnect;
         }
 
         public long Ping()
@@ -91,6 +92,13 @@ namespace HiSocket.TCP
                 return temp[0];
             throw new Exception("Cannt find this domain's ip address");
         }
+
+
+        private void Connected()
+        {
+            client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
+        }
+
 
         public void Send(byte[] param)
         {
