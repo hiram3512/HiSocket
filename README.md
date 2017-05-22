@@ -28,29 +28,33 @@
 ##
 功能说明:
 -------------
-收发逻辑通用，但是消息包的定义每家各不相同，逻辑设计上也尽量将这部分隔离，方便扩展。
+Tcp socket收发逻辑通用，但是消息包的定义每家各不相同（长度，标识符，时间戳，加密字符..），逻辑设计上也尽量将这部分隔离，方便自定义消息格式。
 
-（如果只需要socket逻辑，不需要一整套的消息收发机制，可以只保留工程中的Network文件夹）。
+（如果只需要socket收发逻辑，不需要一整套的消息收发机制，可以只保留工程中的Network文件夹）。
 
-源码中提供了两种消息结构：字节消息和protobuf消息，可以通过宏定义选择。
+建议采用整套逻辑，套接字的封装解析都不需要做再额外处理。
+
+源码中提供了两种消息结构：字节消息和protobuf消息，可以通过宏定义选择采用哪种方式。
 
 ###
 消息定义概述：
 -------------
 
-字节消息定义：
+字节消息结构：
 
 [![](http://thumbnail0.baidupcs.com/thumbnail/6398bce33555603ea4de884c2cf06066?fid=506779508-250528-903135732718103&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-jgUTBtjtO7dvLqnrSDqjVURa%2B6E%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212607178404885154&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/6398bce33555603ea4de884c2cf06066?fid=506779508-250528-903135732718103&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-jgUTBtjtO7dvLqnrSDqjVURa%2B6E%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212607178404885154&dp-callid=0&size=c710_u400&quality=100)
 
-Protobuf消息定义：
+Protobuf消息结构：
 
 [![](http://thumbnail0.baidupcs.com/thumbnail/c3a4ad9b6c552e132d7b0f75ff63a69c?fid=506779508-250528-81367493888917&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-tG6DZISWFd6HyGaPTnsGBrWTRNA%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212675482775317065&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/c3a4ad9b6c552e132d7b0f75ff63a69c?fid=506779508-250528-81367493888917&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-tG6DZISWFd6HyGaPTnsGBrWTRNA%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212675482775317065&dp-callid=0&size=c710_u400&quality=100)
 
-最终为了支持字节消息和Protobuf消息，消息定义如下：（删除了扩展字段，如果有需求自己修改源码添加）
+如果项目同时支持字节消息和protobuf消息，可以修改成如下结构：
 
 [![](http://thumbnail0.baidupcs.com/thumbnail/84a9c3c219447d1128e14566453680e6?fid=506779508-250528-27816268309311&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-Wjupb2CbAhhzJyQJkLKn4s7TemE%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212817129796143869&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/84a9c3c219447d1128e14566453680e6?fid=506779508-250528-27816268309311&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-Wjupb2CbAhhzJyQJkLKn4s7TemE%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212817129796143869&dp-callid=0&size=c710_u400&quality=100)
 
+##
 示例代码如下：
+-------------
 ``` C#
 public class Example : MonoBehaviour
 {
