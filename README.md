@@ -1,12 +1,12 @@
 # HiSocket.TCP_unity
 
-haven't finished 
 ### To Do List
 - [x] ipv6支持
 - [x] 主线程连接
-- [] 多线程连接
-- [] protobuf
+- [x] protobuf
 - [x] aes加密
+- [] 数据压缩
+- [] 多线程连接
 - [] 断线重连
 - [] 消息缓存队列
 - [] 压力测试
@@ -16,20 +16,27 @@ haven't finished
 ####
 概述:
 -------------
+第一版已完成，包含如下功能：
+- [x] Ipv6支持
+- [x] socket连接，收发，断开
+- [x] 套接字粘包拆包，消息包的封装，解析
+- [x] 消息回调
+- [x] 字节消息
+- [x] protobuf消息
+- [x] aes加密
 
+##
+功能说明:
+-------------
 收发逻辑通用，但是消息包的定义每家各不相同，逻辑设计上也尽量将这部分隔离，方便扩展。
-1.Tcp socket收发消息，粘包拆包处理。
-2.消息队列，失败重发。
-3.断线重连。
-4.字节消息读取写入。
-5.Protobuf消息序列化反序列化。
-6.
-7.
+
+（如果只需要socket逻辑，不需要一整套的消息收发机制，可以只保留工程中的Network文件夹）。
+
+源码中提供了两种消息结构：字节消息和protobuf消息，可以通过宏定义选择。
 
 ###
 消息定义概述：
 -------------
-支持传统字节消息和Protobuf消息。
 
 字节消息定义：
 
@@ -43,6 +50,71 @@ Protobuf消息定义：
 
 [![](http://thumbnail0.baidupcs.com/thumbnail/84a9c3c219447d1128e14566453680e6?fid=506779508-250528-27816268309311&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-Wjupb2CbAhhzJyQJkLKn4s7TemE%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212817129796143869&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/84a9c3c219447d1128e14566453680e6?fid=506779508-250528-27816268309311&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-Wjupb2CbAhhzJyQJkLKn4s7TemE%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212817129796143869&dp-callid=0&size=c710_u400&quality=100)
 
+示例代码如下：
+``` C#
+public class Example : MonoBehaviour
+{
+    // Use this for initialization
+    void Start()
+    {
+        //registe bytes msg
+        MsgManager.Instance.RegisterMsg(110, OnByteMsg);
+        //you can registe many msg here
+        //....
+
+        //registe protobuf msg
+        MsgManager.Instance.RegisterMsg(typeof(TestProtobufStruct).FullName, OnProtobufMsg);
+        //....
+
+        //connect(prefer host names)
+        ClientTcp socket = new ClientTcp();
+        bool tempIsConnect = socket.Connect("www.baidu.com", 111);
+        Debug.Log(tempIsConnect);
+
+        // send byte msg
+        MsgByte tempMsg1 = new MsgByte(110);//110 is proto id
+        tempMsg1.Write<int>(100);//write msg's body
+        tempMsg1.Write("hello");//write msg's body
+        tempMsg1.Flush();//send
+
+        //send protobuf msg
+        TestProtobufStruct testProtobufStruct = new TestProtobufStruct();
+        testProtobufStruct.x = 100;
+        testProtobufStruct.y = "hello";
+        MsgProtobuf tempMsg2 = new MsgProtobuf();
+        tempMsg2.Write(testProtobufStruct);
+        tempMsg2.Flush();//send
+    }
+
+    void OnByteMsg(MsgBase param)
+    {
+        var test = param as MsgByte;
+        int temp1 = test.Read<int>(); //100
+        string temp2 = test.Read<string>(5); //"hello"
+
+        Debug.Log(temp1 + temp2);
+    }
+
+    void OnProtobufMsg(MsgBase param)
+    {
+        var test = param as MsgProtobuf;
+        var test2 = test.Read<TestProtobufStruct>();
+
+        int temp1 = test2.x;//100
+        string temp2 = test2.y;//"hello"
+        Debug.Log(temp1 + temp2);
+    }
+}
+public class TestProtobufStruct
+{
+    public int x;
+    public string y;
+}
+ ```
+
+###
+Ipv6说明：
+-------------
 微软提供了很多接口测试当前系统/网络适配器支持哪种ip版本:
 ``` C#
 
