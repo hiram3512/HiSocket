@@ -3,8 +3,10 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace HiSocket.TCP
 {
@@ -21,8 +23,8 @@ namespace HiSocket.TCP
         private byte[] buffer;
         private MsgHandler msgHandler;
 
-        //private Thread sendThread;
-        //private Thread receiveThread;
+        private Thread sendThread;
+        private Thread receiveThread;
 
         public ClientTcp()
         {
@@ -37,8 +39,7 @@ namespace HiSocket.TCP
             buffer = new byte[bufferSize];
             msgHandler = new MsgHandler(this);
 
-            //sendThread = new Thread(SendThread);
-            //receiveThread = new Thread(ReceiveThread);
+
         }
 
         /// <summary>
@@ -154,14 +155,47 @@ namespace HiSocket.TCP
             }
         }
 
-        private void SendThread()
-        {
 
+        void InitThread()
+        {
+            sendThread = new Thread(SendThread);
+            sendThread.IsBackground = true;
+            sendThread.Start();
+            receiveThread = new Thread(ReceiveThread);
+            receiveThread.IsBackground = true;
+            receiveThread.Start();
         }
 
+        private bool isSendThreadRunning = false;
+        Queue<byte[]> sendQueue = new Queue<byte[]>();
+        private void SendThread()
+        {
+            while (isSendThreadRunning)
+            {
+                var temp = sendQueue.Dequeue();
+                Send(temp);
+            }
+        }
         private void ReceiveThread()
         {
-            //client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
+            client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
+        }
+
+        void AbortThread()
+        {
+            isSendThreadRunning = false;
+            sendThread.Abort();
+            sendThread.Join();
+
+            receiveThread.Abort();
+            receiveThread.Join();
+
+            while (sendThread.IsAlive || receiveThread.IsAlive)
+            {
+                Thread.Sleep(100);
+            }
+            sendThread = null;
+            receiveThread = null;
         }
     }
 }
