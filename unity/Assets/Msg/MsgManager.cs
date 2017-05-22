@@ -1,5 +1,5 @@
 ﻿//*********************************************************************
-// Description:
+// Description:Used for registe msg, once receive msg from server will response the method you registed before.
 // Author: hiramtan@live.com
 //*********************************************************************
 

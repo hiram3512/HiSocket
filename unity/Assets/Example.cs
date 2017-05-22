@@ -46,12 +46,6 @@ public class Example : MonoBehaviour
         tempMsg2.Flush();//send
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     void OnByteMsg(MsgBase param)
     {
         var test = param as MsgByte;
