@@ -46,7 +46,7 @@ Tcp socket收发逻辑通用，但是消息包的定义每家各不相同（长�
 
 Protobuf消息结构：
 
-[![](http://thumbnail0.baidupcs.com/thumbnail/c3a4ad9b6c552e132d7b0f75ff63a69c?fid=506779508-250528-81367493888917&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-tG6DZISWFd6HyGaPTnsGBrWTRNA%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212675482775317065&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/c3a4ad9b6c552e132d7b0f75ff63a69c?fid=506779508-250528-81367493888917&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-tG6DZISWFd6HyGaPTnsGBrWTRNA%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212675482775317065&dp-callid=0&size=c710_u400&quality=100)
+[![](http://thumbnail0.baidupcs.com/thumbnail/850a52326f034ec33f51485914b8dde0?fid=506779508-250528-88713546587218&time=1495418400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-F2%2BwqMZn6R7Me9B95Xveqd72DW4%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3279981547062542762&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/850a52326f034ec33f51485914b8dde0?fid=506779508-250528-88713546587218&time=1495418400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-F2%2BwqMZn6R7Me9B95Xveqd72DW4%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3279981547062542762&dp-callid=0&size=c710_u400&quality=100)
 
 如果项目同时支持字节消息和protobuf消息，可以修改成如下结构：
 
