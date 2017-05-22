@@ -28,8 +28,8 @@ public class Example : MonoBehaviour
 
         //connect(prefer host names)
         ClientTcp socket = new ClientTcp();
-        bool tempIsConnect = socket.Connect("www.baidu.com", 111);
-        Debug.Log(tempIsConnect);
+        bool tempIsConnect = socket.Connect("www.google.com", 111);
+        Debug.Log("是否连接成功： " + tempIsConnect);
 
         // send byte msg
         MsgByte tempMsg1 = new MsgByte(110);//110 is proto id

@@ -11,6 +11,5 @@ namespace HiSocket.TCP
 {
     internal class ThreadClientTcp : ClientTcp
     {
-
     }
 }

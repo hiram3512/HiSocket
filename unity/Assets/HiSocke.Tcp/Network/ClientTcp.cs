@@ -103,7 +103,7 @@ namespace HiSocket.TCP
             bool tempIsSendSuccess = false;
             if (!IsConnected)
             {
-                throw new Exception("this msg send failed, please make sure you have already connected");
+                throw new Exception("msg send failed, please make sure you have already connected");
             }
             client.Client.BeginSend(param, 0, param.Length, SocketFlags.None, new AsyncCallback(delegate (IAsyncResult ar)
                  {
@@ -123,6 +123,10 @@ namespace HiSocket.TCP
 
         private void Receive(IAsyncResult ar)
         {
+            if (!IsConnected)
+            {
+                throw new Exception("receive failed, please make sure you have already connected");
+            }
             try
             {
                 TcpClient tempTcpClient = (TcpClient)ar.AsyncState;
@@ -157,7 +161,7 @@ namespace HiSocket.TCP
 
         private void ReceiveThread()
         {
-
+            //client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
         }
     }
 }
