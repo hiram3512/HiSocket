@@ -1,7 +1,9 @@
 ﻿//*********************************************************************
-// Description:
+// Description:目前主线程收发数据
 // Author: hiramtan@live.com
 //*********************************************************************
+
+//#define MultipleThread
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -38,8 +40,6 @@ namespace HiSocket.TCP
 
             buffer = new byte[bufferSize];
             msgHandler = new MsgHandler(this);
-
-
         }
 
         /// <summary>
@@ -96,30 +96,43 @@ namespace HiSocket.TCP
 
         private void ConnectSuccess()
         {
+#if MultipleThread
+            InitThread();
+#else
             client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
+#endif
         }
 
         public bool Send(byte[] param)
         {
+#if MultipleThread
+            sendQueue.Enqueue(param);
+#else
             bool tempIsSendSuccess = false;
             if (!IsConnected)
             {
                 throw new Exception("msg send failed, please make sure you have already connected");
             }
             client.Client.BeginSend(param, 0, param.Length, SocketFlags.None, new AsyncCallback(delegate (IAsyncResult ar)
-                 {
-                     try
-                     {
-                         TcpClient tempTcpClient = (TcpClient)ar.AsyncState;
-                         tempTcpClient.Client.EndSend(ar);
-                         tempIsSendSuccess = ar.IsCompleted;
-                     }
-                     catch (Exception e)
-                     {
-                         throw new Exception(e.ToString());
-                     }
-                 }), client);
+            {
+                try
+                {
+                    TcpClient tempTcpClient = (TcpClient)ar.AsyncState;
+                    tempTcpClient.Client.EndSend(ar);
+                    tempIsSendSuccess = ar.IsCompleted;
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.ToString());
+                }
+            }), client);
             return tempIsSendSuccess;
+#endif
+        }
+
+        void SendMsg(byte[] param)
+        {
+
         }
 
         private void Receive(IAsyncResult ar)
@@ -147,6 +160,9 @@ namespace HiSocket.TCP
 
         public void Close()
         {
+#if MultipleThread
+            AbortThread();
+#endif
             if (IsConnected)
             {
                 client.Client.Shutdown(SocketShutdown.Both);
@@ -161,19 +177,26 @@ namespace HiSocket.TCP
             sendThread = new Thread(SendThread);
             sendThread.IsBackground = true;
             sendThread.Start();
+
             receiveThread = new Thread(ReceiveThread);
             receiveThread.IsBackground = true;
             receiveThread.Start();
         }
 
-        private bool isSendThreadRunning = false;
+        private bool isSendThreadRunning;
         Queue<byte[]> sendQueue = new Queue<byte[]>();
+        private readonly object sendLocker = new object();
         private void SendThread()
         {
             while (isSendThreadRunning)
             {
-                var temp = sendQueue.Dequeue();
-                Send(temp);
+                lock (sendLocker)//main thread will add data to queue
+                {
+                    if (sendQueue.Count > 0)
+                    {
+                        Send(sendQueue.Dequeue());
+                    }
+                }
             }
         }
         private void ReceiveThread()
@@ -194,6 +217,7 @@ namespace HiSocket.TCP
             {
                 Thread.Sleep(100);
             }
+            sendQueue.Clear();
             sendThread = null;
             receiveThread = null;
         }
