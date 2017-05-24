@@ -1,5 +1,7 @@
 ﻿//*********************************************************************
 // Description:
+// wire protocol is a list of :   nameLength   |  name     | body
+//                                               (short)              (string)        (protobuf)
 // Author: hiramtan@live.com
 //*********************************************************************
 using System;

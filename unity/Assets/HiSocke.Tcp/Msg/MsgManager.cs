@@ -1,5 +1,5 @@
 ﻿//*********************************************************************
-// Description:Used for registe msg, once receive msg from server will response the method you registed before.
+// Description:Used for registe msg, once msg received from server will response the method you registed before.
 // Author: hiramtan@live.com
 //*********************************************************************
 
@@ -25,13 +25,13 @@ namespace HiSocket
         public void RegisterMsg(string paramKey, msgEventHandler paramMsgHandler)
         {
             if (protobufDic.ContainsKey(paramKey))
-                return;
+                throw new Exception("you have already registe this key: " + paramKey);
             protobufDic.Add(paramKey, paramMsgHandler);
         }
         public void RegisterMsg(int paramKey, msgEventHandler paramMsgHandler)
         {
             if (commonDic.ContainsKey(paramKey))
-                return;
+                throw new Exception("you have already registe this key: " + paramKey);
             commonDic.Add(paramKey, paramMsgHandler);
         }
         public void SendMsg(byte[] param)
