@@ -42,15 +42,15 @@ Tcp socket收发逻辑通用，但是消息包的定义每家各不相同（长�
 
 字节消息结构：
 
-[![](http://thumbnail0.baidupcs.com/thumbnail/6398bce33555603ea4de884c2cf06066?fid=506779508-250528-903135732718103&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-jgUTBtjtO7dvLqnrSDqjVURa%2B6E%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212607178404885154&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/6398bce33555603ea4de884c2cf06066?fid=506779508-250528-903135732718103&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-jgUTBtjtO7dvLqnrSDqjVURa%2B6E%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212607178404885154&dp-callid=0&size=c710_u400&quality=100)
+[![](https://www.jianguoyun.com/c/tblv2/COmtGRIgbdszrF3pQVKxcBXHFtJCAAjMZ22QHGlArwordjW3QTw/X_RfMWs150E/l)](https://www.jianguoyun.com/c/tblv2/COmtGRIgbdszrF3pQVKxcBXHFtJCAAjMZ22QHGlArwordjW3QTw/X_RfMWs150E/l)
 
 Protobuf消息结构：
 
-[![](http://thumbnail0.baidupcs.com/thumbnail/850a52326f034ec33f51485914b8dde0?fid=506779508-250528-88713546587218&time=1495418400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-F2%2BwqMZn6R7Me9B95Xveqd72DW4%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3279981547062542762&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/850a52326f034ec33f51485914b8dde0?fid=506779508-250528-88713546587218&time=1495418400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-F2%2BwqMZn6R7Me9B95Xveqd72DW4%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3279981547062542762&dp-callid=0&size=c710_u400&quality=100)
+[![](https://www.jianguoyun.com/c/tblv2/COmtGRIgqVeYu7ZTezVAKwzi9znjRGARMA5LLCsueK7j2XqLJxw/KuwlXPbvIxU/l)](https://www.jianguoyun.com/c/tblv2/COmtGRIgqVeYu7ZTezVAKwzi9znjRGARMA5LLCsueK7j2XqLJxw/KuwlXPbvIxU/l)
 
 如果项目同时支持字节消息和protobuf消息，可以修改成如下结构：
 
-[![](http://thumbnail0.baidupcs.com/thumbnail/84a9c3c219447d1128e14566453680e6?fid=506779508-250528-27816268309311&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-Wjupb2CbAhhzJyQJkLKn4s7TemE%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212817129796143869&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/84a9c3c219447d1128e14566453680e6?fid=506779508-250528-27816268309311&time=1495166400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-Wjupb2CbAhhzJyQJkLKn4s7TemE%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3212817129796143869&dp-callid=0&size=c710_u400&quality=100)
+[![](https://www.jianguoyun.com/c/tblv2/COmtGRIgq7KVqXeEEsrFQ--TRP4i5_P8-f0OmTfSpX-3JUlpUaw/kbyhEehcPuE/l)](https://www.jianguoyun.com/c/tblv2/COmtGRIgq7KVqXeEEsrFQ--TRP4i5_P8-f0OmTfSpX-3JUlpUaw/kbyhEehcPuE/l)
 
 ##
 示例代码如下：
@@ -128,15 +128,15 @@ Ipv6说明：
        Debug.Log(Socket.SupportsIPv6);//微软标记过时api
  ```
 我现在使用的Unity(5.3.4.f1)中mono使用的.net仍然是2.0.50727.1433(Environment.Version),第一和第二条按照msdn说明都是基于现有.net平台(.net4.5+),在unity中执行中肯定会异常,但是在调用的时候发现第一条异常,第二条执行正常,仔细查找mono兼容api发现:
-[![](http://thumbnail0.baidupcs.com/thumbnail/905caea0f41c3c8fe15bf26790d379f4?fid=506779508-250528-1061187295904500&time=1495418400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-AwrkmICBgAK2NoX9P%2B7nAAhpnjo%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3280248988395040173&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/905caea0f41c3c8fe15bf26790d379f4?fid=506779508-250528-1061187295904500&time=1495418400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-AwrkmICBgAK2NoX9P%2B7nAAhpnjo%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3280248988395040173&dp-callid=0&size=c710_u400&quality=100)
+[![](https://www.jianguoyun.com/c/tblv2/COmtGRIgIhsNVNmQJOnqh-5fxsoqJg4ZYzThWJcT80ZD_YkuNiE/PmoV7fRYz48/l)](https://www.jianguoyun.com/c/tblv2/COmtGRIgIhsNVNmQJOnqh-5fxsoqJg4ZYzThWJcT80ZD_YkuNiE/PmoV7fRYz48/l)
 
 unity对第二第三第四都提供支持,唯独不支持第一条.第四条被标记成过时api,下面只说明第二第三条.
 > **Tip:** 关于stackoverfollow中有人测试说第二条在android上测试异常看来是谬传了.
-[![](http://thumbnail0.baidupcs.com/thumbnail/e37a5303a1664e6f3bd1bb9630291e55?fid=506779508-250528-921873916973432&time=1495418400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-%2BWXFHF0UCdFaAPLWttwHTLBgxAI%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3280264008509483117&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/e37a5303a1664e6f3bd1bb9630291e55?fid=506779508-250528-921873916973432&time=1495418400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-%2BWXFHF0UCdFaAPLWttwHTLBgxAI%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3280264008509483117&dp-callid=0&size=c710_u400&quality=100)
+[![](https://www.jianguoyun.com/c/tblv2/COmtGRIgeezwxWjXTpQfRdVIoucyUw_INzGUp9TKx1AE_qDY1pI/uJwDA7a3Ms4/l)](https://www.jianguoyun.com/c/tblv2/COmtGRIgeezwxWjXTpQfRdVIoucyUw_INzGUp9TKx1AE_qDY1pI/uJwDA7a3Ms4/l)
 
 按照接口声明,第二条和第三条在unity中正常使用,并非在android上抛出异常.
 再说在unity中支持ipv6,官方说明:
-[![](http://thumbnail0.baidupcs.com/thumbnail/4cfb08fc040370f1755322b5b88fe000?fid=506779508-250528-722748298831990&time=1495418400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-tovNrBzfy0dx0JwFyk2YqsLsPnc%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3280271011411083201&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/4cfb08fc040370f1755322b5b88fe000?fid=506779508-250528-722748298831990&time=1495418400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-tovNrBzfy0dx0JwFyk2YqsLsPnc%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3280271011411083201&dp-callid=0&size=c710_u400&quality=100)
+[![](https://www.jianguoyun.com/c/tblv2/COqtGRIgIoI4dDKtJzGPHGTEbw1xrn1KLz5DfCadel7_nIIIZkI/AYnZ-rtx3Y4/l)](https://www.jianguoyun.com/c/tblv2/COqtGRIgIoI4dDKtJzGPHGTEbw1xrn1KLz5DfCadel7_nIIIZkI/AYnZ-rtx3Y4/l)
 
 说的很明确,推荐域名,然后通过addressfamily选择合适的ipv4或ipv6,下面就通过tcpclient具体处理ipv6支持.
 ``` c#
