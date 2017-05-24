@@ -46,7 +46,7 @@ Tcp socket收发逻辑通用，但是消息包的定义每家各不相同（长�
 
 Protobuf消息结构：
 
-[![](https://www.jianguoyun.com/c/tblv2/COmtGRIgq7KVqXeEEsrFQ--TRP4i5_P8-f0OmTfSpX-3JUlpUaw/kbyhEehcPuE/l)](https://www.jianguoyun.com/c/tblv2/COmtGRIgq7KVqXeEEsrFQ--TRP4i5_P8-f0OmTfSpX-3JUlpUaw/kbyhEehcPuE/l)
+[![](https://www.jianguoyun.com/c/tblv2/COmtGRIgqVeYu7ZTezVAKwzi9znjRGARMA5LLCsueK7j2XqLJxw/KuwlXPbvIxU/l)](https://www.jianguoyun.com/c/tblv2/COmtGRIgqVeYu7ZTezVAKwzi9znjRGARMA5LLCsueK7j2XqLJxw/KuwlXPbvIxU/l)
 
 如果项目同时支持字节消息和protobuf消息，可以修改成如下结构：
 
@@ -136,7 +136,7 @@ unity对第二第三第四都提供支持,唯独不支持第一条.第四条被�
 
 按照接口声明,第二条和第三条在unity中正常使用,并非在android上抛出异常.
 再说在unity中支持ipv6,官方说明:
-[![](http://thumbnail0.baidupcs.com/thumbnail/4cfb08fc040370f1755322b5b88fe000?fid=506779508-250528-722748298831990&time=1495418400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-tovNrBzfy0dx0JwFyk2YqsLsPnc%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3280271011411083201&dp-callid=0&size=c710_u400&quality=100)](http://thumbnail0.baidupcs.com/thumbnail/4cfb08fc040370f1755322b5b88fe000?fid=506779508-250528-722748298831990&time=1495418400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-tovNrBzfy0dx0JwFyk2YqsLsPnc%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=3280271011411083201&dp-callid=0&size=c710_u400&quality=100)
+[![](https://www.jianguoyun.com/c/tblv2/COqtGRIgIoI4dDKtJzGPHGTEbw1xrn1KLz5DfCadel7_nIIIZkI/AYnZ-rtx3Y4/l)](https://www.jianguoyun.com/c/tblv2/COqtGRIgIoI4dDKtJzGPHGTEbw1xrn1KLz5DfCadel7_nIIIZkI/AYnZ-rtx3Y4/l)
 
 说的很明确,推荐域名,然后通过addressfamily选择合适的ipv4或ipv6,下面就通过tcpclient具体处理ipv6支持.
 ``` c#
