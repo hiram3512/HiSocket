@@ -43,11 +43,10 @@ Tcp socket收发逻辑通用，但是消息包的定义每家各不相同（长�
 -------------
 
 字节消息结构：
-
 [![](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)
 
-Protobuf消息结构：
 
+Protobuf消息结构：
 [![](https://i2.wp.com/hiramtan.files.wordpress.com/2017/05/2223.png)](https://i2.wp.com/hiramtan.files.wordpress.com/2017/05/2223.png)
 
 如果项目同时支持字节消息和protobuf消息，可以修改成如下结构：
