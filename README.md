@@ -1,5 +1,7 @@
 # HiSocket.TCP_unity
 
+开源地址：[https://github.com/hiramtan/HiSocket.TCP_unity](https://github.com/hiramtan/HiSocket.TCP_unity "Title")
+
 ### To Do List
 - [x] ipv6支持
 - [x] 主线程连接
