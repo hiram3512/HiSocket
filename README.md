@@ -44,15 +44,15 @@ Tcp socket收发逻辑通用，但是消息包的定义每家各不相同（长�
 
 字节消息结构：
 
-[![](https://www.jianguoyun.com/c/tblv2/COmtGRIgbdszrF3pQVKxcBXHFtJCAAjMZ22QHGlArwordjW3QTw/X_RfMWs150E/l)](https://www.jianguoyun.com/c/tblv2/COmtGRIgbdszrF3pQVKxcBXHFtJCAAjMZ22QHGlArwordjW3QTw/X_RfMWs150E/l)
+[![](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)
 
 Protobuf消息结构：
 
-[![](https://www.jianguoyun.com/c/tblv2/COmtGRIgqVeYu7ZTezVAKwzi9znjRGARMA5LLCsueK7j2XqLJxw/KuwlXPbvIxU/l)](https://www.jianguoyun.com/c/tblv2/COmtGRIgqVeYu7ZTezVAKwzi9znjRGARMA5LLCsueK7j2XqLJxw/KuwlXPbvIxU/l)
+[![](https://i2.wp.com/hiramtan.files.wordpress.com/2017/05/2223.png)](https://i2.wp.com/hiramtan.files.wordpress.com/2017/05/2223.png)
 
 如果项目同时支持字节消息和protobuf消息，可以修改成如下结构：
 
-[![](https://www.jianguoyun.com/c/tblv2/COmtGRIgq7KVqXeEEsrFQ--TRP4i5_P8-f0OmTfSpX-3JUlpUaw/kbyhEehcPuE/l)](https://www.jianguoyun.com/c/tblv2/COmtGRIgq7KVqXeEEsrFQ--TRP4i5_P8-f0OmTfSpX-3JUlpUaw/kbyhEehcPuE/l)
+[![](https://hiramtan.files.wordpress.com/2017/05/3332.png)](https://hiramtan.files.wordpress.com/2017/05/3332.png)
 
 ##
 示例代码如下：
@@ -130,15 +130,15 @@ Ipv6说明：
        Debug.Log(Socket.SupportsIPv6);//微软标记过时api
  ```
 我现在使用的Unity(5.3.4.f1)中mono使用的.net仍然是2.0.50727.1433(Environment.Version),第一和第二条按照msdn说明都是基于现有.net平台(.net4.5+),在unity中执行中肯定会异常,但是在调用的时候发现第一条异常,第二条执行正常,仔细查找mono兼容api发现:
-[![](https://www.jianguoyun.com/c/tblv2/COmtGRIgIhsNVNmQJOnqh-5fxsoqJg4ZYzThWJcT80ZD_YkuNiE/PmoV7fRYz48/l)](https://www.jianguoyun.com/c/tblv2/COmtGRIgIhsNVNmQJOnqh-5fxsoqJg4ZYzThWJcT80ZD_YkuNiE/PmoV7fRYz48/l)
+[![](https://hiramtan.files.wordpress.com/2017/05/4442.png?w=809)](https://hiramtan.files.wordpress.com/2017/05/4442.png?w=809)
 
 unity对第二第三第四都提供支持,唯独不支持第一条.第四条被标记成过时api,下面只说明第二第三条.
 > **Tip:** 关于stackoverfollow中有人测试说第二条在android上测试异常看来是谬传了.
-[![](https://www.jianguoyun.com/c/tblv2/COmtGRIgeezwxWjXTpQfRdVIoucyUw_INzGUp9TKx1AE_qDY1pI/uJwDA7a3Ms4/l)](https://www.jianguoyun.com/c/tblv2/COmtGRIgeezwxWjXTpQfRdVIoucyUw_INzGUp9TKx1AE_qDY1pI/uJwDA7a3Ms4/l)
+[![](https://hiramtan.files.wordpress.com/2017/05/55553.png)](https://hiramtan.files.wordpress.com/2017/05/55553.png)
 
 按照接口声明,第二条和第三条在unity中正常使用,并非在android上抛出异常.
 再说在unity中支持ipv6,官方说明:
-[![](https://www.jianguoyun.com/c/tblv2/COqtGRIgIoI4dDKtJzGPHGTEbw1xrn1KLz5DfCadel7_nIIIZkI/AYnZ-rtx3Y4/l)](https://www.jianguoyun.com/c/tblv2/COqtGRIgIoI4dDKtJzGPHGTEbw1xrn1KLz5DfCadel7_nIIIZkI/AYnZ-rtx3Y4/l)
+[![](https://hiramtan.files.wordpress.com/2017/05/6662.jpg)](https://hiramtan.files.wordpress.com/2017/05/6662.jpg)
 
 说的很明确,推荐域名,然后通过addressfamily选择合适的ipv4或ipv6,下面就通过tcpclient具体处理ipv6支持.
 ``` c#
