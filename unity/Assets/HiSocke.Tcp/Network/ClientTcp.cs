@@ -3,13 +3,16 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 
-//#define MultipleThread
+//#define MultipleThread//是否开启多线程
+
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 
+#if MultipleThread
+using System.Threading;
+using System.Collections.Generic;
+#endif
 namespace HiSocket.TCP
 {
     public class ClientTcp : Singleton<ClientTcp>, ISocket
@@ -25,9 +28,10 @@ namespace HiSocket.TCP
         private byte[] buffer;
         private MsgHandler msgHandler;
 
+#if MultipleThread
         private Thread sendThread;
         private Thread receiveThread;
-
+#endif
         public ClientTcp()
         {
             if (Socket.OSSupportsIPv6)
@@ -103,12 +107,15 @@ namespace HiSocket.TCP
 #endif
         }
 
-        public bool Send(byte[] param)
-        {
 #if MultipleThread
+        public void Send(byte[] param)
+        {
             sendQueue.Enqueue(param);
+        }
 #else
-            bool tempIsSendSuccess = false;
+        public void Send(byte[] param)
+        {
+            //bool tempIsSendSuccess = false;
             if (!IsConnected)
             {
                 throw new Exception("msg send failed, please make sure you have already connected");
@@ -119,22 +126,17 @@ namespace HiSocket.TCP
                 {
                     TcpClient tempTcpClient = (TcpClient)ar.AsyncState;
                     tempTcpClient.Client.EndSend(ar);
-                    tempIsSendSuccess = ar.IsCompleted;
+                    //tempIsSendSuccess = ar.IsCompleted;
                 }
                 catch (Exception e)
                 {
                     throw new Exception(e.ToString());
                 }
             }), client);
-            return tempIsSendSuccess;
+            //return tempIsSendSuccess;
+        }
+
 #endif
-        }
-
-        void SendMsg(byte[] param)
-        {
-
-        }
-
         private void Receive(IAsyncResult ar)
         {
             if (!IsConnected)
@@ -171,7 +173,7 @@ namespace HiSocket.TCP
             }
         }
 
-
+#if MultipleThread
         void InitThread()
         {
             sendThread = new Thread(SendThread);
@@ -182,9 +184,8 @@ namespace HiSocket.TCP
             receiveThread.IsBackground = true;
             receiveThread.Start();
         }
-
         private bool isSendThreadRunning;
-        Queue<byte[]> sendQueue = new Queue<byte[]>();
+        private Queue<byte[]> sendQueue = new Queue<byte[]>();
         private readonly object sendLocker = new object();
         private void SendThread()
         {
@@ -221,5 +222,6 @@ namespace HiSocket.TCP
             sendThread = null;
             receiveThread = null;
         }
+#endif
     }
 }

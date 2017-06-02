@@ -32,7 +32,7 @@ namespace HiSocket.TCP
         /// send data to server
         /// </summary>
         /// <param name="param"></param>
-        bool Send(byte[] param);
+        void Send(byte[] param);
 
         ///// <summary>
         ///// receive data from server 
