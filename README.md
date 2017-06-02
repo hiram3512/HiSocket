@@ -76,7 +76,7 @@ public class Example : MonoBehaviour
 
         //connect(prefer host names)
         ClientTcp socket = new ClientTcp();
-        bool tempIsConnect = socket.Connect("www.baidu.com", 111);
+        bool tempIsConnect = socket.Connect("www.google.com", 111);
         Debug.Log(tempIsConnect);
 
         // send byte msg
