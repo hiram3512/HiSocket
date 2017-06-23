@@ -2,13 +2,13 @@
 
 开源地址：[https://github.com/hiramtan/HiSocket.TCP_unity](https://github.com/hiramtan/HiSocket.TCP_unity "Title")
 
-### To Do List
+## To Do List
 - [x] ipv6支持
 - [x] 主线程连接
 - [x] protobuf
 - [x] aes加密
 - [] 数据压缩
-- [] 多线程连接
+- [x] 多线程连接
 - [] 断线重连
 - [] 消息缓存队列
 - [] 压力测试
@@ -36,10 +36,11 @@ Tcp socket收发逻辑通用，但是消息包的定义每家各不相同（长�
 
 建议采用整套逻辑，套接字的封装解析都不需要做再额外处理。
 
-源码中提供了两种消息结构：字节消息和protobuf消息，可以通过宏定义选择采用哪种方式。
+源码中提供了两种消息结构：字节消息和protobuf消息，可以在unity中定义全局宏定义或者在msgmanager中选择使用哪种方式（默认protobuf）。
+源码中提供了两种收发方式：多线程收发和主线程收发，可以在unity中定义全局宏定义或者在clienttcp中选在（默认主线程）。
 
 ###
-消息定义概述：
+消息定义说明：
 -------------
 
 字节消息结构：
@@ -75,7 +76,7 @@ public class Example : MonoBehaviour
 
         //connect(prefer host names)
         ClientTcp socket = new ClientTcp();
-        bool tempIsConnect = socket.Connect("www.baidu.com", 111);
+        bool tempIsConnect = socket.Connect("www.google.com", 111);
         Debug.Log(tempIsConnect);
 
         // send byte msg
@@ -120,7 +121,7 @@ public class TestProtobufStruct
  ```
 
 ###
-Ipv6说明：
+Ipv6支持说明：
 -------------
 微软提供了很多接口测试当前系统/网络适配器支持哪种ip版本:
 ``` C#
@@ -150,9 +151,23 @@ unity对第二第三第四都提供支持,唯独不支持第一条.第四条被�
 ```
 
 
-
-***********
-**未完待续**
+###
+加密说明：
+-------------
+源码中提供aes加密，需要传入32位密钥，消息传输过程中加密解密会消耗性能，如果对保密要求不严格可以使用简单的移位实现。
 
 
 support:hiramtan@live.com
+***********
+MIT License
+
+Copyright (c) [2017] [Hiram]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
