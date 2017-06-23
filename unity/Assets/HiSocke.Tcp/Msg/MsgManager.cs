@@ -3,8 +3,10 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 
-//#define ByteMsg
-#define ProtobufMsg
+//#define ByteMsg//采用传统字节流消息
+#define ProtobufMsg//采用protobuf消息
+
+
 
 using System;
 using System.Collections.Generic;
