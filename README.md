@@ -1,5 +1,4 @@
 # HiSocket.TCP_unity
-QQ群：83596104
 
 开源地址：[https://github.com/hiramtan/HiSocket.TCP_unity](https://github.com/hiramtan/HiSocket.TCP_unity "Title")
 
