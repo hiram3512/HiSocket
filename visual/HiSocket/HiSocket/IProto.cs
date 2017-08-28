@@ -3,12 +3,14 @@
 // Author: hiramtan@qq.com
 //***************************************************************************
 
+using System.IO;
+
 namespace HiSocket
 {
     interface IProto
     {
-        void Read();
-        void Write();
+        void Unpack(MemoryStream ms);
+        void Pack(MemoryStream ms);
 
     }
 }
