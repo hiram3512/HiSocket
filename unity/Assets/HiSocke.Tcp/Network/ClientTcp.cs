@@ -3,16 +3,19 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 
+//#define MultipleThread//是否开启多线程
 
 using System;
 using System.Net;
 using System.Net.Sockets;
 
+#if MultipleThread
 using System.Threading;
 using System.Collections.Generic;
+#endif
 namespace HiSocket.TCP
 {
-    public class ClientTcp : ISocket
+    public class ClientTcp : Singleton<ClientTcp>, ISocket
     {
         public bool IsConnected { get { return client != null && client.Client != null && client.Connected; } }
 
@@ -76,11 +79,6 @@ namespace HiSocket.TCP
                 throw new Exception(e.ToString());
             }
             return tempIsConnectSuccess;
-        }
-
-        public void DisConnect()
-        {
-            throw new NotImplementedException();
         }
 
         public long Ping()
