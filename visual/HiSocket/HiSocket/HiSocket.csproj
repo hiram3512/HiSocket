@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B98EEB24-B696-460E-9C91-5B4D9D7984E6}</ProjectGuid>
+    <ProjectGuid>{B2033F8E-77F4-4021-BD64-69DEC86C8299}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HiSocket</RootNamespace>
@@ -43,7 +43,7 @@
     <Compile Include="IProto.cs" />
     <Compile Include="ISocket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Socket\TcpClient.cs" />
+    <Compile Include="TcpClient.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -37,6 +37,8 @@ namespace HiSocket.Tcp
         private int receiveBufferSize = 1024 * 128;//128k
         private byte[] buffer;
         private int timeOut = 5000;//5s:收发超时时间
+        MemoryStream msSend = new MemoryStream();
+        MemoryStream msReceive = new MemoryStream();
         public TcpClient(IProto iProto)
         {
             buffer = new byte[ReceiveBufferSize];
@@ -82,11 +84,12 @@ namespace HiSocket.Tcp
                 throw new Exception(e.ToString());
             }
         }
-        MemoryStream msSend = new MemoryStream();
+
         public void Send(byte[] bytes)
         {
             if (!IsConnected)
             {
+                ChangeState(SocketState.DisConnected);
                 throw new Exception("receive failed");
             }
             try
@@ -105,22 +108,23 @@ namespace HiSocket.Tcp
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
-                        throw;
+                        ChangeState(SocketState.DisConnected);
+                        throw new Exception(e.ToString());
                     }
                 }, tcp);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                ChangeState(SocketState.DisConnected);
+                throw new Exception(e.ToString());
             }
         }
-        MemoryStream msReceive = new MemoryStream();
+
         void Receive(IAsyncResult ar)
         {
             if (!IsConnected)
             {
+                ChangeState(SocketState.DisConnected);
                 throw new Exception("receive failed");
             }
             try
@@ -136,6 +140,7 @@ namespace HiSocket.Tcp
             }
             catch (Exception e)
             {
+                ChangeState(SocketState.DisConnected);
                 throw new Exception(e.ToString());
             }
         }
@@ -144,27 +149,13 @@ namespace HiSocket.Tcp
         {
             if (IsConnected)
             {
-                // tcp.Client.Shutdown(SocketShutdown.Both);
-                tcp.Close();
+                //tcp.Client.Shutdown(SocketShutdown.Both);
+                tcp.Close();//close already contain shutdown
                 tcp = null;
             }
             ChangeState(SocketState.DisConnected);
-            StateEvent = null;
-            //sendThread.Abort();
-            //sendThread.Join();
-            //receiveThread.Abort();
-            //receiveThread.Join();
-            //while (sendThread.IsAlive || receiveThread.IsAlive)
-            //{
-            //    Thread.Sleep(100);
-            //}
+            //StateEvent = null;
         }
-
-        private void Close()
-        {
-
-        }
-
         public long Ping()
         {
             System.Net.NetworkInformation.Ping tempPing = new System.Net.NetworkInformation.Ping();
@@ -176,7 +167,9 @@ namespace HiSocket.Tcp
         private void ChangeState(SocketState state)
         {
             if (StateEvent != null)
+            {
                 StateEvent(state);
+            }
         }
     }
 }
