@@ -6,7 +6,7 @@ using System;
 
 namespace HiSocket.Msg
 {
-    interface IMsgRegister
+    public interface IMsgRegister
     {
         void Regist(int id, Action<byte[]> action);
 

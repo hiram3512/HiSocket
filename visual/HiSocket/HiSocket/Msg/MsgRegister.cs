@@ -9,7 +9,7 @@ using System.Text;
 
 namespace HiSocket.Msg
 {
-    class MsgRegister : IMsgRegister
+    public class MsgRegister : IMsgRegister
     {
         Dictionary<int, Action<byte[]>> _msgDic = new Dictionary<int, Action<byte[]>>();
 
