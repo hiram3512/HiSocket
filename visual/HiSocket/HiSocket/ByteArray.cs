@@ -10,50 +10,51 @@ namespace HiSocket
 {
     internal class ByteArray : IByteArray
     {
-        List<byte> bytes = new List<byte>();
+        private List<byte> _bytes = new List<byte>();
+        private readonly object _locker = new object();
         public int Length
         {
-            get { return bytes.Count; }
+            get { return _bytes.Count; }
         }
 
         public byte[] Read(int length)
         {
-            if (length > this.bytes.Count)
+            lock (_locker)
             {
-                throw new Exception("length>bytes's length");
-            }
-            lock (this.bytes)
-            {
+                if (length > this._bytes.Count)
+                {
+                    throw new Exception("length>_bytes's length");
+                }
                 byte[] bytes = new byte[length];
                 for (int i = 0; i < length; i++)
                 {
-                    bytes[i] = this.bytes[i];
+                    bytes[i] = this._bytes[i];
                 }
-                this.bytes.RemoveRange(0, length);
+                this._bytes.RemoveRange(0, length);
                 return bytes;
             }
         }
 
         public void Write(byte[] bytes, int length)
         {
-            if (length > bytes.Length)
+            lock (_locker)
             {
-                throw new Exception("length>bytes's length");
-            }
-            lock (this.bytes)
-            {
+                if (length > bytes.Length)
+                {
+                    throw new Exception("length>_bytes's length");
+                }
                 for (int i = 0; i < length; i++)
                 {
-                    this.bytes.Add(bytes[i]);
+                    this._bytes.Add(bytes[i]);
                 }
             }
         }
 
         public void Clear()
         {
-            lock (bytes)
+            lock (_locker)
             {
-                bytes.Clear();
+                _bytes.Clear();
             }
         }
     }
