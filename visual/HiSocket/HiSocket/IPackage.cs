@@ -7,10 +7,10 @@ using System.IO;
 
 namespace HiSocket
 {
-    interface IProto
+    public interface IPackage
     {
-        void Unpack(MemoryStream ms);
-        void Pack(MemoryStream ms);
+        void Unpack(byte[] bytes);
+        void Pack(byte[] bytes);
 
     }
 }

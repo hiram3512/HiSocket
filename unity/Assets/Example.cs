@@ -7,7 +7,7 @@
 //*********************************************************************
 
 
-
+using System.IO;
 using HiSocket;
 using HiSocket.TCP;
 using UnityEngine;
@@ -17,6 +17,33 @@ public class Example : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+
+
+        byte[] t1 = System.Text.Encoding.UTF8.GetBytes("hello");
+        Debug.Log(t1.Length);
+
+
+        MemoryStream ms = new MemoryStream();
+        ms.Seek(0, SeekOrigin.End);
+        ms.Write(t1, 0, t1.Length);
+        ms.Seek(0, SeekOrigin.Begin);
+        Debug.Log(ms.Length);
+
+        byte[] t2 = new byte[ms.Length];
+        ms.Read(t2, 0, (int)ms.Length);
+        Debug.Log(ms.Position);
+        ms.Read(t2, 0, (int)ms.Length);
+        ms.Flush();
+
+
+        Debug.Log(System.Text.Encoding.UTF8.GetString(t2));
+        Debug.Log(ms.Length);
+
+
+        return;
+
+
+
         //registe bytes msg
         MsgManager.Instance.RegisterMsg(110, OnByteMsg);
         //you can registe many msg here
