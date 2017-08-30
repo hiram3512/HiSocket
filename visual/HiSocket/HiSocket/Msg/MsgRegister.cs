@@ -11,9 +11,9 @@ namespace HiSocket.Msg
 {
     class MsgRegister : IMsgRegister
     {
-        Dictionary<int, Action<IProtobuf>> _msgDic = new Dictionary<int, Action<IProtobuf>>();
+        Dictionary<int, Action<byte[]>> _msgDic = new Dictionary<int, Action<byte[]>>();
 
-        public void Regist(int id, Action<IProtobuf> action)
+        public void Regist(int id, Action<byte[]> action)
         {
             if (_msgDic.ContainsKey(id))
             {
@@ -31,7 +31,7 @@ namespace HiSocket.Msg
             _msgDic.Remove(id);
         }
 
-        public void Dispatch(int id, IProtobuf iProtobuf)
+        public void Dispatch(int id, byte[] iProtobuf)
         {
             if (!_msgDic.ContainsKey(id))
             {

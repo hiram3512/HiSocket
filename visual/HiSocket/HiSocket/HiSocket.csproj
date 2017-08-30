@@ -46,7 +46,6 @@
     <Compile Include="IPackage.cs" />
     <Compile Include="ISocket.cs" />
     <Compile Include="Msg\IMsgRegister.cs" />
-    <Compile Include="Msg\IProtobuf.cs" />
     <Compile Include="Msg\MsgRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp\TcpClient.cs" />
