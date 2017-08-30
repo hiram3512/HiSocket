@@ -1,5 +1,10 @@
 # HiSocket.TCP_unity
 
+
+尚未完成
+Haven't finish
+
+
 开源地址：[https://github.com/hiramtan/HiSocket.TCP_unity](https://github.com/hiramtan/HiSocket.TCP_unity "Title")
 
 ## To Do List
