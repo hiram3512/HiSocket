@@ -8,6 +8,7 @@
 
 
 using HiSocket;
+using HiSocket.Msg;
 using HiSocket.Tcp;
 using UnityEngine;
 
@@ -21,9 +22,11 @@ public class Example : MonoBehaviour
         ISocket socket = new TcpClient(package);
         socket.StateEvent += OnStateChange;
 
-
         socket.Connect("127.0.0.1", 7777);
         socket.Send(new byte[1]);
+
+        IMsgRegister register = new HiSocket.Msg.MsgRegister();
+        register.Regist(1,OnMsg);
 
         socket.DisConnect();
     }
@@ -31,5 +34,10 @@ public class Example : MonoBehaviour
     void OnStateChange(SocketState state)
     {
         Debug.Log(state);
+    }
+
+    void OnMsg(byte[] bytes)
+    {
+
     }
 }
