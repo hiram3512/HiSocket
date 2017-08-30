@@ -19,11 +19,11 @@ namespace HiSocket
         public delegate void msgEventHandler(MsgBase paramMsg);
         public Dictionary<int, msgEventHandler> commonDic = new Dictionary<int, msgEventHandler>();
         public Dictionary<string, msgEventHandler> protobufDic = new Dictionary<string, msgEventHandler>();
-        private MsgHandler msgHandler;
-        public void Init(MsgHandler param)
-        {
-            msgHandler = param;
-        }
+      //  private MsgHandler msgHandler;
+        //public void Init(MsgHandler param)
+        //{
+        //  //  msgHandler = param;
+        //}
         public void RegisterMsg(string paramKey, msgEventHandler paramMsgHandler)
         {
             if (protobufDic.ContainsKey(paramKey))
@@ -38,7 +38,7 @@ namespace HiSocket
         }
         public void SendMsg(byte[] param)
         {
-            msgHandler.Send(param);
+            //msgHandler.Send(param);
         }
 
         public void ReceiveMsg(byte[] param)
