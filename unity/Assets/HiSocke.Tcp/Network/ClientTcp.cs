@@ -8,6 +8,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using UnityEngine;
 
 #if MultipleThread
 using System.Threading;
@@ -59,7 +60,7 @@ namespace HiSocket.TCP
             bool tempIsConnectSuccess = false;
             try
             {
-                client.BeginConnect(address, port, new AsyncCallback(delegate (IAsyncResult ar)
+                client.BeginConnect(paramAddress, port, new AsyncCallback(delegate (IAsyncResult ar)
                 {
                     try
                     {
@@ -149,10 +150,16 @@ namespace HiSocket.TCP
                 int temp = tempTcpClient.Client.EndReceive(ar);
                 if (temp > 0)
                 {
+                    UnityEngine.Debug.Log(temp);
                     msgHandler.Receive(buffer, temp);
                     Array.Clear(buffer, 0, buffer.Length);
-                    client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
+             
                 }
+                else
+                {
+                    UnityEngine.Debug.Log("--------------------------");
+                }
+                client.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(Receive), client);
             }
             catch (Exception e)
             {

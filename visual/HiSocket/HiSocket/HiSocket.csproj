@@ -40,7 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IProto.cs" />
+    <Compile Include="ByteArray.cs" />
+    <Compile Include="IByteArray.cs" />
+    <Compile Include="IPackage.cs" />
     <Compile Include="ISocket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TcpClient.cs" />
