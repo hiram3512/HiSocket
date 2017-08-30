@@ -3,9 +3,6 @@
 // Author: hiramtan@qq.com
 //***************************************************************************
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using HiSocket;
 
 public class Package : HiSocket.IPackage
