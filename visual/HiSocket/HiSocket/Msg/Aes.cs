@@ -41,7 +41,7 @@ namespace HiSocket.Msg
         ///<returns></returns>
         public byte[] Decrypt(byte[] toDecrypt)
         {
-            Byte[] keyArray = System.Text.UTF8Encoding.UTF8.GetBytes(_key);
+            Byte[] keyArray = System.Text.Encoding.UTF8.GetBytes(_key);
             System.Security.Cryptography.RijndaelManaged aes = new System.Security.Cryptography.RijndaelManaged();
             aes.Key = keyArray;
             aes.Mode = System.Security.Cryptography.CipherMode.ECB;
