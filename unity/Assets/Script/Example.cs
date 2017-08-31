@@ -7,26 +7,25 @@
 //*********************************************************************
 
 
+using System;
 using HiSocket;
 using HiSocket.Msg;
 using HiSocket.Tcp;
 using UnityEngine;
 
-public class Example : MonoBehaviour
+public class Example : MonoBehaviour, IPackage
 {
-
+    IMsgRegister register = new MsgRegister();
     // Use this for initialization
     void Start()
     {
-        Package package = new Package();
-        ISocket socket = new TcpClient(package);
+        ISocket socket = new TcpClient(this);
         socket.StateEvent += OnStateChange;
 
         socket.Connect("127.0.0.1", 7777);
         socket.Send(new byte[1]);
 
-        IMsgRegister register = new HiSocket.Msg.MsgRegister();
-        register.Regist(1,OnMsg);
+        register.Regist(100, OnMsg);
 
         socket.DisConnect();
     }
@@ -36,8 +35,35 @@ public class Example : MonoBehaviour
         Debug.Log(state);
     }
 
-    void OnMsg(byte[] bytes)
+    void OnMsg(byte[] bytes)//接收派发消息
     {
 
+    }
+
+    public void Unpack(IByteArray bytes)
+    {
+        //解包:粘包处理
+        throw new System.NotImplementedException();
+
+        if (bytes.Length > 2)
+        {
+            var t1 = bytes.Read(2);
+            var t2 = BitConverter.ToInt16(t1, 0);
+            //需要粘包处理
+            //isgethead = true
+
+            register.Dispatch(t2, bytes.Read(bytes.Length));//派发消息
+
+        }
+    }
+
+    public void Pack(IByteArray bytes)
+    {
+        //封包
+        throw new System.NotImplementedException();
+
+        short id = 100;
+        var t1 = BitConverter.GetBytes(id);
+        bytes.Insert(0, t1);//插入消息头
     }
 }
