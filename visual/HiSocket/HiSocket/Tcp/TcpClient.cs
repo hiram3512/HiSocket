@@ -114,6 +114,7 @@ namespace HiSocket.Tcp
 
 
 #else
+using HiSocket.Msg;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -148,8 +149,8 @@ namespace HiSocket.Tcp
         private int _receiveBufferSize = 1024 * 128;//128k
         private byte[] _receiveBuffer;
         private int _timeOut = 5000;//5s:收发超时时间
-        private IByteArray _iByteArray_Send = new ByteArray();
-        private IByteArray _iByteArray_Receive = new ByteArray();
+        private readonly IByteArray _iByteArraySend = new ByteArray();
+        private readonly IByteArray _iByteArrayReceive = new ByteArray();
         public TcpClient(IPackage iPackage)
         {
             _receiveBuffer = new byte[ReceiveBufferSize];
@@ -205,10 +206,10 @@ namespace HiSocket.Tcp
             }
             try
             {
-                _iByteArray_Send.Clear();
-                _iByteArray_Send.Write(bytes, bytes.Length);
-                _iPackage.Pack(_iByteArray_Send);
-                var toSend = _iByteArray_Send.Read(_iByteArray_Send.Length);
+                _iByteArraySend.Clear();
+                _iByteArraySend.Write(bytes, bytes.Length);
+                _iPackage.Pack(_iByteArraySend);
+                var toSend = _iByteArraySend.Read(_iByteArraySend.Length);
                 _client.Client.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate (IAsyncResult ar)
                 {
                     try
@@ -244,8 +245,8 @@ namespace HiSocket.Tcp
                 int length = tcp.Client.EndReceive(ar);
                 if (length > 0)
                 {
-                    _iByteArray_Receive.Write(_receiveBuffer, length);
-                    _iPackage.Unpack(_iByteArray_Receive);
+                    _iByteArrayReceive.Write(_receiveBuffer, length);
+                    _iPackage.Unpack(_iByteArrayReceive);
                 }
                 tcp.Client.BeginReceive(_receiveBuffer, 0, _receiveBuffer.Length, SocketFlags.None, Receive, tcp);
             }

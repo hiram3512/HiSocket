@@ -3,9 +3,9 @@
 // Author: hiramtan@qq.com
 //***************************************************************************
 
-using System.IO;
 
-namespace HiSocket
+
+namespace HiSocket.Msg
 {
     public interface IPackage
     {

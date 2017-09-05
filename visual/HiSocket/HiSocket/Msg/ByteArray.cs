@@ -6,11 +6,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace HiSocket
+namespace HiSocket.Msg
 {
     internal class ByteArray : IByteArray
     {
-        private List<byte> _bytes = new List<byte>();
+        private readonly List<byte> _bytes = new List<byte>();
         private readonly object _locker = new object();
         public int Length
         {
@@ -47,6 +47,14 @@ namespace HiSocket
                 {
                     this._bytes.Add(bytes[i]);
                 }
+            }
+        }
+
+        public void Insert(int index, byte[] bytes)
+        {
+            lock (_locker)
+            {
+                _bytes.InsertRange(index, bytes);
             }
         }
 
