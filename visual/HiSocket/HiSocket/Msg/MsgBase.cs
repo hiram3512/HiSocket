@@ -2,16 +2,16 @@
 // Description:
 // Author: hiramtan@qq.com
 //***************************************************************************
-using System;
 
 namespace HiSocket.Msg
 {
-    public interface IMsgRegister
+    public abstract class MsgBase
     {
-        void Regist(int id, Action<IByteArray> action);
+        public readonly IByteArray _iByteArray;
 
-        void Unregist(int id);
-
-        void Dispatch(int id, IByteArray iByteArray);
+        protected MsgBase(IByteArray iByteArray)
+        {
+            _iByteArray = iByteArray;
+        }
     }
 }

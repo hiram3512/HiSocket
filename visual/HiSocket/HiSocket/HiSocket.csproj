@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>lib\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,6 +50,9 @@
     <Compile Include="ISocket.cs" />
     <Compile Include="Msg\Aes.cs" />
     <Compile Include="Msg\IMsgRegister.cs" />
+    <Compile Include="Msg\MsgBase.cs" />
+    <Compile Include="Msg\MsgBytes.cs" />
+    <Compile Include="Msg\MsgProtobuf.cs" />
     <Compile Include="Msg\MsgRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp\TcpClient.cs" />

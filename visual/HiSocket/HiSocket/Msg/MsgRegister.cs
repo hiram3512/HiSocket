@@ -9,11 +9,11 @@ namespace HiSocket.Msg
 {
     public class MsgRegister : IMsgRegister
     {
-        private Dictionary<int, Action<byte[]>> _msgDic = new Dictionary<int, Action<byte[]>>();
+        private Dictionary<int, Action<IByteArray>> _msgDic = new Dictionary<int, Action<IByteArray>>();
 
         private readonly object _locker = new object();
 
-        public void Regist(int id, Action<byte[]> action)
+        public void Regist(int id, Action<IByteArray> action)
         {
             lock (_locker)
             {
@@ -37,7 +37,7 @@ namespace HiSocket.Msg
             }
         }
 
-        public void Dispatch(int id, byte[] iProtobuf)
+        public void Dispatch(int id, IByteArray iByteArray)
         {
             lock (_locker)
             {
@@ -45,7 +45,7 @@ namespace HiSocket.Msg
                 {
                     throw new Exception("should regist first:" + id);
                 }
-                _msgDic[id](iProtobuf);
+                _msgDic[id](iByteArray);
             }
         }
     }
