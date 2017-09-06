@@ -5,11 +5,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace HiSocket.Msg
 {
-    internal class ByteArray : IByteArray
+    public class ByteArray : IByteArray
     {
         private readonly List<byte> _bytes = new List<byte>();
         private readonly object _locker = new object();

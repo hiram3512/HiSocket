@@ -7,7 +7,7 @@ using System.IO;
 
 namespace HiSocket.Msg
 {
-    class MsgProtobuf : MsgBase
+    public class MsgProtobuf : MsgBase
     {
         public MsgProtobuf(IByteArray iByteArray) : base(iByteArray)
         {

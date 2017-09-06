@@ -19,7 +19,7 @@ public class Package : IPackage
             if (bytes.Length >= length) //读取消息体
             {
                 int id = BitConverter.ToUInt16((bytes.Read(4)), 0);
-                iMsgRegister.Dispatch(id, bytes.ToArray());
+                iMsgRegister.Dispatch(id, bytes);
             }
             else
             {

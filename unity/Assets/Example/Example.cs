@@ -6,7 +6,6 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 
-using System;
 using HiSocket;
 using HiSocket.Msg;
 using HiSocket.Tcp;
@@ -36,7 +35,7 @@ public class Example : MonoBehaviour
         Debug.Log(state);
     }
 
-    private void OnMsg(byte[] bytes) //接收派发消息
+    private void OnMsg(IByteArray bytes) //接收派发消息
     {
     }
 }

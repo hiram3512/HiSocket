@@ -8,7 +8,7 @@ using System.Text;
 
 namespace HiSocket.Msg
 {
-    internal class MsgBytes : MsgBase
+    public class MsgBytes : MsgBase
     {
         public MsgBytes(IByteArray iByteArray) : base(iByteArray)
         {
