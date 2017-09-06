@@ -6,64 +6,37 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 
-
 using System;
 using HiSocket;
 using HiSocket.Msg;
 using HiSocket.Tcp;
 using UnityEngine;
 
-public class Example : MonoBehaviour, IPackage
+public class Example : MonoBehaviour
 {
-    IMsgRegister register = new MsgRegister();
+    private readonly IMsgRegister _register = new MsgRegister();
+
     // Use this for initialization
-    void Start()
+    private void Start()
     {
-        ISocket socket = new TcpClient(this);
+        IPackage iPackage = new Package();
+        ISocket socket = new TcpClient(iPackage);
         socket.StateEvent += OnStateChange;
 
         socket.Connect("127.0.0.1", 7777);
         socket.Send(new byte[1]);
 
-        register.Regist(100, OnMsg);
+        _register.Regist(100, OnMsg);
 
         socket.DisConnect();
     }
 
-    void OnStateChange(SocketState state)
+    private void OnStateChange(SocketState state)
     {
         Debug.Log(state);
     }
 
-    void OnMsg(byte[] bytes)//接收派发消息
+    private void OnMsg(byte[] bytes) //接收派发消息
     {
-
-    }
-
-    public void Unpack(IByteArray bytes)
-    {
-        //解包:粘包处理
-        throw new System.NotImplementedException();
-
-        if (bytes.Length > 2)
-        {
-            var t1 = bytes.Read(2);
-            var t2 = BitConverter.ToInt16(t1, 0);
-            //需要粘包处理
-            //isgethead = true
-
-            register.Dispatch(t2, bytes.Read(bytes.Length));//派发消息
-
-        }
-    }
-
-    public void Pack(IByteArray bytes)
-    {
-        //封包
-        throw new System.NotImplementedException();
-
-        short id = 100;
-        var t1 = BitConverter.GetBytes(id);
-        bytes.Insert(0, t1);//插入消息头
     }
 }
