@@ -3,9 +3,8 @@
 // Author: hiramtan@qq.com
 //***************************************************************************
 
-using System;
-using System.ComponentModel;
 using HiSocket.Msg;
+using System;
 
 public class Package : IPackage
 {

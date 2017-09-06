@@ -37,5 +37,11 @@ public class Example : MonoBehaviour
 
     private void OnMsg(IByteArray bytes) //接收派发消息
     {
+        //var msg = new MsgBytes(bytes);
+        //var test1 = msg.Read<int>();
+
+
+        //var msg = new MsgProtobuf(bytes);
+        //var test1 = msg.Read<MonoBehaviour>();
     }
 }
