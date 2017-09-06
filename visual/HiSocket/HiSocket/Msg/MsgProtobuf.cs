@@ -13,13 +13,13 @@ namespace HiSocket.Msg
         {
         }
 
-        protected void Write<T>(T t)
+        public void Write<T>(T t)
         {
             var bytes = Serialize(t);
             _iByteArray.Write(bytes, bytes.Length);
         }
 
-        protected T Read<T>()
+        public T Read<T>()
         {
             return Deserialize<T>(_iByteArray.ToArray());
         }
