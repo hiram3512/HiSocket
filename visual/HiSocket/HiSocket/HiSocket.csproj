@@ -41,9 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ByteArray.cs" />
-    <Compile Include="IByteArray.cs" />
-    <Compile Include="IPackage.cs" />
+    <Compile Include="Msg\ByteArray.cs" />
+    <Compile Include="Msg\IByteArray.cs" />
+    <Compile Include="Msg\IPackage.cs" />
     <Compile Include="ISocket.cs" />
     <Compile Include="Msg\Aes.cs" />
     <Compile Include="Msg\IMsgRegister.cs" />

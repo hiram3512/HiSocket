@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HiSocket.Msg
 {
@@ -55,6 +56,14 @@ namespace HiSocket.Msg
             lock (_locker)
             {
                 _bytes.InsertRange(index, bytes);
+            }
+        }
+
+        public byte[] ToArray()
+        {
+            lock (_locker)
+            {
+                return _bytes.ToArray();
             }
         }
 
