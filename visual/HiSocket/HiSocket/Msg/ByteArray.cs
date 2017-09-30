@@ -21,17 +21,21 @@ namespace HiSocket.Msg
         {
             lock (_locker)
             {
-                if (length > this._bytes.Count)
+                try
                 {
-                    throw new Exception("length>_bytes's length");
+                    byte[] bytes = new byte[length];
+                    for (int i = 0; i < length; i++)
+                    {
+                        bytes[i] = this._bytes[i];
+                    }
+                    this._bytes.RemoveRange(0, length);
+                    return bytes;
                 }
-                byte[] bytes = new byte[length];
-                for (int i = 0; i < length; i++)
+                catch (Exception e)
                 {
-                    bytes[i] = this._bytes[i];
+                    throw new Exception(e.ToString());
                 }
-                this._bytes.RemoveRange(0, length);
-                return bytes;
+
             }
         }
 
@@ -39,13 +43,16 @@ namespace HiSocket.Msg
         {
             lock (_locker)
             {
-                if (length > bytes.Length)
+                try
                 {
-                    throw new Exception("length>_bytes's length");
+                    for (int i = 0; i < length; i++)
+                    {
+                        this._bytes.Add(bytes[i]);
+                    }
                 }
-                for (int i = 0; i < length; i++)
+                catch (Exception e)
                 {
-                    this._bytes.Add(bytes[i]);
+                    throw new Exception(e.ToString());
                 }
             }
         }
@@ -75,5 +82,3 @@ namespace HiSocket.Msg
         }
     }
 }
-
-

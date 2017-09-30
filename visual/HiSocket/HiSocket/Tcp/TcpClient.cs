@@ -3,8 +3,8 @@
 // Author: hiramtan@qq.com
 //***************************************************************************
 
-//#define NoThread
-#define SingleThread
+#define NoThread
+//#define SingleThread
 //#define MultiThread
 
 

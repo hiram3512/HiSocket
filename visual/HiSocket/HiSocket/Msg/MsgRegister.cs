@@ -9,7 +9,7 @@ namespace HiSocket.Msg
 {
     public class MsgRegister : IMsgRegister
     {
-        private Dictionary<int, Action<IByteArray>> _msgDic = new Dictionary<int, Action<IByteArray>>();
+        private readonly Dictionary<int, Action<IByteArray>> _msgDic = new Dictionary<int, Action<IByteArray>>();
 
         private readonly object _locker = new object();
 
@@ -17,11 +17,14 @@ namespace HiSocket.Msg
         {
             lock (_locker)
             {
-                if (_msgDic.ContainsKey(id))
+                try
                 {
-                    throw new Exception("do not need to regist again:" + id);
+                    _msgDic.Add(id, action);
                 }
-                _msgDic.Add(id, action);
+                catch (Exception e)
+                {
+                    throw new Exception(e.ToString());
+                }
             }
         }
 
@@ -29,11 +32,14 @@ namespace HiSocket.Msg
         {
             lock (_locker)
             {
-                if (!_msgDic.ContainsKey(id))
+                try
                 {
-                    throw new Exception("should regist first:" + id);
+                    _msgDic.Remove(id);
                 }
-                _msgDic.Remove(id);
+                catch (Exception e)
+                {
+                    throw new Exception(e.ToString());
+                }
             }
         }
 
@@ -41,11 +47,14 @@ namespace HiSocket.Msg
         {
             lock (_locker)
             {
-                if (!_msgDic.ContainsKey(id))
+                try
                 {
-                    throw new Exception("should regist first:" + id);
+                    _msgDic[id](iByteArray);
                 }
-                _msgDic[id](iByteArray);
+                catch (Exception e)
+                {
+                    throw new Exception(e.ToString());
+                }
             }
         }
     }
