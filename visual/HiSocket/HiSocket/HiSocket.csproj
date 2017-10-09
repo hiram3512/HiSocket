@@ -57,6 +57,7 @@
     <Compile Include="Msg\MsgRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp\TcpClient.cs" />
+    <Compile Include="Test.cs" />
     <Compile Include="Udp\UdpClient.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
