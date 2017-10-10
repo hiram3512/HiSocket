@@ -123,7 +123,7 @@ namespace HiSocket.Tcp
                 ChangeState(SocketState.DisConnected);
                 throw new Exception("from receive: disconnected");
             }
-            System.Net.Sockets.TcpClient tcp = ar as System.Net.Sockets.TcpClient;
+            System.Net.Sockets.TcpClient tcp = ar.AsyncState as System.Net.Sockets.TcpClient;
             int length = tcp.Client.EndReceive(ar);
             if (length > 0)
             {
@@ -164,8 +164,7 @@ namespace HiSocket.Tcp
             System.Net.NetworkInformation.PingReply temPingReply = tempPing.Send(ipAddress);
             return temPingReply.RoundtripTime;
         }
-
-
+        
         private void ChangeState(SocketState state)
         {
             if (StateEvent != null)
@@ -743,4 +742,3 @@ namespace HiSocket.Tcp
 //    }
 }
 #endif
-
