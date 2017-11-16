@@ -11,7 +11,7 @@ namespace HiSocket.Udp
     {
         public int TimeOut { get; set; }
         public int ReceiveBufferSize { get; set; }
-        public Action<SocketState> StateEvent { get; set; }
+        public Action<SocketState> StateChangeHandler { get; set; }
         public bool IsConnected { get; }
 
         private IPackage _iPackage;

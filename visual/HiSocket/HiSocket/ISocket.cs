@@ -4,10 +4,10 @@ namespace HiSocket
 {
     public interface ISocket
     {
-        int TimeOut { set; }
-        int ReceiveBufferSize { set; }
+        int TimeOut { get; set; }
+        int ReceiveBufferSize { get; set; }
 
-        Action<SocketState> StateEvent { get; set; }
+        Action<SocketState> StateChangeHandler { set; }
 
         bool IsConnected { get; }
 
@@ -15,7 +15,6 @@ namespace HiSocket
         void DisConnect();
         void Send(byte[] bytes);
         long Ping();
-
     }
     public enum SocketState
     {
