@@ -3,7 +3,6 @@
 // Author: hiramtan@qq.com
 //***************************************************************************
 using System;
-using HiSocket.Msg;
 
 namespace HiSocket.Udp
 {
@@ -13,24 +12,8 @@ namespace HiSocket.Udp
         public int ReceiveBufferSize { get; set; }
         public Action<SocketState> StateChangeHandler { get; set; }
         public bool IsConnected { get; }
-
-        private IPackage _iPackage;
-        private System.Net.Sockets.UdpClient _client;
-        public UdpClient(IPackage iPackage)
-        {
-            _iPackage = iPackage;
-        }
-
         public void Connect(string ip, int port)
         {
-            _client.Client.BeginConnect(ip, port, (x) =>
-            {
-                var client = x.AsyncState as System.Net.Sockets.UdpClient;
-                client.Client.EndConnect(x);
-                //if(client)
-            }, _client);
-
-
             throw new NotImplementedException();
         }
 

@@ -6,6 +6,7 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 
+using System;
 using HiSocket;
 using HiSocket.Msg;
 using HiSocket.Tcp;
@@ -15,31 +16,41 @@ public class Example : MonoBehaviour
 {
     private readonly IMsgRegister _register = new MsgRegister();
 
+    private ISocket socket;
     // Use this for initialization
     private void Start()
     {
+        Debug.LogError("start");
         IPackage iPackage = new Package();
-        ISocket socket = new TcpClient(iPackage);
+        socket = new TcpClient(iPackage);
         socket.StateEvent += OnStateChange;
 
         socket.Connect("127.0.0.1", 7777);
-        socket.Send(new byte[1]);
 
-        _register.Regist(100, OnMsg);
-
-        socket.DisConnect();
+        //_register.Regist(100, OnMsg);
+        //socket.DisConnect();
     }
 
     private void OnStateChange(SocketState state)
     {
         Debug.Log(state);
+        if (state == SocketState.Connected)
+        {
+            int i = 0;
+            while (i < 100)
+            {
+                var bytes = BitConverter.GetBytes(i);
+                socket.Send(bytes);
+                Debug.Log(i);
+                i++;
+            }
+        }
     }
 
     private void OnMsg(IByteArray bytes) //接收派发消息
     {
         //var msg = new MsgBytes(bytes);
         //var test1 = msg.Read<int>();
-
 
         //var msg = new MsgProtobuf(bytes);
         //var test1 = msg.Read<MonoBehaviour>();

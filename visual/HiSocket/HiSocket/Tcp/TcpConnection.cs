@@ -17,22 +17,22 @@ using HiSocket.Msg;
 
 namespace HiSocket.Tcp
 {
-    public class TcpClient : ISocket
+    public class TcpConnection : ISocket
     {
         private static int _receiveBufferSize = 1024 * 128; //128k
         private readonly IByteArray _iByteArrayReceive = new ByteArray();
         private readonly IByteArray _iByteArraySend = new ByteArray();
         private readonly IPackage _iPackage;
-        private System.Net.Sockets.TcpClient _client;
+        private TcpClient _client;
 
         private string _ip;
         private int _port;
         private byte[] _receiveBuffer = new byte[_receiveBufferSize];
 
-        public TcpClient(IPackage iPackage)
+        public TcpConnection(IPackage iPackage)
         {
             _iPackage = iPackage;
-            _client = new System.Net.Sockets.TcpClient();
+            _client = new TcpClient();
             _client.NoDelay = true;
             _client.SendTimeout = _client.ReceiveTimeout = TimeOut;
         }
@@ -63,14 +63,15 @@ namespace HiSocket.Tcp
             }
             try
             {
-                _client.BeginConnect(ip, port, delegate (IAsyncResult ar)
+                _client.BeginConnect(ip, port, delegate(IAsyncResult ar)
                 {
-                    var tcp = ar.AsyncState as System.Net.Sockets.TcpClient;
+                    var tcp = ar.AsyncState as TcpClient;
                     tcp.Client.EndConnect(ar);
                     if (tcp.Connected)
                     {
                         ChangeState(SocketState.Connected);
-                        tcp.Client.BeginReceive(_receiveBuffer, 0, _receiveBuffer.Length, SocketFlags.None, Receive, tcp);
+                        tcp.Client.BeginReceive(_receiveBuffer, 0, _receiveBuffer.Length, SocketFlags.None, Receive,
+                            tcp);
                     }
                     else
                     {
@@ -105,41 +106,11 @@ namespace HiSocket.Tcp
             var toSend = _iByteArraySend.Read(_iByteArraySend.Length);
             try
             {
-                _client.Client.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate (IAsyncResult ar)
+                _client.Client.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate(IAsyncResult ar)
                 {
-                    var tcp = ar.AsyncState as System.Net.Sockets.TcpClient;
+                    var tcp = ar.AsyncState as TcpClient;
                     tcp.Client.EndSend(ar);
                 }, _client);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.ToString());
-            }
-        }
-        private void Receive(IAsyncResult ar)
-        {
-            if (!IsConnected)
-            {
-                ChangeState(SocketState.DisConnected);
-                throw new Exception("from receive: disconnected");
-            }
-            var tcp = ar.AsyncState as System.Net.Sockets.TcpClient;
-            var length = tcp.Client.EndReceive(ar);
-            if (length > 0)
-            {
-                _iByteArrayReceive.Write(_receiveBuffer, length);
-                try
-                {
-                    _iPackage.Unpack(_iByteArrayReceive);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.ToString());
-                }
-            }
-            try
-            {
-                tcp.Client.BeginReceive(_receiveBuffer, 0, _receiveBuffer.Length, SocketFlags.None, Receive, tcp);
             }
             catch (Exception e)
             {
@@ -190,6 +161,38 @@ namespace HiSocket.Tcp
             //    StartCoroutine(Ping());
             //    }
         }
+
+        private void Receive(IAsyncResult ar)
+        {
+            if (!IsConnected)
+            {
+                ChangeState(SocketState.DisConnected);
+                throw new Exception("from receive: disconnected");
+            }
+            var tcp = ar.AsyncState as TcpClient;
+            var length = tcp.Client.EndReceive(ar);
+            if (length > 0)
+            {
+                _iByteArrayReceive.Write(_receiveBuffer, length);
+                try
+                {
+                    _iPackage.Unpack(_iByteArrayReceive);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.ToString());
+                }
+            }
+            try
+            {
+                tcp.Client.BeginReceive(_receiveBuffer, 0, _receiveBuffer.Length, SocketFlags.None, Receive, tcp);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.ToString());
+            }
+        }
+
         private void ChangeState(SocketState state)
         {
             StateChangeHandler?.Invoke(state);
@@ -209,11 +212,11 @@ using HiSocket.Msg;
 
 namespace HiSocket.Tcp
 {
-    public class TcpClient : ISocket
+    public class TcpConnection : ISocket
     {
         private readonly IByteArray _iByteArrayReceive = new ByteArray();
         private readonly IByteArray _iByteArraySend = new ByteArray();
-        private System.Net.Sockets.TcpClient _client;
+        private System.Net.Sockets.TcpConnection _client;
 
         private string _ip;
         private IPackage _iPackage;
@@ -223,11 +226,11 @@ namespace HiSocket.Tcp
         private readonly MemoryStream _sendMs = new MemoryStream();
         private readonly Queue<byte[]> _sendQueue = new Queue<byte[]>();
 
-        public TcpClient(IPackage iPackage)
+        public TcpConnection(IPackage iPackage)
         {
             _receiveBuffer = new byte[ReceiveBufferSize];
             _iPackage = iPackage;
-            _client = new System.Net.Sockets.TcpClient();
+            _client = new System.Net.Sockets.TcpConnection();
             _client.NoDelay = true;
             _client.SendTimeout = _client.ReceiveTimeout = TimeOut;
         }
@@ -260,7 +263,7 @@ namespace HiSocket.Tcp
             {
                 _client.BeginConnect(ip, port, delegate (IAsyncResult ar)
                 {
-                    var tcp = ar.AsyncState as System.Net.Sockets.TcpClient;
+                    var tcp = ar.AsyncState as System.Net.Sockets.TcpConnection;
                     tcp.Client.EndConnect(ar);
                     if (tcp.Connected)
                     {
@@ -339,7 +342,7 @@ namespace HiSocket.Tcp
                         {
                             _client.Client.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate (IAsyncResult ar)
                             {
-                                var tcp = ar.AsyncState as System.Net.Sockets.TcpClient;
+                                var tcp = ar.AsyncState as System.Net.Sockets.TcpConnection;
                                 tcp.Client.EndSend(ar);
                             }, _client);
                         }
@@ -403,7 +406,7 @@ namespace HiSocket.Tcp
                     _client.Client.BeginReceive(_receiveBuffer, 0, _receiveBuffer.Length, SocketFlags.None,
                         delegate (IAsyncResult ar)
                         {
-                            var tcp = ar.AsyncState as System.Net.Sockets.TcpClient;
+                            var tcp = ar.AsyncState as System.Net.Sockets.TcpConnection;
                             int length = tcp.Client.EndReceive(ar);
                             if (length > 0)
                             {
@@ -444,7 +447,7 @@ using System.Threading;
 namespace HiSocket.Tcp
 {
     // State object for receiving data from remote device.  
-    public class TcpClient : ISocket
+    public class TcpConnection : ISocket
     {
         public int TimeOut
         {
@@ -468,7 +471,7 @@ namespace HiSocket.Tcp
         private string _ip;
         private int _port;
         private IPackage _iPackage;
-        private System.Net.Sockets.TcpClient _client;
+        private System.Net.Sockets.TcpConnection _client;
         private int _receiveBufferSize = 1024 * 128;//128k
         private byte[] _receiveBuffer;
         private int _timeOut = 5000;//5s:收发超时时间
@@ -482,11 +485,11 @@ namespace HiSocket.Tcp
             new ManualResetEvent(false);
         private static ManualResetEvent receiveDone =
             new ManualResetEvent(false);
-        public TcpClient(IPackage iPackage)
+        public TcpConnection(IPackage iPackage)
         {
             _receiveBuffer = new byte[ReceiveBufferSize];
             this._iPackage = iPackage;
-            _client = new System.Net.Sockets.TcpClient();
+            _client = new System.Net.Sockets.TcpConnection();
             _client.NoDelay = true;
             _client.SendTimeout = _client.ReceiveTimeout = TimeOut;
         }
@@ -504,7 +507,7 @@ namespace HiSocket.Tcp
                 _client.BeginConnect(ip, port,
                     new AsyncCallback((x) =>
                     {
-                        System.Net.Sockets.TcpClient client = x.AsyncState as System.Net.Sockets.TcpClient;
+                        System.Net.Sockets.TcpConnection client = x.AsyncState as System.Net.Sockets.TcpConnection;
                         client.EndConnect(x);
                         connectDone.Set();
                         _client.Client.BeginReceive(_receiveBuffer, 0, _receiveBuffer.Length, SocketFlags.None, Receive, _client);
@@ -521,7 +524,7 @@ namespace HiSocket.Tcp
         private void Receive(IAsyncResult ar)
         {
             receiveDone.WaitOne();
-            System.Net.Sockets.TcpClient state = ar.AsyncState as System.Net.Sockets.TcpClient;
+            System.Net.Sockets.TcpConnection state = ar.AsyncState as System.Net.Sockets.TcpConnection;
             int bytesRead = state.Client.EndReceive(ar);
             if (bytesRead > 0)
             {
@@ -549,7 +552,7 @@ namespace HiSocket.Tcp
                 _client.Client.BeginSend(bytes, 0, bytes.Length, SocketFlags.None,
                     new AsyncCallback((x) =>
                     {
-                        System.Net.Sockets.TcpClient client = x.AsyncState as System.Net.Sockets.TcpClient;
+                        System.Net.Sockets.TcpConnection client = x.AsyncState as System.Net.Sockets.TcpConnection;
                         client.Client.EndSend(x);
                         sendDone.Set();
                     }), _client);
