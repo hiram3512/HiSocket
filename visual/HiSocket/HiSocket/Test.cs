@@ -15,8 +15,8 @@ namespace HiSocket
     {
         void Init()
         {
-            ISocket s = new TcpClient(null);
-            ISocket ss = new UdpClient(null);
+            ISocket s = new TcpConnection(null);
+            ISocket ss = new UdpConnection(null);
         }
     }
 }

@@ -56,9 +56,10 @@
     <Compile Include="Msg\MsgProtobuf.cs" />
     <Compile Include="Msg\MsgRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tcp\TcpClient.cs" />
+    <Compile Include="Tcp\TcpConnection.cs" />
     <Compile Include="Test.cs" />
-    <Compile Include="Udp\UdpClient.cs" />
+    <Compile Include="Udp\Connection.cs" />
+    <Compile Include="Udp\UdpConnection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -7,52 +7,24 @@
 //#define SingleThread//havent finish
 //#define MultiThread//havent finish
 
-
 #if MainThread
-using System;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
 using HiSocket.Msg;
+using System;
+using System.Net.Sockets;
 
-namespace HiSocket.Tcp
+namespace HiSocket
 {
-    public class TcpConnection : ISocket
+    public class TcpConnection : Connection
     {
-        private static int _receiveBufferSize = 1024 * 128; //128k
-        private readonly IByteArray _iByteArrayReceive = new ByteArray();
-        private readonly IByteArray _iByteArraySend = new ByteArray();
-        private readonly IPackage _iPackage;
         private TcpClient _client;
-
-        private string _ip;
-        private int _port;
-        private byte[] _receiveBuffer = new byte[_receiveBufferSize];
-
-        public TcpConnection(IPackage iPackage)
+        public override bool IsConnected => _client != null && _client.Client != null && _client.Connected;
+        public TcpConnection(IPackage iPackage) : base(iPackage)
         {
-            _iPackage = iPackage;
             _client = new TcpClient();
             _client.NoDelay = true;
             _client.SendTimeout = _client.ReceiveTimeout = TimeOut;
         }
-
-        public int TimeOut { get; set; } = 5000;
-
-        public int ReceiveBufferSize
-        {
-            get => _receiveBufferSize;
-            set
-            {
-                _receiveBufferSize = value;
-                _receiveBuffer = new byte[ReceiveBufferSize];
-            }
-        }
-
-        public Action<SocketState> StateChangeHandler { get; set; }
-        public bool IsConnected => _client != null && _client.Client != null && _client.Connected;
-
-        public void Connect(string ip, int port)
+        public override void Connect(string ip, int port)
         {
             ChangeState(SocketState.Connecting);
             if (IsConnected)
@@ -70,8 +42,7 @@ namespace HiSocket.Tcp
                     if (tcp.Connected)
                     {
                         ChangeState(SocketState.Connected);
-                        tcp.Client.BeginReceive(_receiveBuffer, 0, _receiveBuffer.Length, SocketFlags.None, Receive,
-                            tcp);
+                        tcp.Client.BeginReceive(_receiveBuffer, 0, _receiveBuffer.Length, SocketFlags.None, Receive,tcp);
                     }
                     else
                     {
@@ -86,7 +57,7 @@ namespace HiSocket.Tcp
             }
         }
 
-        public void Send(byte[] bytes)
+        public override void Send(byte[] bytes)
         {
             if (!IsConnected)
             {
@@ -117,8 +88,7 @@ namespace HiSocket.Tcp
                 throw new Exception(e.ToString());
             }
         }
-
-        public void DisConnect()
+        public override void DisConnect()
         {
             if (IsConnected)
             {
@@ -129,39 +99,6 @@ namespace HiSocket.Tcp
             ChangeState(SocketState.DisConnected);
             StateChangeHandler = null;
         }
-
-        public long Ping()
-        {
-            //如果unity选择.net为2.0sub会出现bug
-            //如果unity选择.net为4.6不会出现
-            var ipAddress = IPAddress.Parse(_ip);
-            var tempPing = new Ping();
-            var temPingReply = tempPing.Send(ipAddress);
-            return temPingReply.RoundtripTime;
-
-            //private int pingTime;
-            //private Ping p;
-            //private float timeOut = 1;
-            //private float lastTime;
-            //void Start()
-            //{
-            //    StartCoroutine(Ping());
-            //}
-            //IEnumerator Ping()
-            //{
-            //    p = new Ping("127.0.0.1");
-            //    lastTime = Time.realtimeSinceStartup;
-            //    while (!p.isDone && Time.realtimeSinceStartup - lastTime < 1)
-            //    {
-            //        yield return null;
-            //    }
-            //    pingTime = p.time;
-            //    p.DestroyPing();
-            //    yield return new WaitForSeconds(1);//一秒更新一次
-            //    StartCoroutine(Ping());
-            //    }
-        }
-
         private void Receive(IAsyncResult ar)
         {
             if (!IsConnected)
@@ -191,11 +128,6 @@ namespace HiSocket.Tcp
             {
                 throw new Exception(e.ToString());
             }
-        }
-
-        private void ChangeState(SocketState state)
-        {
-            StateChangeHandler?.Invoke(state);
         }
     }
 }
