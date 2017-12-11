@@ -7,10 +7,8 @@
 //*********************************************************************
 
 using System;
-using HiSocket;
-using HiSocket.Msg;
-using HiSocket.Tcp;
 using UnityEngine;
+using HiSocket;
 
 public class Example : MonoBehaviour
 {

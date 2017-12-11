@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{87D59D20-8E6F-44EF-B4AC-75F7A7C4DD1C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HiSocket</RootNamespace>
-    <AssemblyName>HiSocket</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ProjectGuid>{8E38525C-55D4-4CA9-98FB-EFD91F76B7D9}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TestServer</RootNamespace>
+    <AssemblyName>TestServer</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -31,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="protobuf-net">
-      <HintPath>..\..\lib\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,21 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Connection\Connection.cs" />
-    <Compile Include="Connection\ISocket.cs" />
-    <Compile Include="Connection\TcpConnection.cs" />
-    <Compile Include="Connection\UdpConnection.cs" />
-    <Compile Include="Msg\Aes.cs" />
-    <Compile Include="Msg\ByteArray.cs" />
-    <Compile Include="Msg\IByteArray.cs" />
-    <Compile Include="Msg\IMsgRegister.cs" />
-    <Compile Include="Msg\IPackage.cs" />
-    <Compile Include="Msg\MsgBase.cs" />
-    <Compile Include="Msg\MsgBytes.cs" />
-    <Compile Include="Msg\MsgProtobuf.cs" />
-    <Compile Include="Msg\MsgRegister.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

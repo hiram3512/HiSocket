@@ -5,7 +5,7 @@
 
 
 
-namespace HiSocket.Msg
+namespace HiSocket
 {
     public interface IPackage
     {

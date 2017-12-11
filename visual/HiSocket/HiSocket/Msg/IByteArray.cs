@@ -3,7 +3,7 @@
 // Author: hiramtan@live.com
 //***************************************************************************
 
-namespace HiSocket.Msg
+namespace HiSocket
 {
     public interface IByteArray
     {
