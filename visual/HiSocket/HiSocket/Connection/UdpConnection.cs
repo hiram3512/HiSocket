@@ -10,7 +10,10 @@ namespace HiSocket
     public class UdpConnection : Connection
     {
         private UdpClient _client;
-        public override bool IsConnected => _client != null && _client.Client != null && _client.Client.Connected;
+        public override bool IsConnected
+        {
+            get { return _client != null && _client.Client != null && _client.Client.Connected; }
+        }
         public UdpConnection(IPackage iPackage):base(iPackage)
         {
             _client = new UdpClient();

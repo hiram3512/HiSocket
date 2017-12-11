@@ -16,7 +16,11 @@ namespace HiSocket
     public class TcpConnection : Connection
     {
         private TcpClient _client;
-        public override bool IsConnected => _client != null && _client.Client != null && _client.Connected;
+
+        public override bool IsConnected
+        {
+            get { return _client != null && _client.Client != null && _client.Connected; }
+        }
         public TcpConnection(IPackage iPackage) : base(iPackage)
         {
             _client = new TcpClient();
@@ -34,14 +38,14 @@ namespace HiSocket
             }
             try
             {
-                _client.BeginConnect(ip, port, delegate(IAsyncResult ar)
+                _client.BeginConnect(ip, port, delegate (IAsyncResult ar)
                 {
                     var tcp = ar.AsyncState as TcpClient;
                     tcp.Client.EndConnect(ar);
                     if (tcp.Connected)
                     {
                         ChangeState(SocketState.Connected);
-                        tcp.Client.BeginReceive(_receiveBuffer, 0, _receiveBuffer.Length, SocketFlags.None, Receive,tcp);
+                        tcp.Client.BeginReceive(_receiveBuffer, 0, _receiveBuffer.Length, SocketFlags.None, Receive, tcp);
                     }
                     else
                     {
@@ -76,7 +80,7 @@ namespace HiSocket
             var toSend = _iByteArraySend.Read(_iByteArraySend.Length);
             try
             {
-                _client.Client.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate(IAsyncResult ar)
+                _client.Client.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate (IAsyncResult ar)
                 {
                     var tcp = ar.AsyncState as TcpClient;
                     tcp.Client.EndSend(ar);

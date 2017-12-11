@@ -8,7 +8,7 @@ using System.Net.NetworkInformation;
 
 namespace HiSocket
 {
-    public abstract class Connection: ISocket
+    public abstract class Connection : ISocket
     {
         protected static int _receiveBufferSize = 1024 * 128; //128k
         protected readonly IByteArray _iByteArrayReceive = new ByteArray();
@@ -22,11 +22,16 @@ namespace HiSocket
             _iPackage = iPackage;
         }
 
-        public int TimeOut { get; set; } = 5000;
+        private int _timeOut = 5000;
+        public int TimeOut
+        {
+            get { return _timeOut; }
+            set { _timeOut = value; }
+        }
 
         public int ReceiveBufferSize
         {
-            get => _receiveBufferSize;
+            get { return _receiveBufferSize; }
             set
             {
                 _receiveBufferSize = value;
@@ -34,11 +39,11 @@ namespace HiSocket
             }
         }
 
-        public Action<SocketState> StateChangeHandler { get; set; }
+        public Action<SocketState> StateChangeHandler { protected get; set; }
         public abstract bool IsConnected { get; }
 
         public abstract void Connect(string ip, int port);
-        
+
         public abstract void Send(byte[] bytes);
 
         public long Ping()
@@ -74,7 +79,8 @@ namespace HiSocket
         }
         protected void ChangeState(SocketState state)
         {
-            StateChangeHandler?.Invoke(state);
+            if(StateChangeHandler!=null)
+            StateChangeHandler(state);
         }
         public abstract void DisConnect();
     }
