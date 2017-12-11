@@ -3,9 +3,9 @@
 // Author: hiramtan@qq.com
 //***************************************************************************
 
-using HiSocket.Msg;
 using System;
 using UnityEngine;
+using HiSocket;
 
 public class Package : IPackage
 {

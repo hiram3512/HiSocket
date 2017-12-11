@@ -29,8 +29,7 @@ namespace TestServer
                 var client = _socket.Accept();
                 if (client != null)
                 {
-                    var get = client.Receive(bytes);
-                    if (get > 0)
+                    while (client.Receive(bytes) > 0)
                     {
                         client.Send(bytes);
                     }

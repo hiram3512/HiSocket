@@ -20,10 +20,10 @@ public class Example : MonoBehaviour
     {
         Debug.LogError("start");
         IPackage iPackage = new Package();
-        socket = new TcpClient(iPackage);
-        socket.StateEvent += OnStateChange;
+        socket = new TcpConnection(iPackage);
+        socket.StateChangeHandler = OnStateChange;
 
-        socket.Connect("127.0.0.1", 7777);
+        socket.Connect("127.0.0.1", 5077);
 
         //_register.Regist(100, OnMsg);
         //socket.DisConnect();
