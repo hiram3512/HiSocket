@@ -8,7 +8,6 @@
 //#define MultiThread//havent finish
 
 #if MainThread
-using HiSocket.Msg;
 using System;
 using System.Net.Sockets;
 

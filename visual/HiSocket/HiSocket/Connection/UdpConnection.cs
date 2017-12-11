@@ -4,7 +4,6 @@
 //***************************************************************************
 using System;
 using System.Net.Sockets;
-using HiSocket.Msg;
 
 namespace HiSocket
 {
