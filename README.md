@@ -6,7 +6,7 @@
 Haven't finish
 
 
-开源地址：[https://github.com/hiramtan/HiSocket.TCP_unity](https://github.com/hiramtan/HiSocket.TCP_unity "Title")
+开源地址：[https://github.com/hiramtan/HiSocket_unity](https://github.com/hiramtan/HiSocket_unity)
 
 ## To Do List
 - [x] ipv6支持
