@@ -55,6 +55,7 @@ namespace HiSocket
             var temPingReply = tempPing.Send(ipAddress);
             return temPingReply.RoundtripTime;
 
+
             //private int pingTime;
             //private Ping p;
             //private float timeOut = 1;
@@ -79,8 +80,8 @@ namespace HiSocket
         }
         protected void ChangeState(SocketState state)
         {
-            if(StateChangeHandler!=null)
-            StateChangeHandler(state);
+            if (StateChangeHandler != null)
+                StateChangeHandler(state);
         }
         public abstract void DisConnect();
     }

@@ -67,7 +67,10 @@ namespace HiSocket
                 ChangeState(SocketState.DisConnected);
                 throw new Exception("from send: disconnected");
             }
-            _iByteArraySend.Clear();
+            if (_iByteArrayReceive.Length != 0)
+            {
+                throw new Exception("from send: send queue still have last time data");
+            }
             _iByteArraySend.Write(bytes, bytes.Length);
             try
             {
