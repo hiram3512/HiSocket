@@ -14,3 +14,6 @@ D:\MyGit\github\HiSocket_unity\visual\HiSocket\UnitTest\obj\Debug\UnitTest.cspro
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\UnitTest\obj\Debug\UnitTest.csproj.CoreCompileInputs.cache
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\UnitTest\obj\Debug\UnitTest.dll
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\UnitTest\obj\Debug\UnitTest.pdb
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\UnitTest\bin\Debug\HiSocket.dll
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\UnitTest\bin\Debug\protobuf-net.dll
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\UnitTest\bin\Debug\HiSocket.pdb
