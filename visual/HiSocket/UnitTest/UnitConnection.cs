@@ -11,7 +11,7 @@ namespace UnitTest
         {
             TcpConnection connection = new TcpConnection(new TestPackage());
             connection.StateChangeHandler = TestConnectHandler;
-           connection.Connect("",12);
+            connection.Connect("127.0.0.0", 8080);
         }
         [TestMethod]
         public void TestUdpConnect()
@@ -21,7 +21,7 @@ namespace UnitTest
         [TestMethod]
         public void TestConnectHandler(SocketState state)
         {
-            Assert.IsTrue(state==SocketState.Connected);
+            Assert.IsTrue(state == SocketState.Connected);
         }
     }
 }

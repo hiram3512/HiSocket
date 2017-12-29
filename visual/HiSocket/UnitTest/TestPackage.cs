@@ -13,12 +13,13 @@ namespace UnitTest
     {
         public void Unpack(IByteArray bytes)
         {
-            throw new NotImplementedException();
+            MsgProtobuf msg = new MsgProtobuf(bytes);
+            msg.Read<int>();
         }
 
         public void Pack(IByteArray bytes)
         {
-            throw new NotImplementedException();
+            bytes.Insert(0,new byte[]{1});
         }
     }
 }

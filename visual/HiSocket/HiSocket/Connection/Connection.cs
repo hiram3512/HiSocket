@@ -46,6 +46,10 @@ namespace HiSocket
 
         public abstract void Send(byte[] bytes);
 
+        /// <summary>
+        /// bug there will be a bug if you .net is 2.0sub
+        /// </summary>
+        /// <returns></returns>
         public long Ping()
         {
             //如果unity选择.net为2.0sub会出现bug
