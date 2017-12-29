@@ -1,0 +1,6 @@
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\bin\Debug\HiSocket.dll
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\bin\Debug\HiSocket.pdb
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\bin\Debug\protobuf-net.dll
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\obj\Debug\HiSocket.csproj.CoreCompileInputs.cache
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\obj\Debug\HiSocket.dll
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\obj\Debug\HiSocket.pdb
