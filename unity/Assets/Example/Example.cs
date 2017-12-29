@@ -27,6 +27,7 @@ public class Example : MonoBehaviour
 
         //_register.Regist(100, OnMsg);
         //socket.DisConnect();
+
     }
 
     private void OnStateChange(SocketState state)
