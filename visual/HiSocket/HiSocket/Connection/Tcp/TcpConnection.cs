@@ -258,9 +258,13 @@ namespace HiSocket
                     if (_sendQueue.Count > 0)
                     {
                         var msg = _sendQueue.Dequeue();
+                        _iByteArraySend.Clear();//待处理sendlength未全部发送
                         _iByteArraySend.Write(msg, msg.Length);
                         try
                         {
+
+
+
                             _iPackage.Pack(_iByteArraySend);
                         }
                         catch (Exception e)
@@ -345,6 +349,8 @@ namespace HiSocket
                                 try
                                 {
                                     _iPackage.Unpack(_iByteArrayReceive);
+                                    var toRead = _iByteArrayReceive.Read(_iByteArrayReceive.Length);
+                                    _receiveQueue.Enqueue(toRead);
                                 }
                                 catch (Exception e)
                                 {
