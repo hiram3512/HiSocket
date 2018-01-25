@@ -2,7 +2,9 @@
 // Description:
 // Author: hiramtan@live.com
 //****************************************************************************
+
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
 
@@ -10,36 +12,49 @@ namespace HiSocket
 {
     public abstract class Connection : ISocket
     {
-        protected static int _receiveBufferSize = 1024 * 128; //128k
-        protected readonly IByteArray _iByteArrayReceive = new ByteArray();
-        protected readonly IByteArray _iByteArraySend = new ByteArray();
-        protected readonly IPackage _iPackage;
-        protected string _ip;
-        protected int _port;
-        protected byte[] _receiveBuffer = new byte[_receiveBufferSize];
-        public Connection(IPackage iPackage)
+        protected int _receiveBufferSize = 1024 * 128; //128k
+        protected int _timeOut = 5000;
+        protected string IP;
+        protected int Port;
+        protected byte[] ReceiveBuffer;
+
+        protected Queue<byte[]> _receiveQueue = new Queue<byte[]>();
+        protected Queue<byte[]> _sendQueue = new Queue<byte[]>();
+
+        protected Connection()
         {
-            _iPackage = iPackage;
+            ReceiveBuffer = new byte[_receiveBufferSize];
         }
 
-        private int _timeOut = 5000;
-        public int TimeOut
-        {
-            get { return _timeOut; }
-            set { _timeOut = value; }
-        }
+        public abstract int TimeOut { get; set; }
 
         public int ReceiveBufferSize
         {
-            get { return _receiveBufferSize; }
+            get
+            {
+                return _receiveBufferSize;
+            }
             set
             {
                 _receiveBufferSize = value;
-                _receiveBuffer = new byte[ReceiveBufferSize];
+                ReceiveBuffer = new byte[ReceiveBufferSize];
             }
         }
 
         public Action<SocketState> StateChangeHandler { protected get; set; }
+        public Action<byte[]> ReceiveHandler { get; set; }
+
+        public void Run()
+        {
+            while (_receiveQueue.Count > 0)
+            {
+                if (ReceiveHandler != null)
+                {
+                    ReceiveHandler(_receiveQueue.Dequeue());
+                }
+            }
+        }
+
         public abstract bool IsConnected { get; }
 
         public abstract void Connect(string ip, int port);
@@ -47,14 +62,14 @@ namespace HiSocket
         public abstract void Send(byte[] bytes);
 
         /// <summary>
-        /// bug there will be a bug if you .net is 2.0sub
+        ///     bug there will be a bug if you .net is 2.0sub
         /// </summary>
         /// <returns></returns>
         public long Ping()
         {
             //如果unity选择.net为2.0sub会出现bug
             //如果unity选择.net为4.6不会出现
-            var ipAddress = IPAddress.Parse(_ip);
+            var ipAddress = IPAddress.Parse(IP);
             var tempPing = new Ping();
             var temPingReply = tempPing.Send(ipAddress);
             return temPingReply.RoundtripTime;
@@ -82,11 +97,19 @@ namespace HiSocket
             //    StartCoroutine(Ping());
             //    }
         }
+        //public long Ping()
+        //{
+        //    IPAddress ipAddress = IPAddress.Parse(IP);
+        //    System.Net.NetworkInformation.Ping tempPing = new System.Net.NetworkInformation.Ping();
+        //    System.Net.NetworkInformation.PingReply temPingReply = tempPing.Send(ipAddress);
+        //    return temPingReply.RoundtripTime;
+        //}
+        public abstract void DisConnect();
+
         protected void ChangeState(SocketState state)
         {
             if (StateChangeHandler != null)
                 StateChangeHandler(state);
         }
-        public abstract void DisConnect();
     }
 }

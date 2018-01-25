@@ -46,13 +46,13 @@
   <ItemGroup>
     <Compile Include="Connection\Connection.cs" />
     <Compile Include="Connection\ISocket.cs" />
-    <Compile Include="Connection\TcpConnection.cs" />
-    <Compile Include="Connection\UdpConnection.cs" />
+    <Compile Include="Connection\Tcp\TcpConnection.cs" />
+    <Compile Include="Connection\Udp\UdpConnection.cs" />
     <Compile Include="Msg\Aes.cs" />
-    <Compile Include="Msg\ByteArray.cs" />
-    <Compile Include="Msg\IByteArray.cs" />
+    <Compile Include="Connection\Tcp\ByteArray.cs" />
+    <Compile Include="Connection\Tcp\IByteArray.cs" />
     <Compile Include="Msg\IMsgRegister.cs" />
-    <Compile Include="Msg\IPackage.cs" />
+    <Compile Include="Connection\Tcp\IPackage.cs" />
     <Compile Include="Msg\MsgBase.cs" />
     <Compile Include="Msg\MsgBytes.cs" />
     <Compile Include="Msg\MsgProtobuf.cs" />

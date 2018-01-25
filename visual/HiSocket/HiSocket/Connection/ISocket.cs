@@ -10,16 +10,26 @@ namespace HiSocket
     {
         /// <summary>
         /// timeout for connecting server.
+        /// default is 5000ms
         /// </summary>
         int TimeOut { get; set; }
         /// <summary>
         /// buffer size for receiving data from server 
+        /// default is 1024 * 128; //128k
         /// </summary>
         int ReceiveBufferSize { get; set; }
         /// <summary>
         /// call back when connect state changed 
         /// </summary>
         Action<SocketState> StateChangeHandler { set; }
+
+        Action<byte[]> ReceiveHandler { set; }
+
+        /// <summary>
+        /// Whole project's tick logic
+        /// in main thread
+        /// </summary>
+        void Run();
         /// <summary>
         /// if connected
         /// </summary>

@@ -1,0 +1,6 @@
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\.vs\HiSocket\lut\0\b\HiSocket\bin\Debug\HiSocket.dll
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\.vs\HiSocket\lut\0\b\HiSocket\bin\Debug\HiSocket.pdb
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\.vs\HiSocket\lut\0\i\HiSocket\Debug\HiSocket.csprojResolveAssemblyReference.cache
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\.vs\HiSocket\lut\0\i\HiSocket\Debug\HiSocket.csproj.CoreCompileInputs.cache
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\.vs\HiSocket\lut\0\i\HiSocket\Debug\HiSocket.dll
+D:\MyGit\github\HiSocket_unity\visual\HiSocket\.vs\HiSocket\lut\0\i\HiSocket\Debug\HiSocket.pdb
