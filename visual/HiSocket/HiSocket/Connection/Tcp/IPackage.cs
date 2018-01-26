@@ -4,6 +4,7 @@
 //***************************************************************************
 
 
+using System.Collections.Generic;
 
 namespace HiSocket
 {
@@ -13,11 +14,12 @@ namespace HiSocket
         /// 在此处理接收到服务器数据后的拆包粘包
         /// </summary>
         /// <param name="bytes"></param>
-        void Unpack(IByteArray bytes);
+        void Unpack(IByteArray reader, out byte[] writer);
+
         /// <summary>
         /// 在此处理将要发送的数据添加长度消息id等
         /// </summary>
         /// <param name="bytes"></param>
-        void Pack(IByteArray bytes);
+        void Pack(ref byte[] reader, IByteArray writer);
     }
 }

@@ -257,19 +257,15 @@ namespace HiSocket
                 {
                     if (_sendQueue.Count > 0)
                     {
-                        var msg = _sendQueue.Dequeue();
-                        _iByteArraySend.Clear();//待处理sendlength未全部发送
-                        _iByteArraySend.Write(msg, msg.Length);
                         try
                         {
-
-
-
-                            _iPackage.Pack(_iByteArraySend);
+                            var toPack = _sendQueue.Dequeue();
+                            _iByteArraySend.Clear();//处理未全部发送
+                            _iPackage.Pack(ref toPack, _iByteArraySend);
                         }
                         catch (Exception e)
                         {
-                            throw new Exception(e.ToString());
+                            throw new Exception("pack error: " + e);
                         }
                         var toSend = _iByteArraySend.Read(_iByteArraySend.Length);
                         try
@@ -278,6 +274,11 @@ namespace HiSocket
                             {
                                 var tcp = ar.AsyncState as TcpClient;
                                 var sendLength = tcp.Client.EndSend(ar);
+                                if (sendLength != toSend.Length)
+                                {
+                                    //待处理sendlength未全部发送
+                                    throw new Exception("can not send whole bytes at one time");
+                                }
                             }, _client);
                         }
                         catch (Exception e)
@@ -348,9 +349,9 @@ namespace HiSocket
                                 _iByteArrayReceive.Write(ReceiveBuffer, length);
                                 try
                                 {
-                                    _iPackage.Unpack(_iByteArrayReceive);
-                                    var toRead = _iByteArrayReceive.Read(_iByteArrayReceive.Length);
-                                    _receiveQueue.Enqueue(toRead);
+                                    byte[] unpacked;
+                                    _iPackage.Unpack(_iByteArrayReceive, out unpacked);
+                                    _receiveQueue.Enqueue(unpacked);
                                 }
                                 catch (Exception e)
                                 {
