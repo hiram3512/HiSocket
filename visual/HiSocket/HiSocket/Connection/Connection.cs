@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Threading;
 
 namespace HiSocket
 {
@@ -59,7 +60,15 @@ namespace HiSocket
 
         public abstract void Connect(string ip, int port);
 
-        public abstract void Send(byte[] bytes);
+        protected abstract void Send();
+        protected abstract void Receive();
+        public void Send(byte[] bytes)
+        {
+            lock (_sendQueue)
+            {
+                _sendQueue.Enqueue(bytes);
+            }
+        }
 
         /// <summary>
         ///     bug there will be a bug if you .net is 2.0sub
@@ -73,7 +82,6 @@ namespace HiSocket
             var tempPing = new Ping();
             var temPingReply = tempPing.Send(ipAddress);
             return temPingReply.RoundtripTime;
-
 
             //private int pingTime;
             //private Ping p;
@@ -104,12 +112,60 @@ namespace HiSocket
         //    System.Net.NetworkInformation.PingReply temPingReply = tempPing.Send(ipAddress);
         //    return temPingReply.RoundtripTime;
         //}
-        public abstract void DisConnect();
+        public virtual void DisConnect()
+        {
+            ChangeState(SocketState.DisConnected);
+            AbortThread();
+            lock (_sendQueue)
+            {
+                _sendQueue.Clear();
+            }
+            lock (_receiveQueue)
+            {
+                _receiveQueue.Clear();
+            }
+        }
 
         protected void ChangeState(SocketState state)
         {
             if (StateChangeHandler != null)
                 StateChangeHandler(state);
+        }
+        protected bool _isSendThreadOn;
+        protected bool _isReceiveThreadOn;
+        private Thread sendThread;
+        private Thread receiveThread;
+        protected void InitThread()
+        {
+            _isSendThreadOn = true;
+            sendThread = new Thread(Send);
+            sendThread.Start();
+            _isReceiveThreadOn = true;
+            receiveThread = new Thread(Receive);
+            receiveThread.Start();
+        }
+        private void AbortThread()
+        {
+            try
+            {
+                _isSendThreadOn = false;
+                sendThread.Abort();
+                sendThread = null;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.ToString());
+            }
+            try
+            {
+                _isReceiveThreadOn = false;
+                receiveThread.Abort();
+                receiveThread = null;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.ToString());
+            }
         }
     }
 }

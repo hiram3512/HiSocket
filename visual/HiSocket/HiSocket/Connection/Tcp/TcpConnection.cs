@@ -37,7 +37,6 @@ namespace HiSocket
             _client.SendTimeout = _client.ReceiveTimeout = TimeOut;
             _iPackage = iPackage;
         }
-        public Action<SocketState> StateChangeHandler { get; set; }
 
         public override void Connect(string ip, int port)
         {
@@ -74,34 +73,18 @@ namespace HiSocket
 
         public override void DisConnect()
         {
-            AbortThread();
+            base.DisConnect();
             _iByteArraySend.Clear();
             _iByteArrayReceive.Clear();
-            lock (_sendQueue)
-            {
-                _sendQueue.Clear();
-            }
-            lock (_receiveQueue)
-            {
-                _receiveQueue.Clear();
-            }
             if (IsConnected)
             {
                 _client.Client.Shutdown(SocketShutdown.Both);
                 _client.Close();
                 _client = null;
             }
-            ChangeState(SocketState.DisConnected);
         }
 
-        public override void Send(byte[] bytes)
-        {
-            lock (_sendQueue)
-            {
-                _sendQueue.Enqueue(bytes);
-            }
-        }
-        private void Send()
+        protected override void Send()
         {
             while (_isSendThreadOn)
             {
@@ -133,7 +116,7 @@ namespace HiSocket
                                 var sendLength = tcp.Client.EndSend(ar);
                                 if (sendLength != toSend.Length)
                                 {
-                                    //待处理sendlength未全部发送
+                                    //todo 待处理sendlength未全部发送
                                     throw new Exception("can not send whole bytes at one time");
                                 }
                             }, _client);
@@ -146,45 +129,7 @@ namespace HiSocket
                 }
             }
         }
-        private bool _isSendThreadOn;
-        private bool _isReceiveThreadOn;
-        private Thread sendThread;
-        private Thread receiveThread;
-        private void InitThread()
-        {
-            _isSendThreadOn = true;
-            sendThread = new Thread(Send);
-            sendThread.Start();
-            _isReceiveThreadOn = true;
-            receiveThread = new Thread(Receive);
-            receiveThread.Start();
-        }
-
-        private void AbortThread()
-        {
-            try
-            {
-                _isSendThreadOn = false;
-                sendThread.Abort();
-                sendThread = null;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.ToString());
-            }
-            try
-            {
-                _isReceiveThreadOn = false;
-                receiveThread.Abort();
-                receiveThread = null;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.ToString());
-            }
-        }
-
-        private void Receive()
+        protected override void Receive()
         {
             while (_isReceiveThreadOn)
             {
@@ -223,11 +168,6 @@ namespace HiSocket
                     }
                 }
             }
-        }
-        private void ChangeState(SocketState state)
-        {
-            if (StateChangeHandler != null)
-                StateChangeHandler(state);
         }
     }
 }

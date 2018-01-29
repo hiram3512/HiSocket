@@ -44,7 +44,7 @@ namespace NUnit.Tests
 
         void OnStateChange(SocketState state)
         {
-
+            
         }
     }
 
@@ -52,11 +52,13 @@ namespace NUnit.Tests
     {
         public void Unpack(IByteArray reader, out byte[] writer)
         {
+            //拆包逻辑
             throw new NotImplementedException();
         }
 
         public void Pack(ref byte[] reader, IByteArray writer)
         {
+            //封包逻辑
             throw new NotImplementedException();
         }
     }
