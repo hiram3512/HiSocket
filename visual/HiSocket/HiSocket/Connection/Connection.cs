@@ -149,7 +149,8 @@ namespace HiSocket
             try
             {
                 _isSendThreadOn = false;
-                sendThread.Abort();
+                if (sendThread != null)
+                    sendThread.Abort();
                 sendThread = null;
             }
             catch (Exception e)
@@ -159,7 +160,8 @@ namespace HiSocket
             try
             {
                 _isReceiveThreadOn = false;
-                receiveThread.Abort();
+                if (receiveThread != null)
+                    receiveThread.Abort();
                 receiveThread = null;
             }
             catch (Exception e)

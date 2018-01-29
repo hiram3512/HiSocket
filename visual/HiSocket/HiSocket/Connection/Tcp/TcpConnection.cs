@@ -93,9 +93,9 @@ namespace HiSocket
                     ChangeState(SocketState.DisConnected);
                     throw new Exception("from send: disconnected");
                 }
-                lock (_sendQueue)
+                if (_sendQueue.Count > 0)
                 {
-                    if (_sendQueue.Count > 0)
+                    lock (_sendQueue)
                     {
                         var toPack = _sendQueue.Dequeue();
                         _iByteArraySend.Clear();//todo 处理未全部发送
@@ -138,29 +138,33 @@ namespace HiSocket
                     ChangeState(SocketState.DisConnected);
                     throw new Exception("from receive: disconnected");
                 }
-                lock (_receiveQueue)
+                if (_client.Available > 0)
                 {
                     try
                     {
-                        _client.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, SocketFlags.None, delegate (IAsyncResult ar)
-                        {
-                            var tcp = ar.AsyncState as TcpClient;
-                            int length = tcp.Client.EndReceive(ar);
-                            if (length > 0)
+                        _client.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, SocketFlags.None,
+                            delegate (IAsyncResult ar)
                             {
-                                _iByteArrayReceive.Write(ReceiveBuffer, length);
-                                byte[] unpacked;
-                                try
+                                var tcp = ar.AsyncState as TcpClient;
+                                int length = tcp.Client.EndReceive(ar);
+                                if (length > 0)
                                 {
-                                    _iPackage.Unpack(_iByteArrayReceive, out unpacked);
+                                    _iByteArrayReceive.Write(ReceiveBuffer, length);
+                                    byte[] unpacked;
+                                    try
+                                    {
+                                        _iPackage.Unpack(_iByteArrayReceive, out unpacked);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        throw new Exception(e.ToString());
+                                    }
+                                    lock (_receiveQueue)
+                                    {
+                                        _receiveQueue.Enqueue(unpacked);
+                                    }
                                 }
-                                catch (Exception e)
-                                {
-                                    throw new Exception(e.ToString());
-                                }
-                                _receiveQueue.Enqueue(unpacked);
-                            }
-                        }, _client);
+                            }, _client);
                     }
                     catch (Exception e)
                     {
@@ -171,6 +175,7 @@ namespace HiSocket
         }
     }
 }
+
 
 #region MainThread//havent finish
 //#define MainThread
