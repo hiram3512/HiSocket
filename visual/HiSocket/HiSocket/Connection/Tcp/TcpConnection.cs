@@ -114,14 +114,15 @@ namespace HiSocket
                 {
                     if (_sendQueue.Count > 0)
                     {
+                        byte[] toPack;
+                        lock (_sendQueue)
+                        {
+                            toPack = _sendQueue.Dequeue();
+                        }
                         try
                         {
-                            lock (_sendQueue)
-                            {
-                                var toPack = _sendQueue.Dequeue();
-                                _iByteArraySend.Clear();//todo 处理未全部发送
-                                _iPackage.Pack(ref toPack, _iByteArraySend);
-                            }
+                            _iByteArraySend.Clear();//todo 处理未全部发送
+                            _iPackage.Pack(ref toPack, _iByteArraySend);
                         }
                         catch (Exception e)
                         {
@@ -187,7 +188,6 @@ namespace HiSocket
             }
         }
 
-
         private void Receive()
         {
             while (_isReceiveThreadOn)
@@ -199,29 +199,28 @@ namespace HiSocket
                 }
                 try
                 {
-                    _client.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, SocketFlags.None,
-                        delegate (IAsyncResult ar)
-                        {
-                            var tcp = ar.AsyncState as TcpClient;
-                            int length = tcp.Client.EndReceive(ar);
-                            if (length > 0)
-                            {
-                                _iByteArrayReceive.Write(ReceiveBuffer, length);
-                                try
-                                {
-                                    lock (_receiveQueue)
-                                    {
-                                        byte[] unpacked;
-                                        _iPackage.Unpack(_iByteArrayReceive, out unpacked);
-                                        _receiveQueue.Enqueue(unpacked);
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    throw new Exception(e.ToString());
-                                }
-                            }
-                        }, _client);
+                    _client.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, SocketFlags.None, delegate (IAsyncResult ar)
+                         {
+                             var tcp = ar.AsyncState as TcpClient;
+                             int length = tcp.Client.EndReceive(ar);
+                             if (length > 0)
+                             {
+                                 _iByteArrayReceive.Write(ReceiveBuffer, length);
+                                 try
+                                 {
+                                     byte[] unpacked;
+                                     _iPackage.Unpack(_iByteArrayReceive, out unpacked);
+                                     lock (_receiveQueue)
+                                     {
+                                         _receiveQueue.Enqueue(unpacked);
+                                     }
+                                 }
+                                 catch (Exception e)
+                                 {
+                                     throw new Exception(e.ToString());
+                                 }
+                             }
+                         }, _client);
                 }
                 catch (Exception e)
                 {
