@@ -41,13 +41,12 @@ namespace HiSocket
 
         public override void Connect(string ip, int port)
         {
-            ChangeState(SocketState.Connecting);
             if (IsConnected)
             {
-                ChangeState(SocketState.Connected);
                 Console.WriteLine("already connected");
                 return;
             }
+            ChangeState(SocketState.Connecting);
             try
             {
                 _client.BeginConnect(ip, port, delegate (IAsyncResult ar)
@@ -78,8 +77,14 @@ namespace HiSocket
             AbortThread();
             _iByteArraySend.Clear();
             _iByteArrayReceive.Clear();
-            _sendQueue.Clear();
-            _receiveQueue.Clear();
+            lock (_sendQueue)
+            {
+                _sendQueue.Clear();
+            }
+            lock (_receiveQueue)
+            {
+                _receiveQueue.Clear();
+            }
             if (IsConnected)
             {
                 _client.Client.Shutdown(SocketShutdown.Both);
@@ -111,9 +116,12 @@ namespace HiSocket
                     {
                         try
                         {
-                            var toPack = _sendQueue.Dequeue();
-                            _iByteArraySend.Clear();//处理未全部发送
-                            _iPackage.Pack(ref toPack, _iByteArraySend);
+                            lock (_sendQueue)
+                            {
+                                var toPack = _sendQueue.Dequeue();
+                                _iByteArraySend.Clear();//todo 处理未全部发送
+                                _iPackage.Pack(ref toPack, _iByteArraySend);
+                            }
                         }
                         catch (Exception e)
                         {
@@ -201,9 +209,12 @@ namespace HiSocket
                                 _iByteArrayReceive.Write(ReceiveBuffer, length);
                                 try
                                 {
-                                    byte[] unpacked;
-                                    _iPackage.Unpack(_iByteArrayReceive, out unpacked);
-                                    _receiveQueue.Enqueue(unpacked);
+                                    lock (_receiveQueue)
+                                    {
+                                        byte[] unpacked;
+                                        _iPackage.Unpack(_iByteArrayReceive, out unpacked);
+                                        _receiveQueue.Enqueue(unpacked);
+                                    }
                                 }
                                 catch (Exception e)
                                 {
