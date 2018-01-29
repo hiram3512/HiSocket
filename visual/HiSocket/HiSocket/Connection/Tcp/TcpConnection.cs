@@ -114,10 +114,10 @@ namespace HiSocket
                 {
                     if (_sendQueue.Count > 0)
                     {
+                        var toPack = _sendQueue.Dequeue();
+                        _iByteArraySend.Clear();//todo 处理未全部发送
                         try
                         {
-                            var toPack = _sendQueue.Dequeue();
-                            _iByteArraySend.Clear();//todo 处理未全部发送
                             _iPackage.Pack(ref toPack, _iByteArraySend);
                         }
                         catch (Exception e)
@@ -204,16 +204,16 @@ namespace HiSocket
                             if (length > 0)
                             {
                                 _iByteArrayReceive.Write(ReceiveBuffer, length);
+                                byte[] unpacked;
                                 try
                                 {
-                                    byte[] unpacked;
                                     _iPackage.Unpack(_iByteArrayReceive, out unpacked);
-                                    _receiveQueue.Enqueue(unpacked);
                                 }
                                 catch (Exception e)
                                 {
                                     throw new Exception(e.ToString());
                                 }
+                                _receiveQueue.Enqueue(unpacked);
                             }
                         }, _client);
                     }
