@@ -46,6 +46,11 @@ namespace NUnit.Tests
         {
             
         }
+
+        void OnApplicationQuit()
+        {
+            tcp.DisConnect();
+        }
     }
 
     public class Package : IPackage
