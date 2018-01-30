@@ -30,7 +30,6 @@ namespace HiSocket
         public UdpConnection()
         {
             _client = new UdpClient();
-            _client.Client.NoDelay = true;
             _client.Client.SendTimeout = _client.Client.ReceiveTimeout = TimeOut;
         }
 

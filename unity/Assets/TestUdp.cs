@@ -4,55 +4,53 @@
 //****************************************************************************
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using HiSocket;
 using UnityEngine;
 
 public class TestUdp : MonoBehaviour
 {
-    private UdpConnection udp;
-	// Use this for initialization
-	void Start () {
-	    udp = new UdpConnection();
-
-        udp.StateChangeEvent += OnState;
-	    udp.ReceiveEvent += OnReceive;
-
-	    udp.Connect("127.0.0.1", 7777);
+    private UdpConnection _udp;
+    // Use this for initialization
+    void Start()
+    {
+        _udp = new UdpConnection();
+        _udp.StateChangeEvent += OnState;
+        _udp.ReceiveEvent += OnReceive;
+        Connect();
     }
-	
-	// Update is called once per frame
-	void Update () {
-
+    void Connect()
+    {
+        _udp.Connect("127.0.0.1", 7777);
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        _udp.Run();
+    }
+    void OnState(SocketState state)
+    {
+        Debug.Log("current state is: " + state);
+        if (state == SocketState.Connected)
+        {
+            Send();
+        }
+    }
+    void Send()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            var bytes = BitConverter.GetBytes(i);
+            Debug.Log("send message: " + i);
+            _udp.Send(bytes);
+            i++;
+        }
     }
     private void OnApplicationQuit()
     {
-        udp.DisConnect();
+        _udp.DisConnect();
     }
-    private bool isStartSend;
-    void OnState(SocketState state)
-    {
-        if (state == SocketState.Connected)
-        {
-            isStartSend = true;
-        }
-        Debug.LogError(state);
-    }
-    private int i;
-    void StartSend()
-    {
-        if (i > 10)
-            isStartSend = false;
-
-        Debug.Log(i);
-        var bytes = BitConverter.GetBytes(i);
-        udp.Send(bytes);
-        i++;
-    }
-
     void OnReceive(byte[] bytes)
     {
-        Debug.LogError(BitConverter.ToInt32(bytes, 0));
+        Debug.Log("receive bytes: " + BitConverter.ToInt32(bytes, 0));
     }
 }
