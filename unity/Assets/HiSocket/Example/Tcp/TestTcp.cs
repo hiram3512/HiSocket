@@ -10,8 +10,8 @@ using UnityEngine;
 
 public class TestTcp : MonoBehaviour
 {
-    private TcpConnection _tcp;
-    private Packer _packer = new Packer();
+    private ISocket _tcp;
+    private IPackage _packer = new Packer();
     // Use this for initialization
     void Start()
     {
