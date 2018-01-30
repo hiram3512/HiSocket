@@ -43,16 +43,16 @@ namespace HiSocket
             }
         }
 
-        public Action<SocketState> StateChangeHandler { protected get; set; }
-        public Action<byte[]> ReceiveHandler { get; set; }
+        public event Action<SocketState> StateChangeEvent;
+        public event Action<byte[]> ReceiveEvent;
 
         public void Run()
         {
             while (_receiveQueue.Count > 0)
             {
-                if (ReceiveHandler != null)
+                if (ReceiveEvent != null)
                 {
-                    ReceiveHandler(_receiveQueue.Dequeue());
+                    ReceiveEvent(_receiveQueue.Dequeue());
                 }
             }
         }
@@ -129,8 +129,8 @@ namespace HiSocket
 
         protected void ChangeState(SocketState state)
         {
-            if (StateChangeHandler != null)
-                StateChangeHandler(state);
+            if (StateChangeEvent != null)
+                StateChangeEvent(state);
         }
         protected bool _isSendThreadOn;
         protected bool _isReceiveThreadOn;

@@ -24,8 +24,8 @@ namespace NUnit.Tests
             tcp = new TcpConnection(package);
             tcp.Connect("127.0.0.1", 7777);
 
-            tcp.StateChangeHandler = OnStateChange;
-            tcp.ReceiveHandler = OnReceive;
+            tcp.StateChangeEvent += OnStateChange;
+            tcp.ReceiveEvent += OnReceive;
 
             tcp.Send(new byte[1]);
 
@@ -44,7 +44,7 @@ namespace NUnit.Tests
 
         void OnStateChange(SocketState state)
         {
-            
+
         }
 
         void OnApplicationQuit()

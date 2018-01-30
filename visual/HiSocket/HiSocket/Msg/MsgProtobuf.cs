@@ -9,19 +9,23 @@ namespace HiSocket
 {
     public class MsgProtobuf : MsgBase
     {
-        public MsgProtobuf(IByteArray iByteArray) : base(iByteArray)
+        public MsgProtobuf() : base()
+        {
+
+        }
+        public MsgProtobuf(IByteArray byteArray) : base(byteArray)
         {
         }
 
         public void Write<T>(T t)
         {
             var bytes = Serialize(t);
-            _iByteArray.Write(bytes, bytes.Length);
+            ByteArray.Write(bytes, bytes.Length);
         }
 
         public T Read<T>()
         {
-            return Deserialize<T>(_iByteArray.ToArray());
+            return Deserialize<T>(ByteArray.Read(ByteArray.Length));
         }
 
         private byte[] Serialize<T>(T t)

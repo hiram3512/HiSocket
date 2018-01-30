@@ -1,5 +1,6 @@
 ﻿//****************************************************************************
-// Description:
+// Description:regist delegate
+// why key's type is string? because some project not only use id regist and also protobuf's name
 // Author: hiramtan@live.com
 //***************************************************************************
 using System;
@@ -8,10 +9,12 @@ namespace HiSocket
 {
     public interface IMsgRegister
     {
-        void Regist(int id, Action<IByteArray> action);
+        void Regist(string key, Action<IByteArray> action);
 
-        void Unregist(int id);
+        void Unregist(string key);
 
-        void Dispatch(int id, IByteArray iByteArray);
+        void Dispatch(string key, IByteArray iByteArray);
+
+        bool IsContain(string key);
     }
 }

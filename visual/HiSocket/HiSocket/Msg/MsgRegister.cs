@@ -9,17 +9,17 @@ namespace HiSocket
 {
     public class MsgRegister : IMsgRegister
     {
-        private readonly Dictionary<int, Action<IByteArray>> _msgDic = new Dictionary<int, Action<IByteArray>>();
+        private readonly Dictionary<string, Action<IByteArray>> _msgDic = new Dictionary<string, Action<IByteArray>>();
 
         private readonly object _locker = new object();
 
-        public void Regist(int id, Action<IByteArray> action)
+        public void Regist(string key, Action<IByteArray> action)
         {
             lock (_locker)
             {
                 try
                 {
-                    _msgDic.Add(id, action);
+                    _msgDic.Add(key, action);
                 }
                 catch (Exception e)
                 {
@@ -28,13 +28,13 @@ namespace HiSocket
             }
         }
 
-        public void Unregist(int id)
+        public void Unregist(string key)
         {
             lock (_locker)
             {
                 try
                 {
-                    _msgDic.Remove(id);
+                    _msgDic.Remove(key);
                 }
                 catch (Exception e)
                 {
@@ -43,18 +43,26 @@ namespace HiSocket
             }
         }
 
-        public void Dispatch(int id, IByteArray iByteArray)
+        public void Dispatch(string key, IByteArray iByteArray)
         {
             lock (_locker)
             {
                 try
                 {
-                    _msgDic[id](iByteArray);
+                    _msgDic[key](iByteArray);
                 }
                 catch (Exception e)
                 {
                     throw new Exception(e.ToString());
                 }
+            }
+        }
+
+        public bool IsContain(string key)
+        {
+            lock (_locker)
+            {
+                return _msgDic.ContainsKey(key);
             }
         }
     }

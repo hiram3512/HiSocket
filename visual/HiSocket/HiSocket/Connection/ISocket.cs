@@ -18,12 +18,13 @@ namespace HiSocket
         /// default is 1024 * 128; //128k
         /// </summary>
         int ReceiveBufferSize { get; set; }
+
         /// <summary>
         /// call back when connect state changed 
         /// </summary>
-        Action<SocketState> StateChangeHandler { set; }
+        event Action<SocketState> StateChangeEvent;
 
-        Action<byte[]> ReceiveHandler { set; }
+        event Action<byte[]> ReceiveEvent;
 
         /// <summary>
         /// Whole project's tick logic

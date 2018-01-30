@@ -7,11 +7,16 @@ namespace HiSocket
 {
     public abstract class MsgBase
     {
-        public readonly IByteArray _iByteArray;
+        public readonly IByteArray ByteArray;
 
-        protected MsgBase(IByteArray iByteArray)
+        protected MsgBase(IByteArray byteArray)
         {
-            _iByteArray = iByteArray;
+            ByteArray = byteArray;
+        }
+
+        protected MsgBase()
+        {
+            ByteArray = new ByteArray();
         }
     }
 }

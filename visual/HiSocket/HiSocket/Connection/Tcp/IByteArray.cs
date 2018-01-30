@@ -17,8 +17,6 @@ namespace HiSocket
         /// <param name="bytes"></param>
         void Insert(int index, byte[] bytes);
 
-        byte[] ToArray();
-
         void Clear();
     }
 }
