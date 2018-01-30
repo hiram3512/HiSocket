@@ -30,7 +30,7 @@ namespace HiSocket
         public UdpConnection()
         {
             _client = new UdpClient();
-            _client.Client.NoDelay = true;
+            //_client.Client.NoDelay = true;
             _client.Client.SendTimeout = _client.Client.ReceiveTimeout = TimeOut;
         }
 
@@ -78,7 +78,7 @@ namespace HiSocket
             }
         }
 
-       protected override void Send()
+        protected override void Send()
         {
             while (_isSendThreadOn)
             {
@@ -87,11 +87,11 @@ namespace HiSocket
                     ChangeState(SocketState.DisConnected);
                     throw new Exception("from send: disconnected");
                 }
-                lock (_sendQueue)
+                if (_sendQueue.Count > 0)
                 {
-                    try
+                    lock (_sendQueue)
                     {
-                        if (_sendQueue.Count > 0)
+                        try
                         {
                             var toSend = _sendQueue.Dequeue();
                             _client.Client.BeginSend(toSend, 0, toSend.Length, SocketFlags.None,
@@ -106,10 +106,10 @@ namespace HiSocket
                                     }
                                 }, _client);
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(e.ToString());
+                        catch (Exception e)
+                        {
+                            throw new Exception(e.ToString());
+                        }
                     }
                 }
             }
@@ -124,25 +124,28 @@ namespace HiSocket
                     ChangeState(SocketState.DisConnected);
                     throw new Exception("from receive: disconnected");
                 }
-                lock (_receiveQueue)
+                if (_client.Available > 0)
                 {
-                    try
+                    lock (_receiveQueue)
                     {
-                        _client.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, SocketFlags.None, (x) =>
+                        try
                         {
-                            var udp = x.AsyncState as UdpClient;
-                            int length = udp.Client.EndReceive(x);
-                            if (length > 0)
+                            _client.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, SocketFlags.None, (x) =>
                             {
-                                byte[] receiveBytes = new byte[length];
-                                Array.Copy(ReceiveBuffer, 0, receiveBytes, 0, length);
-                                _receiveQueue.Enqueue(receiveBytes);
-                            }
-                        }, _client);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(e.ToString());
+                                var udp = x.AsyncState as UdpClient;
+                                int length = udp.Client.EndReceive(x);
+                                if (length > 0)
+                                {
+                                    byte[] receiveBytes = new byte[length];
+                                    Array.Copy(ReceiveBuffer, 0, receiveBytes, 0, length);
+                                    _receiveQueue.Enqueue(receiveBytes);
+                                }
+                            }, _client);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new Exception(e.ToString());
+                        }
                     }
                 }
             }

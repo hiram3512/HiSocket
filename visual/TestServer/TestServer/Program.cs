@@ -20,7 +20,7 @@ namespace TestServer
         public void Start()
         {
             IPAddress _ipAddress = IPAddress.Parse("127.0.0.1");
-            IPEndPoint iep = new IPEndPoint(_ipAddress, 5077);
+            IPEndPoint iep = new IPEndPoint(_ipAddress, 7777);
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socket.Bind(iep);
             _socket.Listen(2);

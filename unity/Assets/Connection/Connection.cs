@@ -24,6 +24,7 @@ namespace HiSocket
 
         protected Connection()
         {
+            Console.WriteLine("you can download newest version from here: https://github.com/hiramtan/HiSocket_unity");
             ReceiveBuffer = new byte[_receiveBufferSize];
         }
 

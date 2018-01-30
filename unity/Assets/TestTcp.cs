@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HiSocket;
 
-public class NewBehaviourScript : MonoBehaviour
+public class TestTcp : MonoBehaviour
 {
     private TcpConnection tcp;
     PackMsg packMsg = new PackMsg();
@@ -21,7 +21,7 @@ public class NewBehaviourScript : MonoBehaviour
         tcp.ReceiveHandler = OnReceive;
 
 
-        tcp.Connect("127.0.0.1", 5077);
+        tcp.Connect("127.0.0.1", 7777);
     }
 
     // Update is called once per frame
