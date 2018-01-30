@@ -16,8 +16,8 @@ public class TestUdp : MonoBehaviour
 	void Start () {
 	    udp = new UdpConnection();
 
-        udp.StateChangeHandler = OnState;
-	    udp.ReceiveHandler = OnReceive;
+        udp.StateChangeEvent += OnState;
+	    udp.ReceiveEvent += OnReceive;
 
 	    udp.Connect("127.0.0.1", 7777);
     }
