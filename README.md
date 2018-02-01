@@ -97,19 +97,33 @@ public class TestTcp : MonoBehaviour
     }
     public class Packer : IPackage
     {
-        public void Unpack(IByteArray reader, out byte[] writer)
+         public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
         {
             //get head length or id
-            writer = reader.Read(reader.Length);
+            while (reader.Length >= 1)
+            {
+                byte bodyLength = reader.Read(1)[0];
+
+                if (reader.Length >= bodyLength)
+                {
+                    var body = reader.Read(bodyLength);
+                    receiveQueue.Enqueue(body);
+                }
+            }
         }
-        public void Pack(ref byte[] reader, IByteArray writer)
+        public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
             //add head length or id
-            writer.Write(reader, reader.Length);
+            byte[] head = new Byte[1] { 4 };
+            writer.Write(head, head.Length);
+
+            var body = sendQueue.Dequeue();
+            writer.Write(body, body.Length);
         }
     }
 }
 ```
+---------------------
 #### Example2
 ``` csharp
 //****************************************************************************
@@ -174,15 +188,28 @@ public class TestTcp2 : MonoBehaviour
     }
     public class Packer : IPackage
     {
-        public void Unpack(IByteArray reader, out byte[] writer)
+         public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
         {
-            //get head length
-            writer = reader.Read(reader.Length);
+            //get head length or id
+            while (reader.Length >= 1)
+            {
+                byte bodyLength = reader.Read(1)[0];
+
+                if (reader.Length >= bodyLength)
+                {
+                    var body = reader.Read(bodyLength);
+                    receiveQueue.Enqueue(body);
+                }
+            }
         }
-        public void Pack(ref byte[] reader, IByteArray writer)
+        public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
-            //add head length
-            writer.Write(reader, reader.Length);
+            //add head length or id
+            byte[] head = new Byte[1] { 4 };
+            writer.Write(head, head.Length);
+
+            var body = sendQueue.Dequeue();
+            writer.Write(body, body.Length);
         }
     }
 
@@ -227,7 +254,63 @@ public class TestTcp2 : MonoBehaviour
     #endregion
 }
 ```
+-----------------
+#### Example3
+``` csharp
+//****************************************************************************
+// Description:
+// Author: hiramtan@live.com
+//****************************************************************************
 
+using System;
+using HiSocket;
+using UnityEngine;
+
+public class TestUdp : MonoBehaviour
+{
+    private UdpConnection _udp;
+    // Use this for initialization
+    void Start()
+    {
+        _udp = new UdpConnection();
+        _udp.StateChangeEvent += OnState;
+        _udp.ReceiveEvent += OnReceive;
+        Connect();
+        Send();
+    }
+    void Connect()
+    {
+        _udp.Connect("127.0.0.1", 7777);
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        _udp.Run();
+    }
+    void OnState(SocketState state)
+    {
+        Debug.Log("current state is: " + state);
+    }
+    void Send()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            var bytes = BitConverter.GetBytes(i);
+            _udp.Send(bytes);
+            Debug.Log("send message: " + i);
+        }
+    }
+    private void OnApplicationQuit()
+    {
+        _udp.DisConnect();
+    }
+    void OnReceive(byte[] bytes)
+    {
+        Debug.Log("receive bytes: " + BitConverter.ToInt32(bytes, 0));
+    }
+}
+
+```
 
 support: hiramtan@live.com
 

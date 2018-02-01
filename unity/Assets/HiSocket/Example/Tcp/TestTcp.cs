@@ -71,7 +71,6 @@ public class TestTcp : MonoBehaviour
                 }
             }
         }
-
         public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
             //add head length or id

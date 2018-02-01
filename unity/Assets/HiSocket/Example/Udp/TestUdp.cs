@@ -17,6 +17,7 @@ public class TestUdp : MonoBehaviour
         _udp.StateChangeEvent += OnState;
         _udp.ReceiveEvent += OnReceive;
         Connect();
+        Send();
     }
     void Connect()
     {
@@ -30,19 +31,14 @@ public class TestUdp : MonoBehaviour
     void OnState(SocketState state)
     {
         Debug.Log("current state is: " + state);
-        if (state == SocketState.Connected)
-        {
-            Send();
-        }
     }
     void Send()
     {
         for (int i = 0; i < 10; i++)
         {
             var bytes = BitConverter.GetBytes(i);
-            Debug.Log("send message: " + i);
             _udp.Send(bytes);
-            i++;
+            Debug.Log("send message: " + i);
         }
     }
     private void OnApplicationQuit()
