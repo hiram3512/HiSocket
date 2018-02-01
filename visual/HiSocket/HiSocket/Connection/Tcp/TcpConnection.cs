@@ -97,7 +97,6 @@ namespace HiSocket
                     lock (_sendQueue)
                     {
                         var toPack = _sendQueue.Dequeue();
-                        _iByteArraySend.Clear();//todo 处理未全部发送
                         try
                         {
                             _iPackage.Pack(ref toPack, _iByteArraySend);
@@ -115,7 +114,7 @@ namespace HiSocket
                                 var sendLength = tcp.Client.EndSend(ar);
                                 if (sendLength != toSend.Length)
                                 {
-                                    //todo 待处理sendlength未全部发送
+                                    //todo: if this will happend, msdn is not handle this issue
                                     throw new Exception("can not send whole bytes at one time");
                                 }
                             }, _client);
