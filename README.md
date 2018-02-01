@@ -3,9 +3,9 @@
 中文说明
 
 ### How to use
- You can download unity package from here:
+ You can download unity package from here: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket_unity/releases)
 
- or you can download from unity asset store: 
+ or you can download from unity asset store:[https://www.assetstore.unity3d.com/en/#!/content/104658](https://www.assetstore.unity3d.com/en/#!/content/104658) 
 
 ---------
 
@@ -36,6 +36,7 @@
 8.There is ping logic, but because of the bug of mono, it will throw an error on .net2.0(.net 4.6 will be fine, also you can use unity's api to get ping time)
 
 ---------
+[![](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)
 #### Example1
 ``` csharp
 //****************************************************************************
