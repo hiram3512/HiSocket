@@ -46,9 +46,9 @@ namespace HiSocket
                 _client.Client.BeginConnect(ip, port, (x) =>
                 {
                     var udp = x.AsyncState as UdpClient;
-                    udp.Client.EndConnect(x);
-                    if (udp.Client.Connected)
+                    if (udp != null && udp.Client.Connected)
                     {
+                        udp.Client.EndConnect(x);
                         ChangeState(SocketState.Connected);
                         InitThread();
                     }

@@ -50,9 +50,9 @@ namespace HiSocket
                 _client.BeginConnect(ip, port, delegate (IAsyncResult ar)
                 {
                     var tcp = ar.AsyncState as TcpClient;
-                    tcp.Client.EndConnect(ar);
-                    if (tcp.Connected)
+                    if (tcp != null && tcp.Connected)
                     {
+                        tcp.Client.EndConnect(ar);
                         ChangeState(SocketState.Connected);
                         InitThread();
                     }
