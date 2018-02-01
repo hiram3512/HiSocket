@@ -55,16 +55,29 @@ namespace NUnit.Tests
 
     public class Package : IPackage
     {
-        public void Unpack(IByteArray reader, out byte[] writer)
+        public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
         {
-            //拆包逻辑
-            throw new NotImplementedException();
+            //get head length or id
+            while (reader.Length >= 1)
+            {
+                byte bodyLength = reader.Read(1)[0];
+
+                if (reader.Length >= bodyLength)
+                {
+                    var body = reader.Read(bodyLength);
+                    receiveQueue.Enqueue(body);
+                }
+            }
         }
 
-        public void Pack(ref byte[] reader, IByteArray writer)
+        public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
-            //封包逻辑
-            throw new NotImplementedException();
+            //add head length or id
+            byte[] head = new Byte[1] { 4 };
+            writer.Write(head, head.Length);
+
+            var body = sendQueue.Dequeue();
+            writer.Write(body, body.Length);
         }
     }
 }

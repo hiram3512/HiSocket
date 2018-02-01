@@ -21,7 +21,6 @@ namespace HiSocket
             ChangeState(SocketState.Connecting);
             var address = Dns.GetHostAddresses(ip)[0];
             _socket = new Socket(address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
-            _socket.NoDelay = true;
             _socket.SendTimeout = _socket.ReceiveTimeout = TimeOut;
             try
             {
