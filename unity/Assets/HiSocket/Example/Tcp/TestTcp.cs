@@ -6,6 +6,7 @@
 
 using HiSocket;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TestTcp : MonoBehaviour
@@ -42,9 +43,8 @@ public class TestTcp : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             var bytes = BitConverter.GetBytes(i);
-            Debug.Log("send message: " + i);
             _tcp.Send(bytes);
-            i++;
+            Debug.Log("send message: " + i);
         }
     }
     private void OnApplicationQuit()
@@ -57,15 +57,29 @@ public class TestTcp : MonoBehaviour
     }
     public class Packer : IPackage
     {
-        public void Unpack(IByteArray reader, out byte[] writer)
+        public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
         {
             //get head length or id
-            writer = reader.Read(reader.Length);
+            while (reader.Length >= 1)
+            {
+                byte bodyLength = reader.Read(1)[0];
+
+                if (reader.Length >= bodyLength)
+                {
+                    var body = reader.Read(bodyLength);
+                    receiveQueue.Enqueue(body);
+                }
+            }
         }
-        public void Pack(ref byte[] reader, IByteArray writer)
+
+        public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
             //add head length or id
-            writer.Write(reader, reader.Length);
+            byte[] head = new Byte[1] { 4 };
+            writer.Write(head, head.Length);
+
+            var body = sendQueue.Dequeue();
+            writer.Write(body, body.Length);
         }
     }
 }

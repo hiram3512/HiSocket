@@ -6,6 +6,7 @@
 using System;
 using UnityEngine;
 using HiSocket;
+using System.Collections.Generic;
 
 public class TestTcp2 : MonoBehaviour
 {
@@ -60,17 +61,29 @@ public class TestTcp2 : MonoBehaviour
     }
     public class Packer : IPackage
     {
-        public void Unpack(IByteArray reader, out byte[] writer)
+        public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
         {
-            //get head length
-            writer = reader.Read(reader.Length);
+            //get head length or id
+            while (reader.Length >= 1)
+            {
+                byte bodyLength = reader.Read(1)[0];
+                if (reader.Length >= bodyLength)
+                {
+                    receiveQueue.Enqueue(reader.Read(bodyLength));
+                }
+            }
         }
-        public void Pack(ref byte[] reader, IByteArray writer)
+
+        public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
-            //add head length
-            writer.Write(reader, reader.Length);
+            //add head length or id
+            byte[] head = new Byte[1] { 4 };
+            writer.Write(head, head.Length);
+            var body = sendQueue.Dequeue();
+            writer.Write(body, body.Length);
         }
     }
+
 
     #region receive message
     IMsgRegister msgRegister = new MsgRegister();

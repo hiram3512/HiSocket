@@ -55,7 +55,7 @@ namespace HiSocket
             {
                 for (int i = 0; i < length; i++)
                 {
-                    _bytes.Add(_bytes[i]);
+                    _bytes.Add(bytes[i]);
                 }
             }
         }

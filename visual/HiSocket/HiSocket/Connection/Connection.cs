@@ -83,14 +83,12 @@ namespace HiSocket
         ///     bug there will be a bug if you .net is 2.0sub
         /// </summary>
         /// <returns></returns>
-        public long Ping()
+        public long Ping(string ip)
         {
-            //如果unity选择.net为2.0sub会出现bug
-            //如果unity选择.net为4.6不会出现
-            //var ipAddress = IPAddress.Parse(IP);
-            //var tempPing = new Ping();
-            //var temPingReply = tempPing.Send(ipAddress);
-            //return temPingReply.RoundtripTime;
+            var ipAddress = IPAddress.Parse(ip);
+            var tempPing = new Ping();
+            var temPingReply = tempPing.Send(ipAddress);
+            return temPingReply.RoundtripTime;
 
             //private int pingTime;
             //private Ping p;

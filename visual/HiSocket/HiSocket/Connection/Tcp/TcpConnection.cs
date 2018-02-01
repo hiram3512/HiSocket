@@ -15,7 +15,7 @@ namespace HiSocket
         protected readonly IByteArray _iByteArraySend = new ByteArray();
         protected readonly IPackage _iPackage;
 
-        public TcpConnection(IPackage iPackage) : base()
+        public TcpConnection(IPackage iPackage)
         {
             _iPackage = iPackage;
         }
@@ -29,12 +29,13 @@ namespace HiSocket
             }
             ChangeState(SocketState.Connecting);
             var address = Dns.GetHostAddresses(ip)[0];
+            IPEndPoint iep = new IPEndPoint(address, port);
             _socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             _socket.NoDelay = true;
             _socket.SendTimeout = _socket.ReceiveTimeout = TimeOut;
             try
             {
-                _socket.BeginConnect(ip, port, delegate (IAsyncResult ar)
+                _socket.BeginConnect(iep, delegate (IAsyncResult ar)
                 {
                     var tcp = ar.AsyncState as Socket;
                     if (tcp != null && tcp.Connected)
@@ -75,36 +76,36 @@ namespace HiSocket
                 }
                 if (_sendQueue.Count > 0)
                 {
-                    lock (_sendQueue)
+                    try
                     {
-                        var toPack = _sendQueue.Dequeue();
-                        try
+                        lock (_sendQueue)
                         {
-                            _iPackage.Pack(ref toPack, _iByteArraySend);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception("pack error: " + e);
-                        }
-                        var toSend = _iByteArraySend.Read(_iByteArraySend.Length);
-                        try
-                        {
-                            _socket.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate (IAsyncResult ar)
-                            {
-                                var tcp = ar.AsyncState as Socket;
-                                var sendLength = tcp.EndSend(ar);
-                                if (sendLength != toSend.Length)
-                                {
-                                    //todo: if this will happend, msdn is not handle this issue
-                                    throw new Exception("can not send whole bytes at one time");
-                                }
-                            }, _socket);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(e.ToString());
+                            _iPackage.Pack(_sendQueue, _iByteArraySend);
                         }
                     }
+                    catch (Exception e)
+                    {
+                        throw new Exception("pack error: " + e);
+                    }
+                    var toSend = _iByteArraySend.Read(_iByteArraySend.Length);
+                    try
+                    {
+                        _socket.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate (IAsyncResult ar)
+                        {
+                            var tcp = ar.AsyncState as Socket;
+                            var sendLength = tcp.EndSend(ar);
+                            if (sendLength != toSend.Length)
+                            {
+                                //todo: if this will happend, msdn is not handle this issue
+                                throw new Exception("can not send whole bytes at one time");
+                            }
+                        }, _socket);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.ToString());
+                    }
+
                 }
             }
         }
@@ -128,18 +129,16 @@ namespace HiSocket
                                  if (length > 0)
                                  {
                                      _iByteArrayReceive.Write(ReceiveBuffer, length);
-                                     byte[] unpacked;
                                      try
                                      {
-                                         _iPackage.Unpack(_iByteArrayReceive, out unpacked);
+                                         lock (_receiveQueue)
+                                         {
+                                             _iPackage.Unpack(_iByteArrayReceive, _receiveQueue);
+                                         }
                                      }
                                      catch (Exception e)
                                      {
                                          throw new Exception(e.ToString());
-                                     }
-                                     lock (_receiveQueue)
-                                     {
-                                         _receiveQueue.Enqueue(unpacked);
                                      }
                                  }
                              }, _socket);

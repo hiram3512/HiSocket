@@ -32,6 +32,7 @@ namespace TestServer
                     while (client.Receive(bytes) > 0)
                     {
                         client.Send(bytes);
+                        Console.WriteLine(bytes);
                     }
                 }
             }

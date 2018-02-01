@@ -56,7 +56,7 @@ namespace HiSocket
         /// use .net 4.6 or use unity's ping time.
         /// </summary>
         /// <returns></returns>
-        long Ping();
+        long Ping(string ip);
     }
     public enum SocketState
     {

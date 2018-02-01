@@ -37,8 +37,6 @@
 
 ---------
 #### Example1
-
-
 ``` csharp
 //****************************************************************************
 // Description: only use tcp socket to send and receive message
