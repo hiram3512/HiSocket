@@ -4,36 +4,19 @@
 //***************************************************************************
 
 using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace HiSocket
 {
     public class TcpConnection : Connection
     {
-        private TcpClient _client;
         protected readonly IByteArray _iByteArrayReceive = new ByteArray();
         protected readonly IByteArray _iByteArraySend = new ByteArray();
         protected readonly IPackage _iPackage;
 
-        public override int TimeOut
+        public TcpConnection(IPackage iPackage) : base()
         {
-            get { return _timeOut; }
-            set
-            {
-                _timeOut = value;
-                _client.SendTimeout = _client.ReceiveTimeout = TimeOut;
-            }
-        }
-
-        public override bool IsConnected
-        {
-            get { return _client != null && _client.Client != null && _client.Connected; }
-        }
-        public TcpConnection(IPackage iPackage)
-        {
-            _client = new TcpClient();
-            _client.NoDelay = true;
-            _client.SendTimeout = _client.ReceiveTimeout = TimeOut;
             _iPackage = iPackage;
         }
 
@@ -45,14 +28,18 @@ namespace HiSocket
                 return;
             }
             ChangeState(SocketState.Connecting);
+            var address = Dns.GetHostAddresses(ip)[0];
+            _socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            _socket.NoDelay = true;
+            _socket.SendTimeout = _socket.ReceiveTimeout = TimeOut;
             try
             {
-                _client.BeginConnect(ip, port, delegate (IAsyncResult ar)
+                _socket.BeginConnect(ip, port, delegate (IAsyncResult ar)
                 {
-                    var tcp = ar.AsyncState as TcpClient;
+                    var tcp = ar.AsyncState as Socket;
                     if (tcp != null && tcp.Connected)
                     {
-                        tcp.Client.EndConnect(ar);
+                        tcp.EndConnect(ar);
                         ChangeState(SocketState.Connected);
                         InitThread();
                     }
@@ -61,7 +48,7 @@ namespace HiSocket
                         ChangeState(SocketState.DisConnected);
                         throw new Exception("tcp connected is false");
                     }
-                }, _client);
+                }, _socket);
             }
             catch (Exception e)
             {
@@ -75,12 +62,6 @@ namespace HiSocket
             base.DisConnect();
             _iByteArraySend.Clear();
             _iByteArrayReceive.Clear();
-            if (IsConnected)
-            {
-                _client.Client.Shutdown(SocketShutdown.Both);
-                _client.Close();
-                _client = null;
-            }
         }
 
         protected override void Send()
@@ -108,16 +89,16 @@ namespace HiSocket
                         var toSend = _iByteArraySend.Read(_iByteArraySend.Length);
                         try
                         {
-                            _client.Client.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate (IAsyncResult ar)
+                            _socket.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate (IAsyncResult ar)
                             {
-                                var tcp = ar.AsyncState as TcpClient;
-                                var sendLength = tcp.Client.EndSend(ar);
+                                var tcp = ar.AsyncState as Socket;
+                                var sendLength = tcp.EndSend(ar);
                                 if (sendLength != toSend.Length)
                                 {
                                     //todo: if this will happend, msdn is not handle this issue
                                     throw new Exception("can not send whole bytes at one time");
                                 }
-                            }, _client);
+                            }, _socket);
                         }
                         catch (Exception e)
                         {
@@ -136,14 +117,14 @@ namespace HiSocket
                     ChangeState(SocketState.DisConnected);
                     throw new Exception("from receive: disconnected");
                 }
-                if (_client.Available > 0)
+                if (_socket.Available > 0)
                 {
                     try
                     {
-                        _client.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, SocketFlags.None, delegate (IAsyncResult ar)
+                        _socket.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, SocketFlags.None, delegate (IAsyncResult ar)
                              {
-                                 var tcp = ar.AsyncState as TcpClient;
-                                 int length = tcp.Client.EndReceive(ar);
+                                 var tcp = ar.AsyncState as Socket;
+                                 int length = tcp.EndReceive(ar);
                                  if (length > 0)
                                  {
                                      _iByteArrayReceive.Write(ReceiveBuffer, length);
@@ -161,7 +142,7 @@ namespace HiSocket
                                          _receiveQueue.Enqueue(unpacked);
                                      }
                                  }
-                             }, _client);
+                             }, _socket);
                     }
                     catch (Exception e)
                     {

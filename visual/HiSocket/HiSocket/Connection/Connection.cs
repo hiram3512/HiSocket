@@ -7,18 +7,17 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Threading;
 
 namespace HiSocket
 {
     public abstract class Connection : ISocket
     {
+        protected Socket _socket;
         protected int _receiveBufferSize = 1024 * 128; //128k
         protected int _timeOut = 5000;
-        protected string IP;
-        protected int Port;
         protected byte[] ReceiveBuffer;
-
         protected Queue<byte[]> _receiveQueue = new Queue<byte[]>();
         protected Queue<byte[]> _sendQueue = new Queue<byte[]>();
 
@@ -28,7 +27,19 @@ namespace HiSocket
             ReceiveBuffer = new byte[_receiveBufferSize];
         }
 
-        public abstract int TimeOut { get; set; }
+        public int TimeOut
+        {
+            get { return _timeOut; }
+            set
+            {
+                _timeOut = value;
+                _socket.ReceiveTimeout = _socket.ReceiveTimeout = TimeOut;
+            }
+        }
+        public bool IsConnected
+        {
+            get { return _socket != null && _socket.Connected; }
+        }
 
         public int ReceiveBufferSize
         {
@@ -56,9 +67,6 @@ namespace HiSocket
                 }
             }
         }
-
-        public abstract bool IsConnected { get; }
-
         public abstract void Connect(string ip, int port);
 
         protected abstract void Send();
@@ -79,10 +87,10 @@ namespace HiSocket
         {
             //如果unity选择.net为2.0sub会出现bug
             //如果unity选择.net为4.6不会出现
-            var ipAddress = IPAddress.Parse(IP);
-            var tempPing = new Ping();
-            var temPingReply = tempPing.Send(ipAddress);
-            return temPingReply.RoundtripTime;
+            //var ipAddress = IPAddress.Parse(IP);
+            //var tempPing = new Ping();
+            //var temPingReply = tempPing.Send(ipAddress);
+            //return temPingReply.RoundtripTime;
 
             //private int pingTime;
             //private Ping p;
@@ -124,6 +132,12 @@ namespace HiSocket
             lock (_receiveQueue)
             {
                 _receiveQueue.Clear();
+            }
+            if (IsConnected)
+            {
+                _socket.Shutdown(SocketShutdown.Both);
+                _socket.Close();
+                _socket = null;
             }
         }
 

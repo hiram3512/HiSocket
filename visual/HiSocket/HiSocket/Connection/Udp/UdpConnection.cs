@@ -3,6 +3,7 @@
 // Author: hiramtan@live.com
 //***************************************************************************
 using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -10,29 +11,6 @@ namespace HiSocket
 {
     public class UdpConnection : Connection
     {
-        private UdpClient _client;
-
-        public override int TimeOut
-        {
-            get { return _timeOut; }
-            set
-            {
-                _timeOut = value;
-                _client.Client.ReceiveTimeout = _client.Client.ReceiveTimeout = TimeOut;
-            }
-        }
-
-        public override bool IsConnected
-        {
-            get { return _client != null && _client.Client != null && _client.Client.Connected; }
-        }
-
-        public UdpConnection()
-        {
-            _client = new UdpClient();
-            _client.Client.SendTimeout = _client.Client.ReceiveTimeout = TimeOut;
-        }
-
         public override void Connect(string ip, int port)
         {
             if (IsConnected)
@@ -41,23 +19,27 @@ namespace HiSocket
                 return;
             }
             ChangeState(SocketState.Connecting);
+            var address = Dns.GetHostAddresses(ip)[0];
+            _socket = new Socket(address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+            _socket.NoDelay = true;
+            _socket.SendTimeout = _socket.ReceiveTimeout = TimeOut;
             try
             {
-                _client.Client.BeginConnect(ip, port, (x) =>
+                _socket.BeginConnect(ip, port, delegate (IAsyncResult ar)
                 {
-                    var udp = x.AsyncState as UdpClient;
-                    if (udp != null && udp.Client.Connected)
+                    var tcp = ar.AsyncState as Socket;
+                    if (tcp != null && tcp.Connected)
                     {
-                        udp.Client.EndConnect(x);
+                        tcp.EndConnect(ar);
                         ChangeState(SocketState.Connected);
                         InitThread();
                     }
                     else
                     {
                         ChangeState(SocketState.DisConnected);
-                        throw new Exception("udp connected is false");
+                        throw new Exception("tcp connected is false");
                     }
-                }, _client);
+                }, _socket);
             }
             catch (Exception e)
             {
@@ -65,18 +47,6 @@ namespace HiSocket
                 throw new Exception(e.ToString());
             }
         }
-
-        public override void DisConnect()
-        {
-            base.DisConnect();
-            if (IsConnected)
-            {
-                _client.Client.Shutdown(SocketShutdown.Both);
-                _client.Close();
-                _client = null;
-            }
-        }
-
         protected override void Send()
         {
             while (_isSendThreadOn)
@@ -90,20 +60,19 @@ namespace HiSocket
                 {
                     lock (_sendQueue)
                     {
+                        var toSend = _sendQueue.Dequeue();
                         try
                         {
-                            var toSend = _sendQueue.Dequeue();
-                            _client.Client.BeginSend(toSend, 0, toSend.Length, SocketFlags.None,
-                                delegate (IAsyncResult ar)
+                            _socket.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate (IAsyncResult ar)
+                            {
+                                var tcp = ar.AsyncState as Socket;
+                                var sendLength = tcp.EndSend(ar);
+                                if (sendLength != toSend.Length)
                                 {
-                                    var udp = ar.AsyncState as UdpClient;
-                                    var sendLength = udp.Client.EndSend(ar);
-                                    if (sendLength != toSend.Length)
-                                    {
-                                        //todo 待处理sendlength未全部发送
-                                        throw new Exception("can not send whole bytes at one time");
-                                    }
-                                }, _client);
+                                    //todo: if this will happend, msdn is not handle this issue
+                                    throw new Exception("can not send whole bytes at one time");
+                                }
+                            }, _socket);
                         }
                         catch (Exception e)
                         {
@@ -123,28 +92,28 @@ namespace HiSocket
                     ChangeState(SocketState.DisConnected);
                     throw new Exception("from receive: disconnected");
                 }
-                if (_client.Available > 0)
+                if (_socket.Available > 0)
                 {
-                    lock (_receiveQueue)
+                    try
                     {
-                        try
+                        _socket.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, SocketFlags.None, delegate (IAsyncResult ar)
                         {
-                            _client.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, SocketFlags.None, (x) =>
+                            var tcp = ar.AsyncState as Socket;
+                            int length = tcp.EndReceive(ar);
+                            if (length > 0)
                             {
-                                var udp = x.AsyncState as UdpClient;
-                                int length = udp.Client.EndReceive(x);
-                                if (length > 0)
+                                byte[] receiveBytes = new byte[length];
+                                Array.Copy(ReceiveBuffer,0,receiveBytes,0,length);
+                                lock (_receiveQueue)
                                 {
-                                    byte[] receiveBytes = new byte[length];
-                                    Array.Copy(ReceiveBuffer, 0, receiveBytes, 0, length);
                                     _receiveQueue.Enqueue(receiveBytes);
                                 }
-                            }, _client);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(e.ToString());
-                        }
+                            }
+                        }, _socket);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.ToString());
                     }
                 }
             }
