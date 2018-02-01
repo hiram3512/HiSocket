@@ -10,7 +10,7 @@ namespace HiSocket
 {
     public class MsgBytes : MsgBase
     {
-        public MsgBytes():base()
+        public MsgBytes() : base()
         {
 
         }

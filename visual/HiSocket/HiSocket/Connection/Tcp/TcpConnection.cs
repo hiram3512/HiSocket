@@ -141,29 +141,28 @@ namespace HiSocket
                 {
                     try
                     {
-                        _client.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, SocketFlags.None,
-                            delegate (IAsyncResult ar)
-                            {
-                                var tcp = ar.AsyncState as TcpClient;
-                                int length = tcp.Client.EndReceive(ar);
-                                if (length > 0)
-                                {
-                                    _iByteArrayReceive.Write(ReceiveBuffer, length);
-                                    byte[] unpacked;
-                                    try
-                                    {
-                                        _iPackage.Unpack(_iByteArrayReceive, out unpacked);
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        throw new Exception(e.ToString());
-                                    }
-                                    lock (_receiveQueue)
-                                    {
-                                        _receiveQueue.Enqueue(unpacked);
-                                    }
-                                }
-                            }, _client);
+                        _client.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, SocketFlags.None, delegate (IAsyncResult ar)
+                             {
+                                 var tcp = ar.AsyncState as TcpClient;
+                                 int length = tcp.Client.EndReceive(ar);
+                                 if (length > 0)
+                                 {
+                                     _iByteArrayReceive.Write(ReceiveBuffer, length);
+                                     byte[] unpacked;
+                                     try
+                                     {
+                                         _iPackage.Unpack(_iByteArrayReceive, out unpacked);
+                                     }
+                                     catch (Exception e)
+                                     {
+                                         throw new Exception(e.ToString());
+                                     }
+                                     lock (_receiveQueue)
+                                     {
+                                         _receiveQueue.Enqueue(unpacked);
+                                     }
+                                 }
+                             }, _client);
                     }
                     catch (Exception e)
                     {

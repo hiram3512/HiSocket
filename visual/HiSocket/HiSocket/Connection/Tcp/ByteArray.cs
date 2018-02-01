@@ -14,50 +14,34 @@ namespace HiSocket
         private readonly object _locker = new object();
         public int Length
         {
-            get { return _bytes.Count; }
+            get
+            {
+                lock (_locker)
+                {
+                    return _bytes.Count;
+                }
+            }
+        }
+
+        public byte[] Read(int index, int length)
+        {
+            lock (_locker)
+            {
+                var bytes = _bytes.GetRange(index, length);
+                _bytes.RemoveRange(index, length);
+                return bytes.ToArray();
+            }
         }
 
         public byte[] Read(int length)
         {
             lock (_locker)
             {
-                try
-                {
-                    byte[] bytes = new byte[length];
-                    for (int i = 0; i < length; i++)
-                    {
-                        bytes[i] = this._bytes[i];
-                    }
-                    this._bytes.RemoveRange(0, length);
-                    return bytes;
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.ToString());
-                }
-
+                return Read(0, length);
             }
         }
 
-        public void Write(byte[] bytes, int length)
-        {
-            lock (_locker)
-            {
-                try
-                {
-                    for (int i = 0; i < length; i++)
-                    {
-                        this._bytes.Add(bytes[i]);
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.ToString());
-                }
-            }
-        }
-
-        public void Insert(int index, byte[] bytes)
+        public void Write(int index, byte[] bytes)
         {
             lock (_locker)
             {
@@ -65,11 +49,14 @@ namespace HiSocket
             }
         }
 
-        public byte[] ToArray()
+        public void Write(byte[] bytes, int length)
         {
             lock (_locker)
             {
-                return _bytes.ToArray();
+                for (int i = 0; i < length; i++)
+                {
+                    _bytes.Add(_bytes[i]);
+                }
             }
         }
 
