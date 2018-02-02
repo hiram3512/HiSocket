@@ -1,6 +1,6 @@
 # HiSocket_unity
 ----------------------
-中文说明
+[中文说明](https://github.com/hiramtan/HiSocket_unity/blob/master/README_zh.md) 
 
 ### How to use
  You can download unity package from here: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket_unity/releases)

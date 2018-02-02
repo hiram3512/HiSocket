@@ -2,38 +2,38 @@
 ----------------------
 中文说明
 
-### How to use
- You can download unity package from here: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket_unity/releases)
+### 如何使用
+ 可以从此链接下载最新的unity package: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket_unity/releases)
 
- or you can download from unity asset store:[https://www.assetstore.unity3d.com/en/#!/content/104658](https://www.assetstore.unity3d.com/en/#!/content/104658) 
+ 或者从unity asset store下载:[https://www.assetstore.unity3d.com/en/#!/content/104658](https://www.assetstore.unity3d.com/en/#!/content/104658) 
 
 ---------
 
-### Features
-- Support Tcp socket
-- Support Udp socket
-- Message registration and call back
-- Support byte message
-- Support protobuf message
-- Support AES encryption
+### 功能
+- Tcp socket
+- Udp socket
+- 消息注册和回调
+- 二进制字节消息封装
+- Protobuf消息封装
+- 支持AES消息加密
 
 
-### Details
-1.Tcp and Udp are use async connection
+### 详情
+1.Tcp和Udp都是采用异步通信的方式
 
-2.There is a send thread to send message
+2.发送消息会通过一个发送线程
 
-3.There is a receive thread to receive message
+3.接收消息会通过一个接收线程
 
-4.You use API send and receive message is on main thread
+4.用户执行的接收和发送都在主线程中执行
 
-5.You can get current connect state by adding listener of state event.
+5.监听连接事件获得当前的连接状态.
 
-6.You can receive message by adding listener of receive event.
+6.监听接收事件获得接收的数据.
 
-7.If you use Tcp socket, you should use IPackage interface to pack unpack message.
+7.如果使用Tcp协议需要实现IPackage接口处理粘包拆包.
 
-8.There is ping logic, but because of the bug of mono, it will throw an error on .net2.0(.net 4.6 will be fine, also you can use unity's api to get ping time)
+8.Ping接口因为mono底层的bug会在.net2.0平台报错(.net 4.6 没有问题,或者也可以使用unity的接口获得Ping)
 
 ---------
 [![](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)
