@@ -6,9 +6,10 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
+using UnityEngine;
+using Ping = System.Net.NetworkInformation.Ping;
 
 namespace HiSocket
 {
@@ -16,47 +17,25 @@ namespace HiSocket
     {
         protected Socket _socket;
         protected int _receiveBufferSize = 1024 * 128; //128k
-        protected int _timeOut = 5000;
         protected byte[] ReceiveBuffer;
         protected Queue<byte[]> _receiveQueue = new Queue<byte[]>();
         protected Queue<byte[]> _sendQueue = new Queue<byte[]>();
-
-        protected Connection()
+        public int ReceiveBufferSize
         {
-            Console.WriteLine("you can download newest version from here: https://github.com/hiramtan/HiSocket_unity");
-            ReceiveBuffer = new byte[_receiveBufferSize];
-        }
-
-        public int TimeOut
-        {
-            get { return _timeOut; }
+            get { return _receiveBufferSize; }
             set
             {
-                _timeOut = value;
-                _socket.ReceiveTimeout = _socket.ReceiveTimeout = TimeOut;
+                _receiveBufferSize = value;
+                ReceiveBuffer = new byte[ReceiveBufferSize];
             }
         }
-        public bool IsConnected
-        {
-            get { return _socket != null && _socket.Connected; }
-        }
-
-        public abstract int ReceiveBufferSize { get; set; }
-        //{
-        //    get
-        //    {
-        //        return _receiveBufferSize;
-        //    }
-        //    set
-        //    {
-        //        _receiveBufferSize = value;
-        //        ReceiveBuffer = new byte[ReceiveBufferSize];
-        //    }
-        //}
-
         public event Action<SocketState> StateChangeEvent;
         public event Action<byte[]> ReceiveEvent;
-
+        protected Connection()
+        {
+            Debug.Log("you can download newest version from here: https://github.com/hiramtan/HiSocket_unity");
+            ReceiveBuffer = new byte[_receiveBufferSize];
+        }
         public void Run()
         {
             while (_receiveQueue.Count > 0)
@@ -68,7 +47,6 @@ namespace HiSocket
             }
         }
         public abstract void Connect(string ip, int port);
-
         protected abstract void Send();
         protected abstract void Receive();
         public void Send(byte[] bytes)
@@ -121,7 +99,6 @@ namespace HiSocket
         //}
         public virtual void DisConnect()
         {
-            ChangeState(SocketState.DisConnected);
             AbortThread();
             lock (_sendQueue)
             {
@@ -131,19 +108,11 @@ namespace HiSocket
             {
                 _receiveQueue.Clear();
             }
-            if (IsConnected)
-            {
-                _socket.Shutdown(SocketShutdown.Both);
-                _socket.Close();
-                _socket = null;
-            }
+            _socket.Shutdown(SocketShutdown.Both);
+            _socket.Close();
+            _socket = null;
         }
 
-        protected void ChangeState(SocketState state)
-        {
-            if (StateChangeEvent != null)
-                StateChangeEvent(state);
-        }
         protected bool _isSendThreadOn;
         protected bool _isReceiveThreadOn;
         private Thread sendThread;

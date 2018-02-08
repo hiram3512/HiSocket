@@ -9,6 +9,10 @@ namespace HiSocket
     public interface ITcp
     {
         /// <summary>
+        /// if connected
+        /// </summary>
+        bool IsConnected { get; }
+        /// <summary>
         /// timeout for connecting server.
         /// default is 5000ms
         /// </summary>
@@ -27,14 +31,11 @@ namespace HiSocket
         event Action<byte[]> ReceiveEvent;
 
         /// <summary>
-        /// Whole project's tick logic
+        ///  tick logic
         /// in main thread
         /// </summary>
         void Run();
-        /// <summary>
-        /// if connected
-        /// </summary>
-        bool IsConnected { get; }
+
         /// <summary>
         /// 
         /// </summary>

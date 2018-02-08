@@ -1,4 +1,11 @@
-﻿using UnityEngine;
+﻿/****************************************************************
+ * Description: 
+ * UDP Sockets are "connection-less", so the protocol does not know anything about whether or not the server and client are connected.
+ *
+ * Author: hiramtan@live.com
+ *////////////////////////////////////////////////////////////////////////
+
+using UnityEngine;
 using System.Collections;
 
 public class NewMonoBehaviour : MonoBehaviour
