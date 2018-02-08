@@ -57,7 +57,7 @@ public class TestTcp2 : MonoBehaviour
         //Debug.Log("receive bytes: " + BitConverter.ToInt32(bytes, 0));
         var byteArray = new ByteArray();
         byteArray.Write(bytes, bytes.Length);
-        msgRegister.Dispatch("10001", byteArray);
+        MsgRegister.Dispatch("10001", byteArray);
     }
     public class Packer : IPackage
     {
@@ -86,11 +86,10 @@ public class TestTcp2 : MonoBehaviour
 
 
     #region receive message
-    IMsgRegister msgRegister = new MsgRegister();
     void RegistMsg()
     {
-        msgRegister.Regist("10001", OnMsg_Bytes);
-        msgRegister.Regist("10002", OnMsg_Protobuf);
+        MsgRegister.Regist("10001", OnMsg_Bytes);
+        MsgRegister.Regist("10002", OnMsg_Protobuf);
     }
 
     void OnMsg_Bytes(IByteArray byteArray)

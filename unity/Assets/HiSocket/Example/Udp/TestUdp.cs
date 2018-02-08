@@ -14,7 +14,6 @@ public class TestUdp : MonoBehaviour
     void Start()
     {
         _udp = new UdpConnection();
-        _udp.StateChangeEvent += OnState;
         _udp.ReceiveEvent += OnReceive;
         Connect();
         Send();
@@ -27,10 +26,6 @@ public class TestUdp : MonoBehaviour
     void Update()
     {
         _udp.Run();
-    }
-    void OnState(SocketState state)
-    {
-        Debug.Log("current state is: " + state);
     }
     void Send()
     {
