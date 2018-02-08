@@ -1,18 +1,51 @@
-﻿using UnityEngine;
+﻿/****************************************************************
+ * Description: 
+ * UDP Sockets are "connection-less", so the protocol does not know anything about whether or not the server and client are connected.
+ *
+ * Author: hiramtan@live.com
+ *////////////////////////////////////////////////////////////////////////
+
+using System;
+using UnityEngine;
 using System.Collections;
 
-public class NewMonoBehaviour1 : MonoBehaviour
+namespace HiSocket
 {
-
-    // Use this for initialization
-    void Start()
+    public interface IUdp
     {
+        /// <summary>
+        /// buffer size for receiving data from server 
+        /// default is 1024 * 128; //128k
+        /// </summary>
+        int ReceiveBufferSize { get; set; }
+        event Action<byte[]> ReceiveEvent;
+        /// <summary>
+        ///  tick logic
+        /// in main thread
+        /// </summary>
+        void Run();
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        void Connect(string ip, int port);
+        /// <summary>
+        /// 
+        /// </summary>
+        void DisConnect();
+        /// <summary>
+        /// send bytes to server
+        /// </summary>
+        /// <param name="bytes"></param>
+        void Send(byte[] bytes);
+        /// <summary>
+        /// ping time
+        /// bug if your unity's .net is 2.0 will thow out a bug.
+        /// use .net 4.6 or use unity's ping time instead.
+        /// </summary>
+        /// <returns></returns>
+        long Ping(string ip);
     }
 }

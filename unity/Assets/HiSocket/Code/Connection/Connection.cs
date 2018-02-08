@@ -29,7 +29,6 @@ namespace HiSocket
                 ReceiveBuffer = new byte[ReceiveBufferSize];
             }
         }
-        public event Action<SocketState> StateChangeEvent;
         public event Action<byte[]> ReceiveEvent;
         protected Connection()
         {
