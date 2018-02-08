@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class TestTcp : MonoBehaviour
 {
-    private ISocket _tcp;
+    private ITcp _tcp;
     private IPackage _packer = new Packer();
     // Use this for initialization
     void Start()
