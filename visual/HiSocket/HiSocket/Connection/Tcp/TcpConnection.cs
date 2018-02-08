@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace HiSocket
 {
-    public class Tcp : Connection, ITcp
+    public class TcpConnection : Connection, ITcp
     {
         private readonly IByteArray _iByteArrayReceive = new ByteArray();
         private readonly IByteArray _iByteArraySend = new ByteArray();
@@ -26,7 +26,7 @@ namespace HiSocket
             get { return _socket != null && _socket.Connected; }
         }
         public event Action<SocketState> StateChangeEvent;
-        public Tcp(IPackage iPackage)
+        public TcpConnection(IPackage iPackage)
         {
             _iPackage = iPackage;
         }
@@ -320,7 +320,7 @@ namespace HiSocket
 //using System.Net.Sockets;
 //using System.Threading;
 
-//namespace HiSocket.Tcp
+//namespace HiSocket.TcpConnection
 //{
 //    // State object for receiving data from remote device.  
 //    public class TcpConnection : ITcp
@@ -498,7 +498,7 @@ namespace HiSocket
 
 ////                // Create a TCP/IP socket.  
 ////                Socket client = new Socket(AddressFamily.InterNetwork,
-////                    SocketType.Stream, ProtocolType.Tcp);
+////                    SocketType.Stream, ProtocolType.TcpConnection);
 
 ////                // Connect to the remote endpoint.  
 ////                client.BeginConnect(remoteEP,
