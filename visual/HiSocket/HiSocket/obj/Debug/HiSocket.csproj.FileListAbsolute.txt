@@ -12,3 +12,4 @@ D:\MyGit\HiSocket_unity\visual\HiSocket\HiSocket\obj\Debug\HiSocket.csproj.CoreC
 D:\MyGit\HiSocket_unity\visual\HiSocket\HiSocket\obj\Debug\HiSocket.dll
 D:\MyGit\HiSocket_unity\visual\HiSocket\HiSocket\obj\Debug\HiSocket.pdb
 D:\MyGit\HiSocket_unity\visual\HiSocket\HiSocket\obj\Debug\HiSocket.csprojResolveAssemblyReference.cache
+D:\MyGit\HiSocket_unity\visual\HiSocket\HiSocket\bin\Debug\UnityEngine.dll

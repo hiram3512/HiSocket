@@ -9,3 +9,4 @@ D:\MyGit\HiSocket_unity\visual\HiSocket\NUnit.Tests\obj\Debug\NUnit.Tests.csproj
 D:\MyGit\HiSocket_unity\visual\HiSocket\NUnit.Tests\obj\Debug\NUnit.Tests.csproj.CoreCompileInputs.cache
 D:\MyGit\HiSocket_unity\visual\HiSocket\NUnit.Tests\obj\Debug\NUnit.Tests.dll
 D:\MyGit\HiSocket_unity\visual\HiSocket\NUnit.Tests\obj\Debug\NUnit.Tests.pdb
+D:\MyGit\HiSocket_unity\visual\HiSocket\NUnit.Tests\bin\Debug\UnityEngine.dll

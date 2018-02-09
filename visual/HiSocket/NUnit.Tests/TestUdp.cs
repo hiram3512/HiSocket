@@ -19,7 +19,6 @@ namespace NUnit.Tests
             udp = new UdpConnection();
             udp.Connect("", 7777);
 
-            udp.StateChangeEvent += OnStateChange;
             udp.ReceiveEvent += OnReceive;
 
             udp.DisConnect();

@@ -16,8 +16,7 @@ namespace NUnit.Tests
         #region GetMsg
         void Regist()
         {
-            MsgRegister msgRegister = new MsgRegister();
-            msgRegister.Regist("id", OnMsg);
+            MsgRegister.Regist("id", OnMsg);
         }
 
         void OnMsg(IByteArray iByteArray)
