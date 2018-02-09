@@ -1,11 +1,11 @@
 # HiSocket_unity
 ----------------------
-中文说明
+
 
 ### 如何使用
  可以从此链接下载最新的unity package: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket_unity/releases)
 
- 或者从unity asset store下载:[https://www.assetstore.unity3d.com/en/#!/content/104658](https://www.assetstore.unity3d.com/en/#!/content/104658) 
+ 或者从unity asset store下载: [https://www.assetstore.unity3d.com/en/#!/content/104658](https://www.assetstore.unity3d.com/en/#!/content/104658) 
 
 ---------
 
@@ -19,38 +19,29 @@
 
 
 ### 详情
-1.Tcp和Udp都是采用异步通信的方式
+1. Tcp和Udp都是采用异步通信的方式
 
-2.发送消息会通过一个发送线程
+2. 用户发送接收的操作在主线程中.
 
-3.接收消息会通过一个接收线程
+3. 实际上后台会有发送线程和接收线程处理数据传输.
 
-4.用户执行的接收和发送都在主线程中执行
+4. 监听连接事件获得当前的连接状态.
 
-5.监听连接事件获得当前的连接状态.
+5. 监听接收事件获得接收的数据.
 
-6.监听接收事件获得接收的数据.
+6. 如果使用Tcp协议需要实现IPackage接口处理粘包拆包.
 
-7.如果使用Tcp协议需要实现IPackage接口处理粘包拆包.
-
-8.Ping接口因为mono底层的bug会在.net2.0平台报错(.net 4.6 没有问题,或者也可以使用unity的接口获得Ping)
+7. Ping接口因为mono底层的bug会在.net2.0平台报错(.net 4.6 没有问题,或者也可以使用unity的接口获得Ping)
 
 ---------
-[![](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)
-#### Example1
+
+
+#### Tcp Example
+[Transmission Control Protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol)
+
+Tcp 协议提供可靠有序的流字节传输,用户需要自己分割数据,在这个框架中可以继承IPackage接口来实现.
+
 ``` csharp
-//****************************************************************************
-// Description: only use tcp socket to send and receive message
-// Should achieve pack and unpack logic by yourself
-// Author: hiramtan@live.com
-//****************************************************************************
-
-using HiSocket;
-using System;
-using UnityEngine;
-
-public class TestTcp : MonoBehaviour
-{
     private ISocket _tcp;
     private IPackage _packer = new Packer();
     // Use this for initialization
@@ -73,10 +64,6 @@ public class TestTcp : MonoBehaviour
     void OnState(SocketState state)
     {
         Debug.Log("current state is: " + state);
-        if (state == SocketState.Connected)
-        {
-            Send();
-        }
     }
     void Send()
     {
@@ -87,10 +74,6 @@ public class TestTcp : MonoBehaviour
             _tcp.Send(bytes);
             i++;
         }
-    }
-    private void OnApplicationQuit()
-    {
-        _tcp.DisConnect();
     }
     void OnReceive(byte[] bytes)
     {
@@ -101,125 +84,60 @@ public class TestTcp : MonoBehaviour
          public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
         {
             //get head length or id
-            while (reader.Length >= 1)
-            {
-                byte bodyLength = reader.Read(1)[0];
-
-                if (reader.Length >= bodyLength)
-                {
-                    var body = reader.Read(bodyLength);
-                    receiveQueue.Enqueue(body);
-                }
-            }
         }
         public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
             //add head length or id
-            byte[] head = new Byte[1] { 4 };
-            writer.Write(head, head.Length);
-
-            var body = sendQueue.Dequeue();
-            writer.Write(body, body.Length);
         }
     }
-}
 ```
 ---------------------
-#### Example2
+
+#### Udp Example
+[User Datagram Protocol](https://www.assetstore.unity3d.com/en/#!/content/104658) 
+
+Udp协议提供不可靠的报文消息,用户无法知道当前连接状态,但是消息包时完整的.
+
 ``` csharp
-//****************************************************************************
-// Description:tcp socket and message regist
-// Author: hiramtan@live.com
-//****************************************************************************
-
-using System;
-using UnityEngine;
-using HiSocket;
-
-public class TestTcp2 : MonoBehaviour
-{
-    private ISocket _tcp;
-    private IPackage _packer = new Packer();
+    private UdpConnection _udp;
     // Use this for initialization
     void Start()
     {
-        RegistMsg();
-        _tcp = new TcpConnection(_packer);
-        _tcp.StateChangeEvent += OnState;
-        _tcp.ReceiveEvent += OnReceive;
+        _udp = new UdpConnection();
+        _udp.ReceiveEvent += OnReceive;
         Connect();
+        Send();
     }
     void Connect()
     {
-        _tcp.Connect("127.0.0.1", 7777);
+        _udp.Connect("127.0.0.1", 7777);
     }
     // Update is called once per frame
     void Update()
     {
-        _tcp.Run();
-    }
-    void OnState(SocketState state)
-    {
-        Debug.Log("current state is: " + state);
-        if (state == SocketState.Connected)
-        {
-            Send();
-        }
+        _udp.Run();
     }
     void Send()
     {
         for (int i = 0; i < 10; i++)
         {
             var bytes = BitConverter.GetBytes(i);
+            _udp.Send(bytes);
             Debug.Log("send message: " + i);
-            _tcp.Send(bytes);
-            i++;
         }
-    }
-    private void OnApplicationQuit()
-    {
-        _tcp.DisConnect();
     }
     void OnReceive(byte[] bytes)
     {
-        //Debug.Log("receive bytes: " + BitConverter.ToInt32(bytes, 0));
-        var byteArray = new ByteArray();
-        byteArray.Write(bytes, bytes.Length);
-        msgRegister.Dispatch("10001", byteArray);
+        Debug.Log("receive bytes: " + BitConverter.ToInt32(bytes, 0));
     }
-    public class Packer : IPackage
-    {
-         public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
-        {
-            //get head length or id
-            while (reader.Length >= 1)
-            {
-                byte bodyLength = reader.Read(1)[0];
-
-                if (reader.Length >= bodyLength)
-                {
-                    var body = reader.Read(bodyLength);
-                    receiveQueue.Enqueue(body);
-                }
-            }
-        }
-        public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
-        {
-            //add head length or id
-            byte[] head = new Byte[1] { 4 };
-            writer.Write(head, head.Length);
-
-            var body = sendQueue.Dequeue();
-            writer.Write(body, body.Length);
-        }
-    }
-
-    #region receive message
-    IMsgRegister msgRegister = new MsgRegister();
+```
+-----------------
+#### Message Registration Example
+``` csharp
     void RegistMsg()
     {
-        msgRegister.Regist("10001", OnMsg_Bytes);
-        msgRegister.Regist("10002", OnMsg_Protobuf);
+        MsgRegister.Regist("10001", OnMsg_Bytes);
+        MsgRegister.Regist("10002", OnMsg_Protobuf);
     }
 
     void OnMsg_Bytes(IByteArray byteArray)
@@ -234,84 +152,8 @@ public class TestTcp2 : MonoBehaviour
         GameObject testClass = msg.Read<GameObject>();//your class's type
         var testName = testClass.name;
     }
-    #endregion
-    #region send message
-    void Msg_Bytes()
-    {
-        var msg = new MsgBytes();
-        int x = 10;
-        msg.Write(x);
-        byte[] bytes = msg.ByteArray.Read(msg.ByteArray.Length);
-        _tcp.Send(bytes);
-    }
-    void Msg_Protobuf()
-    {
-        var msg = new MsgProtobuf();
-        var testGo = new GameObject();
-        msg.Write(testGo);
-        byte[] bytes = msg.ByteArray.Read(msg.ByteArray.Length);
-        _tcp.Send(bytes);
-    }
-    #endregion
-}
 ```
------------------
-#### Example3
-``` csharp
-//****************************************************************************
-// Description:
-// Author: hiramtan@live.com
-//****************************************************************************
 
-using System;
-using HiSocket;
-using UnityEngine;
-
-public class TestUdp : MonoBehaviour
-{
-    private UdpConnection _udp;
-    // Use this for initialization
-    void Start()
-    {
-        _udp = new UdpConnection();
-        _udp.StateChangeEvent += OnState;
-        _udp.ReceiveEvent += OnReceive;
-        Connect();
-        Send();
-    }
-    void Connect()
-    {
-        _udp.Connect("127.0.0.1", 7777);
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        _udp.Run();
-    }
-    void OnState(SocketState state)
-    {
-        Debug.Log("current state is: " + state);
-    }
-    void Send()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            var bytes = BitConverter.GetBytes(i);
-            _udp.Send(bytes);
-            Debug.Log("send message: " + i);
-        }
-    }
-    private void OnApplicationQuit()
-    {
-        _udp.DisConnect();
-    }
-    void OnReceive(byte[] bytes)
-    {
-        Debug.Log("receive bytes: " + BitConverter.ToInt32(bytes, 0));
-    }
-}
-
-```
 
 support: hiramtan@live.com
 

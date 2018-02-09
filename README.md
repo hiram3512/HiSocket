@@ -98,7 +98,7 @@ Tcp provides reliable, ordered, and error-checked delivery of a stream of bytes.
 #### Udp Example
 [User Datagram Protocol](https://www.assetstore.unity3d.com/en/#!/content/104658) 
 
-Udp provides checksums for data integrity, and port numbers for addressing different functions at the source and destination of the datagram. that means you don't know current connect state, and package is integrated.
+Udp provides checksums for data integrity, and port numbers for addressing different functions at the source and destination of the datagram. that means you don't know current connect state, but package is integrated.
 
 ``` csharp
     private UdpConnection _udp;
@@ -155,7 +155,6 @@ Udp provides checksums for data integrity, and port numbers for addressing diffe
         var testName = testClass.name;
     }
 ```
-Or you can use this quick resist message
 
 
 support: hiramtan@live.com
