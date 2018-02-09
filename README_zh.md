@@ -41,6 +41,8 @@
 
 Tcp 协议提供可靠有序的流字节传输,用户需要自己分割数据,在这个框架中可以继承IPackage接口来实现.
 
+[![](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)
+
 ``` csharp
     private ISocket _tcp;
     private IPackage _packer = new Packer();
