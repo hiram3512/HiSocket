@@ -49,6 +49,7 @@ public class TestTcp : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
+		if (_tcp.IsConnected)
         _tcp.DisConnect();
     }
     void OnReceive(byte[] bytes)
