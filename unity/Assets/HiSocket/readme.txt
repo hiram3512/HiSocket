@@ -1,15 +1,13 @@
-you can download newest version from here: https://github.com/hiramtan/HiSocket_unity
+you can download newest version from here: <a href=""https://github.com/hiramtan/HiSocket_unity"">HiSocket</a>
 
-Features
+There are two kinds of socket in the project: tcp and udp.
 
-    Support Tcp socket
-    Support Udp socket
-    Message registration and call back
-    Support byte message
-    Support protobuf message
-    Support AES encryption
+1. TestTcp example show how to use tcp connect to server, send and receive data.
+2. TestTcp2 example show how to regist message and callback
+3. TestUdp example show how to use udp connect to server, send and receiv data.
 
-Details
+
+More Details
 
 1.Tcp and Udp are use async connection
 
