@@ -159,7 +159,7 @@ Udp协议提供不可靠的报文消息,用户无法知道当前连接状态,但
 
 support: hiramtan@live.com
 
-点击链接加入QQ群【Unity3D】：https://jq.qq.com/?_wv=1027&k=5l6rZEr
+点击链接加入QQ群【83596104】：https://jq.qq.com/?_wv=1027&k=5l6rZEr
 
 -------------
 MIT License
