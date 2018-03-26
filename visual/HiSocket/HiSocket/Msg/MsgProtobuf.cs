@@ -20,12 +20,12 @@ namespace HiSocket
         public void Write<T>(T t)
         {
             var bytes = Serialize(t);
-            ByteArray.Write(bytes, bytes.Length);
+            ByteArray.Write(0, bytes);
         }
 
         public T Read<T>()
         {
-            return Deserialize<T>(ByteArray.Read(ByteArray.Length));
+            return Deserialize<T>(ByteArray.Read(0, ByteArray.Length));
         }
 
         private byte[] Serialize<T>(T t)

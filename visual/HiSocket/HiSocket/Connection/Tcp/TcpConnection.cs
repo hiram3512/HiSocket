@@ -90,7 +90,7 @@ namespace HiSocket
                     {
                         throw new Exception("pack error: " + e);
                     }
-                    var toSend = _iByteArraySend.Read(_iByteArraySend.Length);
+                    var toSend = _iByteArraySend.Read(0, _iByteArraySend.Length);
                     try
                     {
                         _socket.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate (IAsyncResult ar)
@@ -99,8 +99,10 @@ namespace HiSocket
                             var sendLength = tcp.EndSend(ar);
                             if (sendLength != toSend.Length)
                             {
-                                //todo: if this will happend, msdn is not handle this issue
-                                throw new Exception("can not send whole bytes at one time");
+                                //todo: if this will really happend? msdn is not handle this issue
+                                byte[] haventFinishBytes = new byte[toSend.Length - sendLength];
+                                Array.Copy(toSend, sendLength, haventFinishBytes, 0, haventFinishBytes.Length);
+                                _iByteArraySend.Write(0, haventFinishBytes);
                             }
                         }, _socket);
                     }
@@ -131,7 +133,9 @@ namespace HiSocket
                             int length = tcp.EndReceive(ar);
                             if (length > 0)
                             {
-                                _iByteArrayReceive.Write(ReceiveBuffer, length);
+                                byte[] toWrite = new byte[length];
+                                Array.Copy(ReceiveBuffer, 0, toWrite, 0, toWrite.Length);
+                                _iByteArrayReceive.Write(0, toWrite);
                                 try
                                 {
                                     lock (_receiveQueue)
@@ -160,8 +164,6 @@ namespace HiSocket
         }
     }
 }
-
-
 //#region MainThread//havent finish
 ////#define MainThread
 //#if MainThread
