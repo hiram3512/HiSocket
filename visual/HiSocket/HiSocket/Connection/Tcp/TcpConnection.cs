@@ -90,7 +90,7 @@ namespace HiSocket
                     {
                         throw new Exception("pack error: " + e);
                     }
-                    var toSend = _iByteArraySend.Read(0, _iByteArraySend.Length);
+                    var toSend = _iByteArraySend.Read(_iByteArraySend.Length);
                     try
                     {
                         _socket.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate (IAsyncResult ar)
@@ -100,9 +100,11 @@ namespace HiSocket
                             if (sendLength != toSend.Length)
                             {
                                 //todo: if this will really happend? msdn is not handle this issue
-                                byte[] haventFinishBytes = new byte[toSend.Length - sendLength];
+                                var haventFinishBytes = new byte[toSend.Length - sendLength];
                                 Array.Copy(toSend, sendLength, haventFinishBytes, 0, haventFinishBytes.Length);
-                                _iByteArraySend.Write(0, haventFinishBytes);
+                                var inListBytes = _iByteArraySend.Read(_iByteArraySend.Length);
+                                _iByteArraySend.Write(haventFinishBytes);
+                                _iByteArraySend.Write(inListBytes);
                             }
                         }, _socket);
                     }
@@ -135,7 +137,7 @@ namespace HiSocket
                             {
                                 byte[] toWrite = new byte[length];
                                 Array.Copy(ReceiveBuffer, 0, toWrite, 0, toWrite.Length);
-                                _iByteArrayReceive.Write(0, toWrite);
+                                _iByteArrayReceive.Write(toWrite);
                                 try
                                 {
                                     lock (_receiveQueue)

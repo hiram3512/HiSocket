@@ -23,23 +23,23 @@ namespace HiSocket
             }
         }
 
-        public byte[] Read(int index, int length)
+        public byte[] Read(int length)
         {
             lock (_locker)
             {
-                if (index + length > Length)
+                if (length > Length)
                     throw new Exception("length error: don't have so many bytes to read");
-                var bytes = _bytes.GetRange(index, length);
-                _bytes.RemoveRange(index, length);
+                var bytes = _bytes.GetRange(0, length);
+                _bytes.RemoveRange(0, length);
                 return bytes.ToArray();
             }
         }
 
-        public void Write(int insertIndex, byte[] bytes)
+        public void Write(byte[] bytes)
         {
             lock (_locker)
             {
-                _bytes.InsertRange(insertIndex, bytes);
+                _bytes.InsertRange(_bytes.Count, bytes);
             }
         }
         public void Clear()

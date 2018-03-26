@@ -6,7 +6,6 @@ D:\MyGit\HiSocket_unity\visual\HiSocket\HiSocket\obj\Release\HiSocket.csprojReso
 D:\MyGit\HiSocket_unity\visual\HiSocket\HiSocket\obj\Release\HiSocket.csproj.CoreCompileInputs.cache
 D:\MyGit\HiSocket_unity\visual\HiSocket\HiSocket\obj\Release\HiSocket.dll
 D:\MyGit\HiSocket_unity\visual\HiSocket\HiSocket\obj\Release\HiSocket.pdb
-D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\obj\Release\HiSocket.csprojResolveAssemblyReference.cache
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\obj\Release\HiSocket.csproj.CoreCompileInputs.cache
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\obj\Release\HiSocket.dll
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\obj\Release\HiSocket.pdb

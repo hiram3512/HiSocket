@@ -49,40 +49,31 @@ public class TestTcp : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
-		if (_tcp.IsConnected)
-        _tcp.DisConnect();
+        if (_tcp.IsConnected)
+            _tcp.DisConnect();
     }
     void OnReceive(byte[] bytes)
     {
-        Debug.Log("receive bytes: " +bytes.Length);
+        Debug.Log("receive bytes: " + bytes.Length);
     }
     public class Packer : IPackage
     {
         public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
         {
-            //get head length or id
-            //while (reader.Length >= 1)
-            //{
-            //    byte bodyLength = reader.Read(1)[0];
+            //add your unpack logic here
+            var bytesWaitToUnpack = reader.Read(1);
+            //
+            //
 
-            //    if (reader.Length >= bodyLength)
-            //    {
-            //        var body = reader.Read(bodyLength);
-            //        receiveQueue.Enqueue(body);
-            //    }
-            //}
-
-            receiveQueue.Enqueue(reader.Read(reader.Length));
+            receiveQueue.Enqueue(bytesWaitToUnpack);
         }
         public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
-            //add head length or id
-            //byte[] head = new Byte[1] { 4 };
-            //writer.Write(head, head.Length);
-            //var body = sendQueue.Dequeue();
+            var bytesWaitToPack = sendQueue.Dequeue();
+            // add your pack logic here
+            //
 
-            var test = sendQueue.Dequeue();
-            writer.Write(test, test.Length);
+            writer.Write(bytesWaitToPack);
         }
     }
 }

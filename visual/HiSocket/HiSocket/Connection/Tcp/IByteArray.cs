@@ -13,19 +13,18 @@ namespace HiSocket
         int Length { get; }
 
         /// <summary>
-        /// read bytes
+        /// read bytes from head of the list
         /// </summary>
         /// <param name="index">from index</param>
         /// <param name="length">read how many bytes</param>
         /// <returns></returns>
-        byte[] Read(int index, int length);
+        byte[] Read(int length);
 
         /// <summary>
-        /// write bytes
+        /// write bytes into the end of the list
         /// </summary>
         /// <param name="insertIndex">where to insert</param>
         /// <param name="bytes">bytes wait to write</param>
-        void Write(int insertIndex, byte[] bytes);
-        void Clear();
+        void Write(byte[] bytes);
     }
 }

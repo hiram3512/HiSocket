@@ -56,7 +56,7 @@ public class TestTcp2 : MonoBehaviour
     {
         //Debug.Log("receive bytes: " + BitConverter.ToInt32(bytes, 0));
         var byteArray = new ByteArray();
-        byteArray.Write(bytes, bytes.Length);
+        byteArray.Write(bytes);
         MsgRegister.Dispatch("10001", byteArray);
     }
     public class Packer : IPackage
@@ -77,10 +77,13 @@ public class TestTcp2 : MonoBehaviour
         public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
             //add head length or id
-            byte[] head = new Byte[1] { 4 };
-            writer.Write(head, head.Length);
-            var body = sendQueue.Dequeue();
-            writer.Write(body, body.Length);
+            while (sendQueue.Count > 1)
+            {
+                byte[] head = new Byte[1] { 4 };
+                writer.Write(head);
+                var body = sendQueue.Dequeue();
+                writer.Write(body);
+            }
         }
     }
 
