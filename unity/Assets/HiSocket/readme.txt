@@ -1,4 +1,4 @@
-you can download newest version from here: <a href=""https://github.com/hiramtan/HiSocket_unity"">HiSocket</a>
+you can download newest version from here:https://github.com/hiramtan/HiSocket_unity
 
 There are two kinds of socket in the project: tcp and udp.
 
