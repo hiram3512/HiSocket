@@ -64,26 +64,20 @@ public class TestTcp2 : MonoBehaviour
         public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
         {
             //get head length or id
-            while (reader.Length >= 1)
+            byte bodyLength = reader.Read(1)[0];
+            if (reader.Length >= bodyLength)
             {
-                byte bodyLength = reader.Read(1)[0];
-                if (reader.Length >= bodyLength)
-                {
-                    receiveQueue.Enqueue(reader.Read(bodyLength));
-                }
+                receiveQueue.Enqueue(reader.Read(bodyLength));
             }
         }
 
         public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
             //add head length or id
-            while (sendQueue.Count > 1)
-            {
-                byte[] head = new Byte[1] { 4 };
-                writer.Write(head);
-                var body = sendQueue.Dequeue();
-                writer.Write(body);
-            }
+            byte[] head = new Byte[1] { 4 };
+            writer.Write(head);
+            var body = sendQueue.Dequeue();
+            writer.Write(body);
         }
     }
 
