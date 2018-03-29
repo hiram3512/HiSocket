@@ -35,7 +35,7 @@ namespace HiSocket
         {
             if (IsConnected)
             {
-                Debug.Log("already connected");
+                Debug.LogWarning("already connected");
                 return;
             }
             ChangeState(SocketState.Connecting);
