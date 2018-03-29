@@ -42,12 +42,5 @@ namespace HiSocket
                 _bytes.InsertRange(_bytes.Count, bytes);
             }
         }
-        public void Clear()
-        {
-            lock (_locker)
-            {
-                _bytes.Clear();
-            }
-        }
     }
 }

@@ -49,7 +49,7 @@ namespace HiSocket
                                 if (sendLength != toSend.Length)
                                 {
                                     //todo: if this will happend, msdn is not handle this issue
-                                    throw new Exception("can not send whole bytes at one time");
+                                    throw new Exception("error: protocol is udp");
                                 }
                             }, _socket);
                         }

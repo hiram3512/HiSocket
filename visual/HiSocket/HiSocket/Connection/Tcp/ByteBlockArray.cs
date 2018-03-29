@@ -12,7 +12,7 @@ namespace HiSocket
 {
     class ByteBlockArray
     {
-        public const int size = 1024;//block's size
+        public const int size = 1024; //block's size
         private LinkedList<byte[]> _linkedList = new LinkedList<byte[]>();
 
         public NodeInfo Reader { get; private set; }
@@ -24,11 +24,12 @@ namespace HiSocket
             Reader = new NodeInfo(_linkedList.First, 0);
             Writer = new NodeInfo(_linkedList.First, 0);
         }
+
         /// <summary>
         /// how many bytes you have already write in
         /// </summary>
         /// <param name="length"></param>
-        void Write(int length)
+        public void Write(int length)
         {
             Writer.Position += length;
             if (Writer.Position >= size)
@@ -48,34 +49,37 @@ namespace HiSocket
                 {
                     Writer.Node = _linkedList.First;
                 }
-                else//create new block
+                else //create new block
                 {
                     _linkedList.AddAfter(Writer.Node, GetBlock());
                     Writer.Node = Writer.Node.Next;
                 }
             }
-            else//next block is exist
+            else //next block is exist
             {
-                if (Writer.Node.Next == Reader.Node)//all blocks are occupied, create a new one
+                if (Writer.Node.Next == Reader.Node) //all blocks are occupied, create a new one
                 {
                     _linkedList.AddAfter(Writer.Node, GetBlock());
                     Writer.Node = Writer.Node.Next;
                 }
-                else//reuse block
+                else //reuse block
                 {
                     Writer.Node = Writer.Node.Next;
                 }
             }
         }
+
         /// <summary>
         /// how many bytes you have read out
         /// </summary>
         /// <param name="length"></param>
-        void ReadBytes(int length)
+        public void Read(int length)
         {
             Reader.Position += length;
             if (Reader.Position >= size)
-            { throw new Exception("Reader position error"); }
+            {
+                throw new Exception("Reader position error");
+            }
             if (IsReaderAndWriterInSameNode())
             {
                 if (Reader.Position > Writer.Position)
@@ -92,21 +96,26 @@ namespace HiSocket
 
         void ReaderNoderMove()
         {
-            if (Reader.Node.Next == null)//next block is null
+            if (Reader.Node.Next == null) //next block is null
             {
-                Reader.Node = _linkedList.First;//read from first block
+                Reader.Node = _linkedList.First; //read from first block
             }
-            else//next block is not null
+            else //next block is not null
             {
                 Reader.Node = Reader.Node.Next;
             }
         }
 
-        public int GetHowManyCountWaitForRead()
+        public int GetHowManyCountCanReadInThisBlock()
         {
-            if (Reader.Node == Writer.Node)// if there are in same block
+            if (Reader.Node == Writer.Node) // if there are in same block
                 return Writer.Position - Reader.Position;
-            return size - Reader.Position;//get rest of this block's bytes
+            return size - Reader.Position; //get rest of this block's bytes
+        }
+
+        public int GetHowManyCountCanWriteInThisBlock()
+        {
+            return size - Writer.Position;
         }
 
         bool IsReaderAndWriterInSameNode()

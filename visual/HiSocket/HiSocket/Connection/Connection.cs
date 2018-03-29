@@ -35,7 +35,7 @@ namespace HiSocket
             Debug.Log("you can download newest version from here: https://github.com/hiramtan/HiSocket_unity");
             ReceiveBuffer = new byte[_receiveBufferSize];
         }
-        public void Run()
+        public virtual void Run()
         {
             while (_receiveQueue.Count > 0)
             {

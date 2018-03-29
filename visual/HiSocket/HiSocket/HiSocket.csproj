@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connection\Connection.cs" />
+    <Compile Include="Connection\Tcp\ByteBlockArray.cs" />
     <Compile Include="Connection\Tcp\ITcp.cs" />
     <Compile Include="Connection\Tcp\TcpConnection.cs" />
     <Compile Include="Connection\Udp\IUdp.cs" />
