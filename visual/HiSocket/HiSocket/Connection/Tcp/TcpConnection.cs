@@ -139,32 +139,36 @@ namespace HiSocket
 
         void Pack()
         {
-            try
+            if (_sendQueue.Count == 0)
+                return;
+            lock (_sendBuffer)
             {
-                lock (_sendBuffer)
+                try
                 {
                     _iPackage.Pack(_sendQueue, _sendArray);
                     _sendBuffer.WriteAllBytes(_sendArray.Read(_sendArray.Length));
                 }
-            }
-            catch (Exception e)
-            {
-                throw new Exception("pack error: " + e);
+                catch (Exception e)
+                {
+                    throw new Exception("pack error: " + e);
+                }
             }
         }
         void UnPack()
         {
-            try
+            lock (_receiveBuffer)
             {
-                lock (_receiveBuffer)
+                if (_receiveBuffer.ReadAllBytes().Length == 0)
+                    return;
+                try
                 {
                     _receiveArray.Write(_receiveBuffer.ReadAllBytes());
                     _iPackage.Unpack(_receiveArray, _receiveQueue);
                 }
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.ToString());
+                catch (Exception e)
+                {
+                    throw new Exception(e.ToString());
+                }
             }
         }
     }

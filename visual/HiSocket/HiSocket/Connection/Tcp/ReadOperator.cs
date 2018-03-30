@@ -20,7 +20,7 @@ namespace HiSocket
         public void MovePosition(int length)
         {
             Position += length;
-            if (Position >= ByteBlockBuffer.Size)
+            if (Position > ByteBlockBuffer.Size)
             {
                 throw new Exception("Reader position error");
             }
@@ -31,7 +31,7 @@ namespace HiSocket
                     throw new Exception("When in same node, Reader's position must not large than Writer's postion");
                 }
             }
-            if (Position == ByteBlockBuffer.Size - 1) //current block have already read finish
+            if (Position == ByteBlockBuffer.Size) //current block have already read finish
             {
                 Position = 0;
                 ReaderNodeMove();

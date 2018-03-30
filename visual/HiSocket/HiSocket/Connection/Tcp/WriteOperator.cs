@@ -23,9 +23,9 @@ namespace HiSocket
         public void MovePosition(int length)
         {
             Position += length;
-            if (Position >= ByteBlockBuffer.Size)
+            if (Position > ByteBlockBuffer.Size)
                 throw new Exception("Writer position error");
-            if (Position == ByteBlockBuffer.Size - 1) //current block is full
+            if (Position == ByteBlockBuffer.Size) //current block is full
             {
                 Position = 0;
                 WriterNodeMove();
