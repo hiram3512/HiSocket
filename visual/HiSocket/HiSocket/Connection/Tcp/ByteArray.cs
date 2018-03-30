@@ -42,5 +42,13 @@ namespace HiSocket
                 _bytes.InsertRange(_bytes.Count, bytes);
             }
         }
+
+        public void Insert(int index, byte[] bytes)
+        {
+            lock (_locker)
+            {
+                _bytes.InsertRange(index, bytes);
+            }
+        }
     }
 }

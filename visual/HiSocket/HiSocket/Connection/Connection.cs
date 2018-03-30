@@ -4,7 +4,6 @@
 //****************************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -16,28 +15,16 @@ namespace HiSocket
     public abstract class Connection
     {
         protected Socket _socket;
-        protected int _receiveBufferSize = 1024 * 128; //128k
-        protected byte[] ReceiveBuffer;
-        protected Queue<byte[]> _receiveQueue = new Queue<byte[]>();
-        protected Queue<byte[]> _sendQueue = new Queue<byte[]>();
-        public int ReceiveBufferSize
-        {
-            get { return _receiveBufferSize; }
-            set
-            {
-                _receiveBufferSize = value;
-                ReceiveBuffer = new byte[ReceiveBufferSize];
-            }
-        }
+        protected ByteBlockBuffer SendBuffer = new ByteBlockBuffer();
+        protected ByteBlockBuffer ReceiveBuffer = new ByteBlockBuffer();
         public event Action<byte[]> ReceiveEvent;
         protected Connection()
         {
             Debug.Log("you can download newest version from here: https://github.com/hiramtan/HiSocket_unity");
-            ReceiveBuffer = new byte[_receiveBufferSize];
         }
         public virtual void Run()
         {
-            while (_receiveQueue.Count > 0)
+            while (receiveArray.Length > 0)
             {
                 if (ReceiveEvent != null)
                 {

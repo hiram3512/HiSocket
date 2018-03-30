@@ -5,6 +5,7 @@
  *////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 
@@ -12,6 +13,8 @@ namespace HiSocket
 {
     public class UdpConnection : Connection, IUdp
     {
+        protected Queue<byte[]> SendQueue = new Queue<byte[]>();
+        protected Queue<byte[]> ReceiveQueue = new Queue<byte[]>();
         public override void Connect(string ip, int port)
         {
             var address = Dns.GetHostAddresses(ip)[0];

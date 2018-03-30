@@ -26,5 +26,11 @@ namespace HiSocket
         /// <param name="insertIndex">where to insert</param>
         /// <param name="bytes">bytes wait to write</param>
         void Write(byte[] bytes);
+        /// <summary>
+        /// insert bytes to array
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="bytes"></param>
+        void Insert(int index, byte[] bytes);
     }
 }
