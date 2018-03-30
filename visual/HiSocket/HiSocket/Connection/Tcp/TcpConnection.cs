@@ -158,11 +158,12 @@ namespace HiSocket
         {
             lock (_receiveBuffer)
             {
-                if (_receiveBuffer.ReadAllBytes().Length == 0)
+                var bytes = _receiveBuffer.ReadAllBytes();
+                if (bytes.Length == 0)
                     return;
                 try
                 {
-                    _receiveArray.Write(_receiveBuffer.ReadAllBytes());
+                    _receiveArray.Write(bytes);
                     _iPackage.Unpack(_receiveArray, _receiveQueue);
                 }
                 catch (Exception e)

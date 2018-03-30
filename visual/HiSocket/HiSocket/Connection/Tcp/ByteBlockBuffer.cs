@@ -46,30 +46,38 @@ namespace HiSocket
                 var readerBlockBytes = new byte[Size - Reader.Position];
                 Array.Copy(Reader.Node.Value, Reader.Position, readerBlockBytes, 0, readerBlockBytes.Length);
                 var betweenReadAndWriterBytes = new List<byte>();
-                GetBytesBetweenThoseTwo(Reader.Node, Writer.Node, ref betweenReadAndWriterBytes);
+                GetBytesBetweenReaderAndWriter(Reader.Node, Writer.Node, ref betweenReadAndWriterBytes);
                 var writerBlockBytes = new byte[Writer.Position];
                 Array.Copy(Writer.Node.Value, 0, writerBlockBytes, 0, writerBlockBytes.Length);
                 List<byte> bytes = new List<byte>();
                 bytes.AddRange(readerBlockBytes);
                 bytes.AddRange(betweenReadAndWriterBytes);
                 bytes.AddRange(writerBlockBytes);
+                Reader.Node = Writer.Node;//finish and move reader
+                Reader.MovePosition(Writer.Position);
                 return bytes.ToArray();
             }
         }
-        void GetBytesBetweenThoseTwo(LinkedListNode<byte[]> first, LinkedListNode<byte[]> last, ref List<byte> bytes)
+        void GetBytesBetweenReaderAndWriter(LinkedListNode<byte[]> reader, LinkedListNode<byte[]> writer, ref List<byte> bytes)
         {
-            if (first == last)
+            if (reader.Next == null)
             {
-                throw new Exception("first node and last node is same");
+                //when writer reuse and at begin reader at end, this will hapen
+                reader = LinkedList.First;
+                if (reader != writer)
+                {
+                    GetBytesBetweenReaderAndWriter(reader, writer, ref bytes);
+                }
             }
-            else if (first.Next == last)
+            else if (reader.Next == writer)
             {
                 //0 node between this two blocks
             }
             else
             {
-                bytes.AddRange(first.Next.Value);
-                GetBytesBetweenThoseTwo(first.Next, last, ref bytes);
+                bytes.AddRange(reader.Next.Value);
+                reader = reader.Next;
+                GetBytesBetweenReaderAndWriter(reader, writer, ref bytes);
             }
         }
         // haven't use for current now
