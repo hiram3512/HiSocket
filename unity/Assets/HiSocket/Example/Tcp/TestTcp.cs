@@ -43,6 +43,7 @@ public class TestTcp : MonoBehaviour
         if (state == SocketState.Connected)
         {
             Debug.Log("connect success");
+            Send();
         }
         else if (state == SocketState.DisConnected)
         {
@@ -53,26 +54,35 @@ public class TestTcp : MonoBehaviour
             Debug.Log("connecting");
         }
     }
+    void OnApplicationQuit()
+    {
+        _tcp.DisConnect();
+    }
     void Send()
     {
-        var bytes = BitConverter.GetBytes(100);
-        _tcp.Send(bytes);
+        for (int i = 0; i < 10; i++)
+        {
+            var bytes = BitConverter.GetBytes(i);
+            Debug.Log("send message: " + i);
+            _tcp.Send(bytes);
+        }
     }
     void OnReceive(byte[] bytes)
     {
-        Debug.Log("receive bytes: " + bytes.Length);
+        Debug.Log("receive msg: " + BitConverter.ToInt32(bytes, 0));
     }
     public class Packer : IPackage
     {
         public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
         {
             //add your unpack logic here
-            var bytesWaitToUnpack = reader.Read(1);
-            //
-            //
-
-            receiveQueue.Enqueue(bytesWaitToUnpack);
+            if (reader.Length >= 1024)//1024 is example, it's msg's length
+            {
+                var bytesWaitToUnpack = reader.Read(1024);
+                receiveQueue.Enqueue(bytesWaitToUnpack);
+            }
         }
+
         public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
             var bytesWaitToPack = sendQueue.Dequeue();

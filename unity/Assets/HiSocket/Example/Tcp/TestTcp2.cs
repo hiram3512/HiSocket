@@ -58,7 +58,6 @@ public class TestTcp2 : MonoBehaviour
             var bytes = BitConverter.GetBytes(i);
             Debug.Log("send message: " + i);
             _tcp.Send(bytes);
-            i++;
         }
     }
     private void OnApplicationQuit()
@@ -76,21 +75,21 @@ public class TestTcp2 : MonoBehaviour
     {
         public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
         {
-            //get head length or id
-            byte bodyLength = reader.Read(1)[0];
-            if (reader.Length >= bodyLength)
+            //add your unpack logic here
+            if (reader.Length >= 1024)//1024 is example, it's msg's length
             {
-                receiveQueue.Enqueue(reader.Read(bodyLength));
+                var bytesWaitToUnpack = reader.Read(1024);
+                receiveQueue.Enqueue(bytesWaitToUnpack);
             }
         }
 
         public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
-            //add head length or id
-            byte[] head = new Byte[1] { 4 };
-            writer.Write(head);
-            var body = sendQueue.Dequeue();
-            writer.Write(body);
+            var bytesWaitToPack = sendQueue.Dequeue();
+            // add your pack logic here
+            //
+
+            writer.Write(bytesWaitToPack);
         }
     }
 

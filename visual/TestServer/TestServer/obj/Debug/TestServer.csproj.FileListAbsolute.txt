@@ -5,3 +5,10 @@ D:\MyGit\HiSocket_unity\visual\TestServer\TestServer\obj\Debug\TestServer.csproj
 D:\MyGit\HiSocket_unity\visual\TestServer\TestServer\obj\Debug\TestServer.csproj.CoreCompileInputs.cache
 D:\MyGit\HiSocket_unity\visual\TestServer\TestServer\obj\Debug\TestServer.exe
 D:\MyGit\HiSocket_unity\visual\TestServer\TestServer\obj\Debug\TestServer.pdb
+D:\MyGit\github\HiSocket_unity\visual\TestServer\TestServer\bin\Debug\TestServer.exe.config
+D:\MyGit\github\HiSocket_unity\visual\TestServer\TestServer\bin\Debug\TestServer.exe
+D:\MyGit\github\HiSocket_unity\visual\TestServer\TestServer\bin\Debug\TestServer.pdb
+D:\MyGit\github\HiSocket_unity\visual\TestServer\TestServer\obj\Debug\TestServer.csprojResolveAssemblyReference.cache
+D:\MyGit\github\HiSocket_unity\visual\TestServer\TestServer\obj\Debug\TestServer.csproj.CoreCompileInputs.cache
+D:\MyGit\github\HiSocket_unity\visual\TestServer\TestServer\obj\Debug\TestServer.exe
+D:\MyGit\github\HiSocket_unity\visual\TestServer\TestServer\obj\Debug\TestServer.pdb
