@@ -16,41 +16,47 @@ public class TestTcp : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Init();
+    }
+    void Update()
+    {
+        _tcp.Run();
+    }
+
+    void Init()
+    {
         _tcp = new TcpConnection(_packer);
         _tcp.StateChangeEvent += OnState;
         _tcp.ReceiveEvent += OnReceive;
         Connect();
     }
+
     void Connect()
     {
         _tcp.Connect("127.0.0.1", 7777);
     }
     // Update is called once per frame
-    void Update()
-    {
-        _tcp.Run();
-    }
+
     void OnState(SocketState state)
     {
         Debug.Log("current state is: " + state);
         if (state == SocketState.Connected)
         {
-            Send();
+            Debug.Log("connect success");
+        }
+        else if (state == SocketState.DisConnected)
+        {
+            Debug.Log("connect failed");
+        }
+        else if (state == SocketState.Connecting)
+        {
+            Debug.Log("connecting");
         }
     }
     void Send()
     {
-        for (int i = 0; i < 10; i++)
-        {
-            var bytes = BitConverter.GetBytes(i);
-            _tcp.Send(bytes);
-            Debug.Log("send message: " + i);
-        }
-    }
-    private void OnApplicationQuit()
-    {
-        if (_tcp.IsConnected)
-            _tcp.DisConnect();
+        var bytes = BitConverter.GetBytes(100);
+        _tcp.Send(bytes);
     }
     void OnReceive(byte[] bytes)
     {

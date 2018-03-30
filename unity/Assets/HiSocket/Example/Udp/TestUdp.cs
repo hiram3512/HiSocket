@@ -13,7 +13,7 @@ public class TestUdp : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        _udp = new UdpConnection();
+        _udp = new UdpConnection(1024);
         _udp.ReceiveEvent += OnReceive;
         Connect();
         Send();
