@@ -85,7 +85,7 @@ namespace HiSocket
                         try
                         {
                             var length = _socket.Send(SendBuffer.Reader.Node.Value, SendBuffer.Reader.Position, count, SocketFlags.None);
-                            SendBuffer.Read(length);
+                            SendBuffer.ReadInThisBlock(length);
                         }
                         catch (Exception e)
                         {
@@ -112,7 +112,7 @@ namespace HiSocket
                         {
                             var count = ReceiveBuffer.GetHowManyCountCanWriteInThisBlock();
                             var length = _socket.Receive(ReceiveBuffer.Writer.Node.Value, ReceiveBuffer.Writer.Position, count, SocketFlags.None);
-                            ReceiveBuffer.Write(length);
+                            ReceiveBuffer.WriteInThisBlock(length);
                         }
                         catch (Exception e)
                         {
@@ -125,7 +125,7 @@ namespace HiSocket
         void ChangeState(SocketState state)
         {
             if (StateChangeEvent != null)
-                StateChangeEvent(state);
+                StateChangeEvent(state);                                    
         }
 
         public override void Run()
