@@ -5,13 +5,12 @@
 ### How to use
  You can download unity package from here: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket_unity/releases)
 
- or you can download from unity asset store:[https://www.assetstore.unity3d.com/en/#!/content/104658](https://www.assetstore.unity3d.com/en/#!/content/104658) 
-
 ---------
 
 ### Features
 - Support Tcp socket
 - Support Udp socket
+- High-performance byte block buffer
 - Message registration and call back
 - Support byte message
 - Support protobuf message
@@ -19,19 +18,13 @@
 
 
 ### Details
-1. Tcp and Udp are use async connection
-
-2. The API supply for user to send and receive message is on main thread.
-
-3. Actually there are send thread and receive thread in background to process byte.
-
-4. You can get current connect state by adding listener of state event.
-
-5. You can receive message by adding listener of receive event.
-
-6. If you use Tcp socket, you should implement IPackage interface to pack or unpack message.
-
-7. There is ping logic, but because of the bug of mono, it will throw an error on .net2.0(.net 4.6 will be fine, also you can use unity's api to get ping time)
+- Tcp and Udp are use async connection
+- There are send thread and receive thread in background to process bytes.
+- User send and receive message's operation are in main thread.
+- You can get current connect state by adding listener of state event.
+- You can receive message by adding listener of receive event.
+- If you use Tcp socket, you should implement IPackage interface to pack or unpack message.
+- There is ping logic, but because of the bug of mono, it will throw an error on .net2.0(.net 4.6 will be fine, also you can use unity's api to get ping time, project contain some example logic)
 
 ---------
 
