@@ -4,19 +4,20 @@
 //****************************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
-using Ping = System.Net.NetworkInformation.Ping;
 
 namespace HiSocket
 {
     public abstract class Connection
     {
         protected Socket _socket;
-        protected ByteBlockBuffer SendBuffer = new ByteBlockBuffer();
-        protected ByteBlockBuffer ReceiveBuffer = new ByteBlockBuffer();
+
+        protected Queue<byte[]> _sendQueue = new Queue<byte[]>();
+        protected Queue<byte[]> _receiveQueue = new Queue<byte[]>();
         public event Action<byte[]> ReceiveEvent;
         protected Connection()
         {
@@ -24,7 +25,7 @@ namespace HiSocket
         }
         public virtual void Run()
         {
-            while (receiveArray.Length > 0)
+            while (_receiveQueue.Count > 0)
             {
                 if (ReceiveEvent != null)
                 {
@@ -49,9 +50,9 @@ namespace HiSocket
         /// <returns></returns>
         public long Ping(string ip)
         {
-            var ipAddress = IPAddress.Parse(ip);
-            var tempPing = new Ping();
-            var temPingReply = tempPing.Send(ipAddress);
+            IPAddress ipAddress = IPAddress.Parse(ip);
+            System.Net.NetworkInformation.Ping tempPing = new System.Net.NetworkInformation.Ping();
+            System.Net.NetworkInformation.PingReply temPingReply = tempPing.Send(ipAddress);
             return temPingReply.RoundtripTime;
 
             //private int pingTime;
@@ -76,13 +77,6 @@ namespace HiSocket
             //    StartCoroutine(Ping());
             //    }
         }
-        //public long Ping()
-        //{
-        //    IPAddress ipAddress = IPAddress.Parse(IP);
-        //    System.Net.NetworkInformation.Ping tempPing = new System.Net.NetworkInformation.Ping();
-        //    System.Net.NetworkInformation.PingReply temPingReply = tempPing.Send(ipAddress);
-        //    return temPingReply.RoundtripTime;
-        //}
         public virtual void DisConnect()
         {
             AbortThread();

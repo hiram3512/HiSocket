@@ -5,7 +5,6 @@
  *////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 
@@ -13,8 +12,12 @@ namespace HiSocket
 {
     public class UdpConnection : Connection, IUdp
     {
-        protected Queue<byte[]> SendQueue = new Queue<byte[]>();
-        protected Queue<byte[]> ReceiveQueue = new Queue<byte[]>();
+        private byte[] _receiveBuffer;
+        public UdpConnection(int bufferSize)
+        {
+            _receiveBuffer = new byte[bufferSize];
+        }
+
         public override void Connect(string ip, int port)
         {
             var address = Dns.GetHostAddresses(ip)[0];
@@ -73,14 +76,14 @@ namespace HiSocket
                 {
                     try
                     {
-                        _socket.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, SocketFlags.None, delegate (IAsyncResult ar)
+                        _socket.BeginReceive(_receiveBuffer, 0, _receiveBuffer.Length, SocketFlags.None, delegate (IAsyncResult ar)
                         {
                             var tcp = ar.AsyncState as Socket;
                             int length = tcp.EndReceive(ar);
                             if (length > 0)
                             {
                                 byte[] receiveBytes = new byte[length];
-                                Array.Copy(ReceiveBuffer, 0, receiveBytes, 0, length);
+                                Array.Copy(_receiveBuffer, 0, receiveBytes, 0, length);
                                 lock (_receiveQueue)
                                 {
                                     _receiveQueue.Enqueue(receiveBytes);

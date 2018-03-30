@@ -6,18 +6,11 @@
  *////////////////////////////////////////////////////////////////////////
 
 using System;
-using UnityEngine;
-using System.Collections;
 
 namespace HiSocket
 {
     public interface IUdp
     {
-        /// <summary>
-        /// buffer size for receiving data from server 
-        /// default is 1024 * 128; //128k
-        /// </summary>
-        int ReceiveBufferSize { get; set; }
         event Action<byte[]> ReceiveEvent;
         /// <summary>
         ///  tick logic

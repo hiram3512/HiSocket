@@ -11,8 +11,10 @@ namespace HiSocket
 {
     public class TcpConnection : Connection, ITcp
     {
-        protected ByteArray sendArray = new ByteArray();
-        protected ByteArray receiveArray = new ByteArray();
+        private ByteBlockBuffer _sendBuffer = new ByteBlockBuffer();
+        private ByteBlockBuffer _receiveBuffer = new ByteBlockBuffer();
+        private ByteArray _sendArray = new ByteArray();
+        private ByteArray _receiveArray = new ByteArray();
         private readonly IPackage _iPackage;
         private int _timeOut = 5000;
         public int TimeOut
@@ -77,15 +79,15 @@ namespace HiSocket
                 {
                     throw new Exception("from send: disconnected");
                 }
-                int count = SendBuffer.Reader.GetHowManyCountCanReadInThisBlock();
+                int count = _sendBuffer.Reader.GetHowManyCountCanReadInThisBlock();
                 if (count > 0)
                 {
-                    lock (SendBuffer)
+                    lock (_sendBuffer)
                     {
                         try
                         {
-                            var length = _socket.Send(SendBuffer.Reader.Node.Value, SendBuffer.Reader.Position, count, SocketFlags.None);
-                            SendBuffer.Reader.MovePosition(length);
+                            var length = _socket.Send(_sendBuffer.Reader.Node.Value, _sendBuffer.Reader.Position, count, SocketFlags.None);
+                            _sendBuffer.Reader.MovePosition(length);
                         }
                         catch (Exception e)
                         {
@@ -106,13 +108,13 @@ namespace HiSocket
                 }
                 if (_socket.Available > 0)
                 {
-                    lock (ReceiveBuffer)
+                    lock (_receiveBuffer)
                     {
                         try
                         {
-                            var count = ReceiveBuffer.Writer.GetHowManyCountCanWriteInThisBlock();
-                            var length = _socket.Receive(ReceiveBuffer.Writer.Node.Value, ReceiveBuffer.Writer.Position, count, SocketFlags.None);
-                            ReceiveBuffer.Writer.MovePosition(length);
+                            var count = _receiveBuffer.Writer.GetHowManyCountCanWriteInThisBlock();
+                            var length = _socket.Receive(_receiveBuffer.Writer.Node.Value, _receiveBuffer.Writer.Position, count, SocketFlags.None);
+                            _receiveBuffer.Writer.MovePosition(length);
                         }
                         catch (Exception e)
                         {
@@ -125,7 +127,7 @@ namespace HiSocket
         void ChangeState(SocketState state)
         {
             if (StateChangeEvent != null)
-                StateChangeEvent(state);                                    
+                StateChangeEvent(state);
         }
 
         public override void Run()
@@ -139,10 +141,10 @@ namespace HiSocket
         {
             try
             {
-                lock (SendBuffer)
+                lock (_sendBuffer)
                 {
-                    var bytes = _sendQueue.Dequeue();
-                    _iPackage.Pack(_sendQueue, _iByteArraySend);
+                    _iPackage.Pack(_sendQueue, _sendArray);
+                    _sendBuffer.WriteAllBytes(_sendArray.Read(_sendArray.Length));
                 }
             }
             catch (Exception e)
@@ -154,9 +156,10 @@ namespace HiSocket
         {
             try
             {
-                lock (_receiveQueue)
+                lock (_receiveBuffer)
                 {
-                    _iPackage.Unpack(_iByteArrayReceive, _receiveQueue);
+                    _receiveArray.Write(_receiveBuffer.ReadAllBytes());
+                    _iPackage.Unpack(_receiveArray, _receiveQueue);
                 }
             }
             catch (Exception e)
