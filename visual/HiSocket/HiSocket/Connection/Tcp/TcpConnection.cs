@@ -77,7 +77,7 @@ namespace HiSocket
                 {
                     throw new Exception("from send: disconnected");
                 }
-                int count = SendBuffer.GetHowManyCountCanReadInThisBlock();
+                int count = SendBuffer.Reader.GetHowManyCountCanReadInThisBlock();
                 if (count > 0)
                 {
                     lock (SendBuffer)
@@ -85,7 +85,7 @@ namespace HiSocket
                         try
                         {
                             var length = _socket.Send(SendBuffer.Reader.Node.Value, SendBuffer.Reader.Position, count, SocketFlags.None);
-                            SendBuffer.ReadInThisBlock(length);
+                            SendBuffer.Reader.MovePosition(length);
                         }
                         catch (Exception e)
                         {
@@ -110,9 +110,9 @@ namespace HiSocket
                     {
                         try
                         {
-                            var count = ReceiveBuffer.GetHowManyCountCanWriteInThisBlock();
+                            var count = ReceiveBuffer.Writer.GetHowManyCountCanWriteInThisBlock();
                             var length = _socket.Receive(ReceiveBuffer.Writer.Node.Value, ReceiveBuffer.Writer.Position, count, SocketFlags.None);
-                            ReceiveBuffer.WriteInThisBlock(length);
+                            ReceiveBuffer.Writer.MovePosition(length);
                         }
                         catch (Exception e)
                         {

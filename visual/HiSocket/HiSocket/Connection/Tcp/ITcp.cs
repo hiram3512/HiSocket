@@ -17,11 +17,6 @@ namespace HiSocket
         /// default is 5000ms
         /// </summary>
         int TimeOut { get; set; }
-        /// <summary>
-        /// buffer size for receiving data from server 
-        /// default is 1024 * 128; //128k
-        /// </summary>
-        int ReceiveBufferSize { get; set; }
 
         /// <summary>
         /// call back when connect state changed 

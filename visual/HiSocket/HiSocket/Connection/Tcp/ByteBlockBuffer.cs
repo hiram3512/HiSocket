@@ -15,70 +15,17 @@ namespace HiSocket
     {
         public int Size { get; private set; }//block's size
         public LinkedList<byte[]> LinkedList { get; private set; }
-
-        public ReadOperater Reader { get; private set; }
-        public WriteOperater Writer { get; private set; }
-
+        public ReadOperator Reader { get; private set; }
+        public WriteOperator Writer { get; private set; }
         public ByteBlockBuffer(int size = 1024)
         {
             Size = size;
             LinkedList = new LinkedList<byte[]>();
             LinkedList.AddFirst(GetBlock());
-            Reader = new ReadOperater(this);
-            Writer = new WriteOperater(this);
+            Reader = new ReadOperator(this);
+            Writer = new WriteOperator(this);
         }
-
-        /// <summary>
-        /// how many bytes you have read out
-        /// used to move postion
-        /// </summary>
-        /// <param name="length"></param>
-        public void ReadInThisBlock(int length)
-        {
-            Reader.Position += length;
-            if (Reader.Position >= Size)
-            {
-                throw new Exception("Reader position error");
-            }
-            if (IsReaderAndWriterInSameNode())
-            {
-                if (Reader.Position > Writer.Position)
-                {
-                    throw new Exception("When in same node, Reader's position must not large than Writer's postion");
-                }
-            }
-            if (Reader.Position == Size - 1) //current block have already read finish
-            {
-                Reader.Position = 0;
-                ReaderNoderMove();
-            }
-        }
-
-        void ReaderNoderMove()
-        {
-            if (Reader.Node.Next == null) //next block is null
-            {
-                Reader.Node = LinkedList.First; //read from first block
-            }
-            else //next block is not null
-            {
-                Reader.Node = Reader.Node.Next;
-            }
-        }
-
-        public int GetHowManyCountCanReadInThisBlock()
-        {
-            if (Reader.Node == Writer.Node) // if there are in same block
-                return Writer.Position - Reader.Position;
-            return Size - Reader.Position; //get rest of this block's bytes
-        }
-
-        public int GetHowManyCountCanWriteInThisBlock()
-        {
-            return Size - Writer.Position;
-        }
-
-        bool IsReaderAndWriterInSameNode()
+        public bool IsReaderAndWriterInSameNode()
         {
             // if reader and writer in same block, reader's position must not large than writer's position
             return Reader.Node == Writer.Node;
@@ -92,7 +39,7 @@ namespace HiSocket
                 var length = Writer.Position - Reader.Position;
                 var bytes = new byte[length];
                 Array.Copy(Reader.Node.Value, Reader.Position, bytes, 0, length);
-                ReadInThisBlock(length);
+                Reader.MovePosition(length);
                 return bytes;
             }
             else
@@ -146,7 +93,6 @@ namespace HiSocket
         //}
 
 
-
         public void WriteAllBytes(byte[] bytes)
         {
             WriteAllBytes(bytes, 0);
@@ -159,87 +105,21 @@ namespace HiSocket
         /// <param name="index">how many bytes already been write in</param>
         void WriteAllBytes(byte[] bytes, int index)
         {
-            //if (index < bytes.Length)
-            //{
-            //    var length = GetHowManyCountCanWriteInThisBlock();
-            //    Array.Copy(bytes, index, Writer.Node.Value, Writer.Position, length);
-            //    index += length;
-            //    MovePosition(length);
-            //    WriteAllBytes(bytes, index);
-            //}
+            if (index < bytes.Length)
+            {
+                var canWriteLength = Writer.GetHowManyCountCanWriteInThisBlock();
+                var haventWriteLength = bytes.Length - index;
+                var reallyWriteLength = haventWriteLength < canWriteLength ? haventWriteLength : canWriteLength;
+                Array.Copy(bytes, index, Writer.Node.Value, Writer.Position, reallyWriteLength);
+                index += reallyWriteLength;
+                Writer.MovePosition(reallyWriteLength);
+                WriteAllBytes(bytes, index);
+            }
         }
         #endregion
         public byte[] GetBlock()
         {
             return new byte[Size];
-        }
-        public abstract class NodeOperater
-        {
-            protected ByteBlockBuffer ByteBlockBuffer { get; }
-            public LinkedListNode<byte[]> Node { get; set; }
-            public int Position { get; set; }
-            public NodeOperater(ByteBlockBuffer byteBlockBuffer)
-            {
-                ByteBlockBuffer = byteBlockBuffer;
-                Node = ByteBlockBuffer.LinkedList.First;
-            }
-        }
-
-        public class ReadOperater : NodeOperater
-        {
-            public ReadOperater(ByteBlockBuffer byteBlockBuffer) : base(byteBlockBuffer)
-            {
-            }
-        }
-
-        public class WriteOperater : NodeOperater
-        {
-            public WriteOperater(ByteBlockBuffer byteBlockBuffer) : base(byteBlockBuffer)
-            {
-            }
-            /// <summary>
-            /// how many bytes you have already write in
-            /// used to move postion
-            /// </summary>
-            /// <param name="length"></param>
-            public void MovePosition(int length)
-            {
-                Position += length;
-                if (Position >= ByteBlockBuffer.Size)
-                    throw new Exception("Writer position error");
-                if (Position == ByteBlockBuffer.Size - 1) //current block is full
-                {
-                    Position = 0;
-                    WriterNodeMove();
-                }
-            }
-            void WriterNodeMove()
-            {
-                if (Node.Next == null) //next block is null
-                {
-                    if (ByteBlockBuffer.LinkedList.First != ByteBlockBuffer.Reader.Node) //give priority to reuse block from beginning
-                    {
-                        Node = ByteBlockBuffer.LinkedList.First;
-                    }
-                    else //create new block
-                    {
-                        ByteBlockBuffer.LinkedList.AddAfter(Node, ByteBlockBuffer.GetBlock());
-                        Node = Node.Next;
-                    }
-                }
-                else //next block is exist
-                {
-                    if (Node.Next == ByteBlockBuffer.Reader.Node) //all blocks are occupied, create a new one
-                    {
-                        ByteBlockBuffer.LinkedList.AddAfter(Node, ByteBlockBuffer.GetBlock());
-                        Node = Node.Next;
-                    }
-                    else //reuse block
-                    {
-                        Node = Node.Next;
-                    }
-                }
-            }
         }
     }
 }
