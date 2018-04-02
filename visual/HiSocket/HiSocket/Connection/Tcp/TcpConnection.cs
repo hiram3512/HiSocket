@@ -130,6 +130,12 @@ namespace HiSocket
                 StateChangeEvent(state);
         }
 
+        public override void DisConnect()
+        {
+            ChangeState(SocketState.DisConnected);
+            base.DisConnect();
+        }
+
         public override void Run()
         {
             base.Run();
