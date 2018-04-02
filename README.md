@@ -10,6 +10,7 @@
 ### Features
 - Support Tcp socket
 - Support Udp socket
+- Scalable byte Array
 - High-performance byte block buffer
 - Message registration and call back
 - Support byte message
@@ -28,7 +29,7 @@
 - If you use Tcp socket, you should implement IPackage interface to pack or unpack message.
 - There is ping logic, but because of the bug of mono, it will throw an error on .net2.0(.net 4.6 will be fine, also you can use unity's api to get ping time, project contain some example logic)
 
-### Functionality
+### Details
 - Tcp 
 [Transmission Control Protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol)
     - Tcp connection 
@@ -155,11 +156,37 @@
         ```csharp
         _udp = new UdpConnection(1024);
         ```
-- Ping
-
+- Ping 
+    Because there is a bug with mono on .net 2.0 and subset, you can use logic as below.
+    ```csharp
+    public int PingTime;
+    private Ping p;
+    private float timeOut = 1;
+    private float lastTime;
+    void Start()
+    {
+        StartCoroutine(Ping());
+    }
+    IEnumerator Ping()
+    {
+        p = new Ping("127.0.0.1");
+        lastTime = Time.realtimeSinceStartup;
+        while (!p.isDone && Time.realtimeSinceStartup - lastTime < 1)
+        {
+            yield return null;
+        }
+        PingTime = p.time;
+        p.DestroyPing();
+        yield return new WaitForSeconds(1);
+        StartCoroutine(Ping());
+    }
+    ```
+- Message Register
+- Protobuf
+- Bytes message
+- Encription
 
 ---------
-
 
 ### Tcp Example
 
@@ -169,7 +196,7 @@ Tcp provides reliable, ordered, and error-checked delivery of a stream of bytes.
 
 
 ``` csharp
-    private ISocket _tcp;
+    private ITcp _tcp;
     private IPackage _packer = new Packer();
     // Use this for initialization
     void Start()
@@ -179,18 +206,37 @@ Tcp provides reliable, ordered, and error-checked delivery of a stream of bytes.
         _tcp.ReceiveEvent += OnReceive;
         Connect();
     }
+    void Update()
+    {
+        _tcp.Run();
+    }
+
     void Connect()
     {
         _tcp.Connect("127.0.0.1", 7777);
     }
     // Update is called once per frame
-    void Update()
-    {
-        _tcp.Run();
-    }
+
     void OnState(SocketState state)
     {
         Debug.Log("current state is: " + state);
+        if (state == SocketState.Connected)
+        {
+            Debug.Log("connect success");
+            Send();
+        }
+        else if (state == SocketState.DisConnected)
+        {
+            Debug.Log("connect failed");
+        }
+        else if (state == SocketState.Connecting)
+        {
+            Debug.Log("connecting");
+        }
+    }
+    void OnApplicationQuit()
+    {
+        _tcp.DisConnect();
     }
     void Send()
     {
@@ -199,22 +245,31 @@ Tcp provides reliable, ordered, and error-checked delivery of a stream of bytes.
             var bytes = BitConverter.GetBytes(i);
             Debug.Log("send message: " + i);
             _tcp.Send(bytes);
-            i++;
         }
     }
     void OnReceive(byte[] bytes)
     {
-        Debug.Log("receive bytes: " + BitConverter.ToInt32(bytes, 0));
+        Debug.Log("receive msg: " + BitConverter.ToInt32(bytes, 0));
     }
     public class Packer : IPackage
     {
-         public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
+        public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
         {
-            //get head length or id
+            //add your unpack logic here
+            if (reader.Length >= 1024)//1024 is example, it's msg's length
+            {
+                var bytesWaitToUnpack = reader.Read(1024);
+                receiveQueue.Enqueue(bytesWaitToUnpack);
+            }
         }
+
         public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
-            //add head length or id
+            var bytesWaitToPack = sendQueue.Dequeue();
+            // add your pack logic here
+            //
+
+            writer.Write(bytesWaitToPack);
         }
     }
 ```
@@ -230,7 +285,7 @@ Udp provides checksums for data integrity, and port numbers for addressing diffe
     // Use this for initialization
     void Start()
     {
-        _udp = new UdpConnection();
+        _udp = new UdpConnection(1024);
         _udp.ReceiveEvent += OnReceive;
         Connect();
         Send();
@@ -252,6 +307,10 @@ Udp provides checksums for data integrity, and port numbers for addressing diffe
             _udp.Send(bytes);
             Debug.Log("send message: " + i);
         }
+    }
+    private void OnApplicationQuit()
+    {
+        _udp.DisConnect();
     }
     void OnReceive(byte[] bytes)
     {

@@ -16,19 +16,14 @@ public class TestTcp : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Init();
-    }
-    void Update()
-    {
-        _tcp.Run();
-    }
-
-    void Init()
-    {
         _tcp = new TcpConnection(_packer);
         _tcp.StateChangeEvent += OnState;
         _tcp.ReceiveEvent += OnReceive;
         Connect();
+    }
+    void Update()
+    {
+        _tcp.Run();
     }
 
     void Connect()
