@@ -33,8 +33,9 @@
 ---------
 ### 细节
 - Tcp 
-[Transmission Control Protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol)
+
     - Tcp connection
+    
     Tcp协议传输字节流,用户需要分割字节流获得正确的数据包,当创建一个tcp协议的socket时,需要传入一个Package对象来封包和解包.
         ```csharp
         private IPackage _packer = new Packer();
@@ -191,7 +192,7 @@
 ---------
 
 ### Tcp Example
-
+[Transmission Control Protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol)
 
 Tcp 协议提供可靠有序的流字节传输,用户需要自己分割数据,在这个框架中可以继承IPackage接口来实现.
 
