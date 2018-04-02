@@ -73,23 +73,35 @@ public class TestTcp2 : MonoBehaviour
     }
     public class Packer : IPackage
     {
+        private bool _isGetHead = false;
+        private int _bodyLength;
         public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
         {
-            //add your unpack logic here
-            if (reader.Length >= 1024)//1024 is example, it's msg's length
+            if (!_isGetHead)
             {
-                var bytesWaitToUnpack = reader.Read(1024);
-                receiveQueue.Enqueue(bytesWaitToUnpack);
+                if (reader.Length >= 2)//2 is example, get msg's head length
+                {
+                    var bodyLengthBytes = reader.Read(2);
+                    _bodyLength = BitConverter.ToUInt16(bodyLengthBytes, 0);
+                }
+                else
+                {
+                    if (reader.Length >= _bodyLength)//get body
+                    {
+                        var bytes = reader.Read(_bodyLength);
+                        receiveQueue.Enqueue(bytes);
+                        _isGetHead = false;
+                    }
+                }
             }
         }
-
         public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
         {
             var bytesWaitToPack = sendQueue.Dequeue();
-            // add your pack logic here
-            //
-
-            writer.Write(bytesWaitToPack);
+            UInt16 length = (UInt16)bytesWaitToPack.Length;//get head lenth
+            var bytesHead = BitConverter.GetBytes(length);
+            writer.Write(bytesHead);//write head
+            writer.Write(bytesWaitToPack);//write body
         }
     }
 
