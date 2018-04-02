@@ -31,8 +31,9 @@
 
 ### Details
 - Tcp 
-[Transmission Control Protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol)
+
     - Tcp connection 
+    
     Because Tcp is a a stream of bytes protocol, user should split the bytes to get correct message package. when create a tcp socket channel there must be a package instance to pack and unpack message.
         ```csharp
         private IPackage _packer = new Packer();
@@ -189,7 +190,7 @@
 ---------
 
 ### Tcp Example
-
+[Transmission Control Protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol)
 
 Tcp provides reliable, ordered, and error-checked delivery of a stream of bytes. you have to split bytes by yourself, in this framework you can implement IPackage interface to achieve this.
 
