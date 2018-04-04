@@ -32,17 +32,15 @@
 ### Details
 - Tcp 
 
-    - Tcp connection 
-    
+    - Tcp connection     
     Because Tcp is a a stream of bytes protocol, user should split the bytes to get correct message package. when create a tcp socket channel there must be a package instance to pack and unpack message.
-    
         ```csharp
         private IPackage _packer = new Packer();
         void Test()
         {
          _tcp = new TcpConnection(_packer);
         }
-        public class Packer : IPackage
+        public class Packer : IPackage
         {
             public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
             {
@@ -54,12 +52,11 @@
                // add your pack logic here
            }
         }
-       ```
+        ```
     - Connect
         ```csharp
         _tcp.Connect("127.0.0.1", 7777);
         ```
-
     - Disconnect
     You shold initiative use API to disconnect to server when application quit(for example there is a unity's API onapplicationquit)
         ```csharp
@@ -68,7 +65,6 @@
             _tcp.DisConnect();
         }
         ```
-
     - Connection's state change
     If you want to know current socket channel's state, you can regist state event.
         ```csharp

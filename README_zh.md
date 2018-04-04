@@ -34,8 +34,7 @@
 ### 细节
 - Tcp 
 
-    - Tcp connection
-    
+    - Tcp connection    
     Tcp协议传输字节流,用户需要分割字节流获得正确的数据包,当创建一个tcp协议的socket时,需要传入一个Package对象来封包和解包.
         ```csharp
         private IPackage _packer = new Packer();
@@ -57,6 +56,7 @@
            }
         }
         ``` 
+
     - 连接
         ```csharp
         _tcp.Connect("127.0.0.1", 7777);
