@@ -42,8 +42,7 @@
         {
          _tcp = new TcpConnection(_packer);
         }
-
-        public class Packer : IPackage
+        public class Packer : IPackage
         {
             public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
             {
