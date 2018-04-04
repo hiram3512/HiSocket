@@ -36,7 +36,7 @@
     
     Because Tcp is a a stream of bytes protocol, user should split the bytes to get correct message package. when create a tcp socket channel there must be a package instance to pack and unpack message.
     
-        ``` csharp
+        ```csharp
         private IPackage _packer = new Packer();
         void Test()
         {
@@ -54,7 +54,7 @@
                // add your pack logic here
            }
         }
-        ``` 
+       ```
     - Connect
         ```csharp
         _tcp.Connect("127.0.0.1", 7777);
