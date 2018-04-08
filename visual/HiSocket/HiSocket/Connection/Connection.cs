@@ -91,9 +91,12 @@ namespace HiSocket
             {
                 _receiveQueue.Clear();
             }
-            _socket.Shutdown(SocketShutdown.Both);
-            _socket.Close();
-            _socket = null;
+            if (_socket.Connected)
+            {
+                _socket.Shutdown(SocketShutdown.Both);
+                _socket.Close();
+                _socket = null;
+            }
         }
 
         protected bool _isSendThreadOn;
