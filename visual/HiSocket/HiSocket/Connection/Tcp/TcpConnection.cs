@@ -17,6 +17,7 @@ namespace HiSocket
         private ByteArray _receiveArray = new ByteArray();
         private readonly IPackage _iPackage;
         private int _timeOut = 5000;
+
         public int TimeOut
         {
             get { return _timeOut; }
@@ -27,7 +28,9 @@ namespace HiSocket
         {
             get { return _socket != null && _socket.Connected; }
         }
+
         public event Action<SocketState> StateChangeEvent;
+
         public TcpConnection(IPackage iPackage)
         {
             _iPackage = iPackage;
@@ -79,20 +82,19 @@ namespace HiSocket
                 {
                     throw new Exception("from send: disconnected");
                 }
+                Pack();
                 int count = _sendBuffer.Reader.GetHowManyCountCanReadInThisBlock();
                 if (count > 0)
                 {
-                    lock (_sendBuffer)
+                    try
                     {
-                        try
-                        {
-                            var length = _socket.Send(_sendBuffer.Reader.Node.Value, _sendBuffer.Reader.Position, count, SocketFlags.None);
-                            _sendBuffer.Reader.MovePosition(length);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(e.ToString());
-                        }
+                        var length = _socket.Send(_sendBuffer.Reader.Node.Value, _sendBuffer.Reader.Position, count,
+                            SocketFlags.None);
+                        _sendBuffer.Reader.MovePosition(length);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.ToString());
                     }
                 }
             }
@@ -108,22 +110,22 @@ namespace HiSocket
                 }
                 if (_socket.Available > 0)
                 {
-                    lock (_receiveBuffer)
+                    try
                     {
-                        try
-                        {
-                            var count = _receiveBuffer.Writer.GetHowManyCountCanWriteInThisBlock();
-                            var length = _socket.Receive(_receiveBuffer.Writer.Node.Value, _receiveBuffer.Writer.Position, count, SocketFlags.None);
-                            _receiveBuffer.Writer.MovePosition(length);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(e.ToString());
-                        }
+                        var count = _receiveBuffer.Writer.GetHowManyCountCanWriteInThisBlock();
+                        var length = _socket.Receive(_receiveBuffer.Writer.Node.Value, _receiveBuffer.Writer.Position,
+                            count, SocketFlags.None);
+                        _receiveBuffer.Writer.MovePosition(length);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.ToString());
                     }
                 }
+                UnPack();
             }
         }
+
         void ChangeState(SocketState state)
         {
             if (StateChangeEvent != null)
@@ -136,19 +138,12 @@ namespace HiSocket
             base.DisConnect();
         }
 
-        public override void Run()
-        {
-            base.Run();
-            Pack();
-            UnPack();
-        }
-
         void Pack()
         {
-            if (_sendQueue.Count == 0)
-                return;
-            lock (_sendBuffer)
+            lock (_sendQueue)
             {
+                if (_sendQueue.Count == 0)
+                    return;
                 try
                 {
                     _iPackage.Pack(_sendQueue, _sendArray);
@@ -160,14 +155,18 @@ namespace HiSocket
                 _sendBuffer.WriteAllBytes(_sendArray.Read(_sendArray.Length));
             }
         }
+
         void UnPack()
         {
-            lock (_receiveBuffer)
+            if (_receiveBuffer.Reader.GetHowManyCountCanReadInThisBlock() > 0) // if there have bytes to read
             {
                 var bytes = _receiveBuffer.ReadAllBytes();
                 _receiveArray.Write(bytes);
-                if (_receiveArray.Length == 0)
-                    return;
+            }
+            if (_receiveArray.Length == 0)
+                return;
+            lock (_receiveQueue)
+            {
                 try
                 {
                     _iPackage.Unpack(_receiveArray, _receiveQueue);

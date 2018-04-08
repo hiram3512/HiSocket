@@ -25,11 +25,14 @@ namespace HiSocket
         }
         public virtual void Run()
         {
-            while (_receiveQueue.Count > 0)
+            lock (_receiveQueue)
             {
-                if (ReceiveEvent != null)
+                while (_receiveQueue.Count > 0)
                 {
-                    ReceiveEvent(_receiveQueue.Dequeue());
+                    if (ReceiveEvent != null)
+                    {
+                        ReceiveEvent(_receiveQueue.Dequeue());
+                    }
                 }
             }
         }
