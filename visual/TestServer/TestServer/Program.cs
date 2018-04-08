@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestServer
 {
     class Program
     {
         private Socket _socket;
-        byte[] bytes = new byte[1024];
+        byte[] buffer = new byte[1024];
         static void Main(string[] args)
         {
             new Program().Start();
@@ -24,16 +20,17 @@ namespace TestServer
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socket.Bind(iep);
             _socket.Listen(2);
+            _socket.NoDelay = true;
             while (true)
             {
                 var client = _socket.Accept();
-                if (client != null)
+                while (true)
                 {
-                    while (client.Receive(bytes) > 0)
-                    {
-                        client.Send(bytes);
-                        Console.WriteLine(bytes);
-                    }
+                    var len = client.Receive(buffer);
+                    byte[] toSend = new byte[len];
+                    Array.Copy(buffer, 0, toSend, 0, toSend.Length);
+                    Console.WriteLine(toSend.Length);
+                    client.Send(toSend);
                 }
             }
         }

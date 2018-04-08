@@ -71,9 +71,9 @@ public class TestTcp : MonoBehaviour
         public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
         {
             //add your unpack logic here
-            if (reader.Length >= 1024)//1024 is example, it's msg's length
+            if (reader.Length >= 4)//4 is example, it's msg's length
             {
-                var bytesWaitToUnpack = reader.Read(1024);
+                var bytesWaitToUnpack = reader.Read(4);
                 receiveQueue.Enqueue(bytesWaitToUnpack);
             }
         }
