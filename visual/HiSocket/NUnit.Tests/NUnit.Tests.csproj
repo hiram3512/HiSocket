@@ -36,11 +36,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestByteMsg.cs" />
-    <Compile Include="TestProtobufMsg.cs" />
-    <Compile Include="TestTcp.cs" />
+    <Compile Include="TestByteArray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestUdp.cs" />
+    <Compile Include="TestClass1.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
