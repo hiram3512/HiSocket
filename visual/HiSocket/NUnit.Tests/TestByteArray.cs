@@ -1,4 +1,6 @@
-﻿using HiSocket;
+﻿using System;
+using System.Configuration;
+using HiSocket;
 using NUnit.Framework;
 using System.Text;
 
@@ -20,6 +22,22 @@ namespace NUnit.Tests
             Assert.AreEqual(i.Length, 5);
             var hello2 = i.Read(5);
             Assert.AreEqual(hello, hello2);
+
+            i.Write(hello);
+            i.Insert(5, world);
+            i.Read(5);
+            var world2 = i.Read(i.Length);
+            Assert.AreEqual(world, world2);
+
+            try
+            {
+                i.Read(5);
+            }
+            catch (Exception e)
+            {
+                Assert.NotNull(e);
+            }
+            i.Read(0);
         }
     }
 }
