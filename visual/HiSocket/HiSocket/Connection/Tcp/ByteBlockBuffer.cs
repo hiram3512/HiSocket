@@ -13,12 +13,14 @@ namespace HiSocket
 {
     public class ByteBlockBuffer
     {
-        public static int Size = 1024;//block's size
+        public int Size;//block's size
+        public int Count;//how many blocks
         public LinkedList<byte[]> LinkedList { get; private set; }
         public ReadOperator Reader { get; private set; }
         public WriteOperator Writer { get; private set; }
-        public ByteBlockBuffer()
+        public ByteBlockBuffer(int size = 1024)
         {
+            Size = size;
             LinkedList = new LinkedList<byte[]>();
             LinkedList.AddFirst(GetBlock());
             Reader = new ReadOperator(this);
@@ -126,6 +128,7 @@ namespace HiSocket
         #endregion
         public byte[] GetBlock()
         {
+            Count += 1;
             return new byte[Size];
         }
     }
