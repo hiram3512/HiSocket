@@ -5,6 +5,7 @@
 
 using System;
 using System.Net;
+using System.Net.Sockets;
 
 namespace HiSocket
 {
@@ -13,6 +14,8 @@ namespace HiSocket
     /// </summary>
     public interface ISocket : ITick
     {
+        Socket Socket { get; }
+
         /// <summary>
         /// trigger when connecting
         /// </summary>

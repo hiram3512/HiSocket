@@ -1,11 +1,32 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace HiSocket
 {
-    public class NewConnectio : ISocket
+    public abstract class NewConnection : ISocket
     {
+        /// <summary>
+        /// For send data
+        /// </summary>
+        private Thread sendThread;
+        /// <summary>
+        /// For receive data
+        /// </summary>
+        private Thread receiveThread;
+
+
+        /// <summary>
+        /// If send thread is run
+        /// </summary>
+        protected bool IsSendThreadOn;
+        /// <summary>
+        /// If receive thread is run
+        /// </summary>
+        protected bool IsReceiveThreadOn;
+
+        public Socket Socket { get; }
         public event Action OnConnected;
         public event Action OnConnecting;
         public event Action OnDisconnected;
@@ -13,45 +34,26 @@ namespace HiSocket
         public event Action<byte[]> OnReceive;
         public event Action<string> OnWarnning;
 
-        private Socket _socket;
-
-        public NewConnectio(Socket socket)
+        protected NewConnection(Socket socket)
         {
-            _socket = socket;
-            MakeSureNotNull(_socket, "Socket is null when construct");
+            Socket = socket;
+            MakeSureNotNull(Socket, "Socket is null when construct");
         }
 
-        public void Connect(IPEndPoint iep)
+        public abstract void Connect(IPEndPoint iep);
+
+        protected void InitThread()
         {
-            MakeSureNotNull(iep, "IPEndPoint is null");
-            if (OnConnecting != null)
-            {
-                OnConnecting();
-            }
-            _socket.BeginConnect(iep, delegate (IAsyncResult ar)
-            {
-                var socket = ar.AsyncState as Socket;
-                if (socket == null)
-                {
-                    MakeSureNotNull(socket, "socket is null when end ");
-                }
-
-
-
-
-                if (tcp != null && tcp.Connected)
-                {
-                    tcp.EndConnect(ar);
-                    ChangeState(SocketState.Connected);
-                    InitThread();
-                }
-                else
-                {
-                    ChangeState(SocketState.DisConnected);
-                    throw new Exception("socket connect failed");
-                }
-            }, _socket);
+            IsSendThreadOn = true;
+            sendThread = new Thread(Send);
+            sendThread.Start();
+            IsReceiveThreadOn = true;
+            receiveThread = new Thread(Receive);
+            receiveThread.Start();
         }
+
+        protected abstract void Send();
+        protected abstract void Receive();
 
         public void DisConnect()
         {
@@ -73,7 +75,7 @@ namespace HiSocket
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="info"></param>
-        private void MakeSureNotNull(object obj, string info)
+        protected void MakeSureNotNull(object obj, string info)
         {
             if (obj == null)
             {
@@ -81,18 +83,26 @@ namespace HiSocket
             }
         }
 
-        private void ConnectingEvent()
+        protected void ConnectingEvent()
         {
             if (OnConnecting != null)
             {
                 OnConnecting();
             }
         }
-        private void ErrorEvent(Exception e)
+        protected void ErrorEvent(Exception e)
         {
             if (OnError != null)
             {
                 OnError(e);
+            }
+        }
+
+        protected void ConnectedEvent()
+        {
+            if (OnConnected != null)
+            {
+                OnConnected();
             }
         }
     }
