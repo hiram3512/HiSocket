@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace HiSocket
+﻿namespace HiSocket
 {
-    interface ITick
+    /// <summary>
+    /// Tick interface
+    /// </summary>
+    public interface ITick
     {
-        void Tick();
+        /// <summary>
+        /// Tick 
+        /// </summary>
+        /// <param name="time">how many time passed with last tick</param>
+        void Tick(float time);
     }
 }

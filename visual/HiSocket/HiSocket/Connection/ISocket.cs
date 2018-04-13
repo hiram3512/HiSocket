@@ -11,7 +11,7 @@ namespace HiSocket
     /// <summary>
     /// socket api
     /// </summary>
-    interface ISocket : ITick
+    public interface ISocket : ITick
     {
         /// <summary>
         /// trigger when connecting
@@ -29,6 +29,11 @@ namespace HiSocket
         event Action OnDisconnected;
 
         /// <summary>
+        /// trigger when there is a warnning, for example when you connected and connect again.
+        /// </summary>
+        event Action<string> OnWarnning;
+
+        /// <summary>
         /// trigger when have error
         /// </summary>
         event Action<Exception> OnError;
@@ -41,15 +46,18 @@ namespace HiSocket
         /// <summary>
         /// Connect to server
         /// </summary>
-        /// <param name="ipe">Server's address</param>
-        void Connect(IPEndPoint ipe);
+        /// <param name="iep">server</param>
+        void Connect(IPEndPoint iep);
+
+        /// <summary>
+        /// Send bytes to server
+        /// </summary>
+        /// <param name="bytes"></param>
+        void Send(byte[] bytes);
 
         /// <summary>
         /// Disconnect
         /// </summary>
         void DisConnect();
-
-        
-        void Send(byte[] bytes);
     }
 }
