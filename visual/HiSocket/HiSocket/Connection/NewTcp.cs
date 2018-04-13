@@ -9,7 +9,10 @@ namespace HiSocket
 {
     class NewTcp : NewConnection, ITcp
     {
-        public bool IsConnected { get; }
+        public bool IsConnected
+        {
+            get { return Socket != null && Socket.Connected; }
+        }
 
         private static readonly object _sendLocker = new object();
         private static readonly object _receiveLocker = new object();
@@ -57,7 +60,12 @@ namespace HiSocket
         {
             while (IsSendThreadOn)
             {
-
+                if (!IsConnected)
+                {
+                    throw new Exception("From send thread: disconnected");
+                }
+                var count = _sendBuffer.Reader.GetHowManyCountCanReadInThisBlock();
+                Socket.Send()
             }
         }
 
@@ -66,6 +74,6 @@ namespace HiSocket
 
         }
 
-      
+
     }
 }
