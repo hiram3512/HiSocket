@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connection\Connection.cs" />
+    <Compile Include="Connection\ISocket.cs" />
+    <Compile Include="Connection\ITick.cs" />
     <Compile Include="Connection\Tcp\ByteBlockBuffer.cs" />
     <Compile Include="Connection\Tcp\ByteBlockOperator.cs" />
     <Compile Include="Connection\Tcp\ITcp.cs" />
