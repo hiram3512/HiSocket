@@ -48,8 +48,8 @@
     <Compile Include="Connection\Socket\Connection.cs" />
     <Compile Include="Connection\Socket\ISocket.cs" />
     <Compile Include="Connection\ITick.cs" />
-    <Compile Include="Connection\Socket\NewConnection.cs" />
-    <Compile Include="Connection\Socket\Tcp\NewTcp.cs" />
+    <Compile Include="Connection\Socket\SocketBase.cs" />
+    <Compile Include="Connection\Socket\Tcp\TcpSocket.cs" />
     <Compile Include="Connection\Socket\Tcp\ByteBlockBuffer.cs" />
     <Compile Include="Connection\Socket\Tcp\ByteBlockOperator.cs" />
     <Compile Include="Connection\Socket\Tcp\ITcp.cs" />

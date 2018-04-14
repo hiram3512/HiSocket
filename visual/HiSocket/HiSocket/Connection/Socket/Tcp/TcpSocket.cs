@@ -7,7 +7,7 @@ using System.Text;
 
 namespace HiSocket
 {
-    class NewTcp : NewConnection, ITcp
+    class TcpSocket : SocketBase, ITcp
     {
         public bool IsConnected
         {
@@ -18,11 +18,16 @@ namespace HiSocket
         private static readonly object _receiveLocker = new object();
         private ByteBlockBuffer _sendBuffer = new ByteBlockBuffer();
         private ByteBlockBuffer _receiveBuffer = new ByteBlockBuffer();
-        public NewTcp(Socket socket) : base(socket)
+        public TcpSocket(Socket socket) : base(socket)
         {
         }
         public override void Connect(IPEndPoint iep)
         {
+            if (IsConnected)
+            {
+                ErrorEvent("Already Connected");
+                return;
+            }
             Assert.IsNotNull(iep, "IPEndPoint is null");
             ConnectingEvent();
             try
@@ -38,7 +43,7 @@ namespace HiSocket
                         }
                         if (!Socket.Connected)
                         {
-                            ErrorEvent(new Exception("Connect faild"));
+                            throw new Exception("Connect faild");
                         }
                         socket.EndConnect(ar);
                         ConnectedEvent();
@@ -56,6 +61,15 @@ namespace HiSocket
                 throw new Exception(e.ToString());
             }
         }
+
+        public override void Send(byte[] bytes)
+        {
+            lock (_sendLocker)
+            {
+                _sendBuffer.WriteAllBytes(bytes);
+            }
+        }
+
         protected override void Send()
         {
             while (IsSendThreadOn)
@@ -102,6 +116,8 @@ namespace HiSocket
                             var length = Socket.Receive(_receiveBuffer.Writer.Node.Value, _receiveBuffer.Writer.Position,
                                 count, SocketFlags.None);
                             _receiveBuffer.Writer.MovePosition(length);
+                            var bytes = _receiveBuffer.ReadAllBytes();
+                            ReceiveEvent(bytes);
                         }
                         catch (Exception e)
                         {

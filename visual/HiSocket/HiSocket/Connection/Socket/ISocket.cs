@@ -40,14 +40,9 @@ namespace HiSocket
         event Action<byte[]> OnReceive;
 
         /// <summary>
-        /// trigger when there is a warnning, for example when you connected and connect again.
+        /// trigger when have error(for example: tcp already connect and connect again)
         /// </summary>
-        event Action<string> OnWarnning;
-
-        /// <summary>
-        /// trigger when have error
-        /// </summary>
-        event Action<Exception> OnError;
+        event Action<string> OnError;
 
         /// <summary>
         /// Connect to server
