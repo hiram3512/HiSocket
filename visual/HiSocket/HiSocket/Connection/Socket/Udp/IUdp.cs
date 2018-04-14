@@ -9,6 +9,6 @@ namespace HiSocket
 {
     public interface IUdp : ISocket
     {
-
+        int BufferSize { get; set; }
     }
 }

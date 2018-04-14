@@ -11,26 +11,72 @@ using System.Net.Sockets;
 
 namespace HiSocket
 {
-    public class UdpConnection : Connection, IUdp
+    public class UdpConnection : SocketBase, IUdp
     {
-        private byte[] _receiveBuffer;
-        public UdpConnection(int bufferSize)
+        public int BufferSize
         {
-            _receiveBuffer = new byte[bufferSize];
+            get { return _buffer.Length; }
+            set { _buffer = new byte[value]; }
         }
 
-        public override void Connect(string ip, int port)
+        private byte[] _buffer;
+        public UdpConnection(Socket socket) : base(socket)
         {
-            var address = Dns.GetHostAddresses(ip)[0];
-            _socket = new Socket(address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+            _buffer = new byte[1024];
+        }
+
+        public override void Connect(IPEndPoint iep)
+        {
             try
             {
-                _socket.BeginConnect(ip, port, delegate (IAsyncResult ar)
+                Socket.BeginConnect(iep, x =>
                 {
-                    var socket = ar.AsyncState as Socket;
-                    socket.EndConnect(ar);
-                    InitThread();
-                }, _socket);
+                    try
+                    {
+                        var socket = x.AsyncState as Socket;
+                        Assert.IsNotNull(socket, "Socket is null when connect end");
+                        if (!Socket.Connected)
+                        {
+                            throw new Exception("Connect faild");
+                        }
+                        socket.EndConnect(x);
+                        ConnectedEvent();
+                        StartReceive();
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.ToString());
+                    }
+
+                }, Socket);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.ToString());
+            }
+
+        }
+
+        public override void Send(byte[] bytes)
+        {
+            try
+            {
+                Socket.BeginSend(bytes, 0, bytes.Length, SocketFlags.None, x =>
+                {
+                    try
+                    {
+                        var socket = x.AsyncState as Socket;
+                        Assert.IsNotNull(socket, "Socket is null when send end");
+                        int length = socket.EndSend(x);
+                        //Todo: because this is udp protocol, this is no sence
+                        if (length != bytes.Length) { }
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.ToString());
+                    }
+
+                }, Socket);
             }
             catch (Exception e)
             {
@@ -38,65 +84,33 @@ namespace HiSocket
             }
         }
 
-        protected override void Send()
+        private void StartReceive()
         {
-            while (_isSendThreadOn)
+            try
             {
-                if (_sendQueue.Count > 0)
-                {
-                    lock (_sendQueue)
-                    {
-                        var toSend = _sendQueue.Dequeue();
-                        try
-                        {
-                            _socket.BeginSend(toSend, 0, toSend.Length, SocketFlags.None, delegate (IAsyncResult ar)
-                            {
-                                var socket = ar.AsyncState as Socket;
-                                var sendLength = socket.EndSend(ar);
-                                if (sendLength != toSend.Length)
-                                {
-                                    //todo: if this will happend, msdn is not handle this issue
-                                    throw new Exception("error: protocol is udp");
-                                }
-                            }, _socket);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(e.ToString());
-                        }
-                    }
-                }
+                Socket.BeginReceive(_buffer, 0, BufferSize, SocketFlags.None, ReceiveEnd, Socket);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.ToString());
             }
         }
 
-        protected override void Receive()
+        private void ReceiveEnd(IAsyncResult ar)
         {
-            while (_isReceiveThreadOn)
+            try
             {
-                if (_socket.Available > 0)
-                {
-                    try
-                    {
-                        _socket.BeginReceive(_receiveBuffer, 0, _receiveBuffer.Length, SocketFlags.None, delegate (IAsyncResult ar)
-                        {
-                            var tcp = ar.AsyncState as Socket;
-                            int length = tcp.EndReceive(ar);
-                            if (length > 0)
-                            {
-                                byte[] receiveBytes = new byte[length];
-                                Array.Copy(_receiveBuffer, 0, receiveBytes, 0, length);
-                                lock (_receiveQueue)
-                                {
-                                    _receiveQueue.Enqueue(receiveBytes);
-                                }
-                            }
-                        }, _socket);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(e.ToString());
-                    }
-                }
+                var socket = ar.AsyncState as Socket;
+                Assert.IsNotNull(socket, "Socket is null when receive end");
+                int length = socket.EndReceive(ar);
+                byte[] bytes = new byte[length];
+                Array.Copy(_buffer, 0, bytes, 0, bytes.Length);
+                ReceiveEvent(bytes);
+                StartReceive();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.ToString());
             }
         }
     }

@@ -8,6 +8,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace HiSocket
 {
@@ -17,13 +18,32 @@ namespace HiSocket
         {
             get { return Socket != null && Socket.Connected; }
         }
+        /// <summary>
+        /// For send data
+        /// </summary>
+        private Thread sendThread;
+        /// <summary>
+        /// For receive data
+        /// </summary>
+        private Thread receiveThread;
+
+        /// <summary>
+        /// If send thread is run
+        /// </summary>
+        private bool IsSendThreadOn;
+        /// <summary>
+        /// If receive thread is run
+        /// </summary>
+        private bool IsReceiveThreadOn;
 
         private static readonly object _sendLocker = new object();
         private static readonly object _receiveLocker = new object();
         private ByteBlockBuffer _sendBuffer = new ByteBlockBuffer();
         private ByteBlockBuffer _receiveBuffer = new ByteBlockBuffer();
+
         public TcpSocket(Socket socket) : base(socket)
         {
+
         }
         public override void Connect(IPEndPoint iep)
         {
@@ -41,10 +61,7 @@ namespace HiSocket
                     try
                     {
                         var socket = ar.AsyncState as Socket;
-                        if (socket == null)
-                        {
-                            Assert.IsNotNull(socket, "AsyncState as Socket is null");
-                        }
+                        Assert.IsNotNull(socket, "Socket is null when connect end");
                         if (!Socket.Connected)
                         {
                             throw new Exception("Connect faild");
@@ -74,7 +91,13 @@ namespace HiSocket
             }
         }
 
-        protected override void Send()
+        public override void DisConnect()
+        {
+            base.DisConnect();
+            AbortThread();
+        }
+
+        private void Send()
         {
             while (IsSendThreadOn)
             {
@@ -102,7 +125,7 @@ namespace HiSocket
             }
         }
 
-        protected override void Receive()
+        private void Receive()
         {
             while (IsReceiveThreadOn)
             {
@@ -129,6 +152,41 @@ namespace HiSocket
                         }
                     }
                 }
+            }
+        }
+        private void InitThread()
+        {
+            IsSendThreadOn = true;
+            sendThread = new Thread(Send);
+            sendThread.Start();
+            IsReceiveThreadOn = true;
+            receiveThread = new Thread(Receive);
+            receiveThread.Start();
+        }
+
+        private void AbortThread()
+        {
+            try
+            {
+                IsReceiveThreadOn = false;
+                if (sendThread != null)
+                    sendThread.Abort();
+                sendThread = null;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Abort send thread with error: " + e.ToString());
+            }
+            try
+            {
+                IsReceiveThreadOn = false;
+                if (receiveThread != null)
+                    receiveThread.Abort();
+                receiveThread = null;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Abort receive thread with error: " + e.ToString());
             }
         }
     }
