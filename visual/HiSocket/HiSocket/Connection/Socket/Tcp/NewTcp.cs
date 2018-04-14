@@ -23,7 +23,7 @@ namespace HiSocket
         }
         public override void Connect(IPEndPoint iep)
         {
-            MakeSureNotNull(iep, "IPEndPoint is null");
+            Assert.IsNotNull(iep, "IPEndPoint is null");
             ConnectingEvent();
             try
             {
@@ -34,7 +34,7 @@ namespace HiSocket
                         var socket = ar.AsyncState as Socket;
                         if (socket == null)
                         {
-                            MakeSureNotNull(socket, "AsyncState as Socket is null");
+                            Assert.IsNotNull(socket, "AsyncState as Socket is null");
                         }
                         if (!Socket.Connected)
                         {
@@ -64,16 +64,52 @@ namespace HiSocket
                 {
                     throw new Exception("From send thread: disconnected");
                 }
-                var count = _sendBuffer.Reader.GetHowManyCountCanReadInThisBlock();
-                Socket.Send()
+                lock (_sendLocker)
+                {
+                    var count = _sendBuffer.Reader.GetHowManyCountCanReadInThisBlock();
+                    if (count > 0)
+                    {
+                        try
+                        {
+                            var length = Socket.Send(_sendBuffer.Reader.Node.Value, _sendBuffer.Reader.Position, count,
+                                SocketFlags.None);
+                            _sendBuffer.Reader.MovePosition(length);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new Exception(e.ToString());
+                        }
+                    }
+                }
             }
         }
 
         protected override void Receive()
         {
-
+            while (IsReceiveThreadOn)
+            {
+                if (!IsConnected)
+                {
+                    throw new Exception("From receive thread: disconnected");
+                }
+                lock (_receiveLocker)
+                {
+                    if (Socket.Available > 0)
+                    {
+                        try
+                        {
+                            var count = _receiveBuffer.Writer.GetHowManyCountCanWriteInThisBlock();
+                            var length = Socket.Receive(_receiveBuffer.Writer.Node.Value, _receiveBuffer.Writer.Position,
+                                count, SocketFlags.None);
+                            _receiveBuffer.Writer.MovePosition(length);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new Exception(e.ToString());
+                        }
+                    }
+                }
+            }
         }
-
-
     }
 }

@@ -44,22 +44,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Connection\Connection.cs" />
-    <Compile Include="Connection\ISocket.cs" />
+    <Compile Include="Assert.cs" />
+    <Compile Include="Connection\Socket\Connection.cs" />
+    <Compile Include="Connection\Socket\ISocket.cs" />
     <Compile Include="Connection\ITick.cs" />
-    <Compile Include="Connection\NewConnection.cs" />
-    <Compile Include="Connection\Tcp\ByteBlockBuffer.cs" />
-    <Compile Include="Connection\Tcp\ByteBlockOperator.cs" />
-    <Compile Include="Connection\Tcp\ITcp.cs" />
-    <Compile Include="Connection\Tcp\ReadOperator.cs" />
-    <Compile Include="Connection\Tcp\TcpConnection.cs" />
-    <Compile Include="Connection\Tcp\WriteOperator.cs" />
-    <Compile Include="Connection\Udp\IUdp.cs" />
-    <Compile Include="Connection\Udp\UdpConnection.cs" />
+    <Compile Include="Connection\Socket\NewConnection.cs" />
+    <Compile Include="Connection\Socket\Tcp\NewTcp.cs" />
+    <Compile Include="Connection\Socket\Tcp\ByteBlockBuffer.cs" />
+    <Compile Include="Connection\Socket\Tcp\ByteBlockOperator.cs" />
+    <Compile Include="Connection\Socket\Tcp\ITcp.cs" />
+    <Compile Include="Connection\Socket\Tcp\ReadOperator.cs" />
+    <Compile Include="Connection\Socket\Tcp\TcpConnection.cs" />
+    <Compile Include="Connection\Socket\Tcp\WriteOperator.cs" />
+    <Compile Include="Connection\Socket\Udp\IUdp.cs" />
+    <Compile Include="Connection\Socket\Udp\UdpConnection.cs" />
     <Compile Include="Msg\Aes.cs" />
-    <Compile Include="Connection\Tcp\ByteArray.cs" />
-    <Compile Include="Connection\Tcp\IByteArray.cs" />
-    <Compile Include="Connection\Tcp\IPackage.cs" />
+    <Compile Include="Connection\Socket\Tcp\ByteArray.cs" />
+    <Compile Include="Connection\Socket\Tcp\IByteArray.cs" />
+    <Compile Include="Connection\Socket\Tcp\IPackage.cs" />
     <Compile Include="Msg\MsgBase.cs" />
     <Compile Include="Msg\MsgBytes.cs" />
     <Compile Include="Msg\MsgProtobuf.cs" />

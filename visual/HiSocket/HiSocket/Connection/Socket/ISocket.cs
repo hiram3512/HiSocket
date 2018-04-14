@@ -12,8 +12,11 @@ namespace HiSocket
     /// <summary>
     /// socket api
     /// </summary>
-    public interface ISocket : ITick
+    public interface ISocket
     {
+        /// <summary>
+        /// Get socket and modify it(for example: set timeout)
+        /// </summary>
         Socket Socket { get; }
 
         /// <summary>
@@ -32,6 +35,11 @@ namespace HiSocket
         event Action OnDisconnected;
 
         /// <summary>
+        /// trigger when get message
+        /// </summary>
+        event Action<byte[]> OnReceive;
+
+        /// <summary>
         /// trigger when there is a warnning, for example when you connected and connect again.
         /// </summary>
         event Action<string> OnWarnning;
@@ -40,11 +48,6 @@ namespace HiSocket
         /// trigger when have error
         /// </summary>
         event Action<Exception> OnError;
-
-        /// <summary>
-        /// trigger when get message
-        /// </summary>
-        event Action<byte[]> OnReceive;
 
         /// <summary>
         /// Connect to server

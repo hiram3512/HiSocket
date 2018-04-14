@@ -16,7 +16,6 @@ namespace HiSocket
         /// </summary>
         private Thread receiveThread;
 
-
         /// <summary>
         /// If send thread is run
         /// </summary>
@@ -30,14 +29,14 @@ namespace HiSocket
         public event Action OnConnected;
         public event Action OnConnecting;
         public event Action OnDisconnected;
-        public event Action<Exception> OnError;
         public event Action<byte[]> OnReceive;
         public event Action<string> OnWarnning;
+        public event Action<Exception> OnError;
 
         protected NewConnection(Socket socket)
         {
             Socket = socket;
-            MakeSureNotNull(Socket, "Socket is null when construct");
+            Assert.IsNotNull(Socket, "Socket is null when construct");
         }
 
         public abstract void Connect(IPEndPoint iep);
@@ -68,19 +67,6 @@ namespace HiSocket
         public void Tick(float time)
         {
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Make sure the object is not null
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="info"></param>
-        protected void MakeSureNotNull(object obj, string info)
-        {
-            if (obj == null)
-            {
-                throw new NullReferenceException("Null exception: " + info);
-            }
         }
 
         protected void ConnectingEvent()
