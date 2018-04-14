@@ -1,12 +1,11 @@
-﻿/****************************************************************************
- * Description:
+﻿/***************************************************************
+ * Description: 
  *
+ * Documents: https://github.com/hiramtan/HiSocket_unity
  * Author: hiramtan@live.com
- ****************************************************************************/
+***************************************************************/
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace HiSocket
 {

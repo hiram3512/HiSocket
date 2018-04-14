@@ -1,7 +1,9 @@
-﻿//****************************************************************************
-// Description:
-// Author: hiramtan@live.com
-//***************************************************************************
+﻿/***************************************************************
+ * Description: 
+ *
+ * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Author: hiramtan@live.com
+***************************************************************/
 
 using System;
 using System.Collections.Generic;

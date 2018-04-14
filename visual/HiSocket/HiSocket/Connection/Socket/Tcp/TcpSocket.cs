@@ -1,9 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿/***************************************************************
+ * Description:
+ *
+ * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Author: hiramtan@live.com
+***************************************************************/
+
+using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 namespace HiSocket
 {

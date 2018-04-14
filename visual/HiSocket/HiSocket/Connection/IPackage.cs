@@ -1,8 +1,9 @@
-﻿//****************************************************************************
-// Description:处理拆包粘包
-// Author: hiramtan@live.com
-//***************************************************************************
-
+﻿/***************************************************************
+ * Description: pack and unpack message
+ *
+ * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Author: hiramtan@live.com
+***************************************************************/
 
 using System.Collections.Generic;
 
