@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assert.cs" />
+    <Compile Include="Connection\Tcp\TcpConnection.cs" />
+    <Compile Include="Connection\UdpConection.cs" />
     <Compile Include="NoUse\Connection.cs" />
     <Compile Include="Connection\Socket\ISocket.cs" />
     <Compile Include="Connection\ITick.cs" />
@@ -58,7 +60,7 @@
     <Compile Include="NoUse\TcpConnection.cs" />
     <Compile Include="Connection\Socket\Tcp\WriteOperator.cs" />
     <Compile Include="Connection\Socket\Udp\IUdp.cs" />
-    <Compile Include="Connection\Socket\Udp\UdpConnection.cs" />
+    <Compile Include="Connection\Socket\Udp\UdpSocket.cs" />
     <Compile Include="Msg\Aes.cs" />
     <Compile Include="Connection\ByteArray.cs" />
     <Compile Include="Connection\IByteArray.cs" />
@@ -72,6 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Connection\Udp\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

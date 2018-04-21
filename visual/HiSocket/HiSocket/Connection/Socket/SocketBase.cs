@@ -18,7 +18,7 @@ namespace HiSocket
         public event Action OnConnecting;
         public event Action OnDisconnected;
         public event Action<byte[]> OnReceive;
-        public event Action<string> OnError;
+        public event Action<Exception> OnError;
 
         protected SocketBase(Socket socket)
         {
@@ -56,7 +56,7 @@ namespace HiSocket
         {
             if (OnError != null)
             {
-                OnError(info);
+                OnError(new Exception(info));
             }
         }
 

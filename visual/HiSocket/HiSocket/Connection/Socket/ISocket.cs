@@ -44,7 +44,7 @@ namespace HiSocket
         /// <summary>
         /// trigger when have error(for example: tcp already connect and connect again)
         /// </summary>
-        event Action<string> OnError;
+        event Action<Exception> OnError;
 
         /// <summary>
         /// Connect to server
