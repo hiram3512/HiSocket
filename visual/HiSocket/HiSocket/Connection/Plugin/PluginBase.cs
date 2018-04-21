@@ -5,18 +5,15 @@
  * Author: hiramtan@live.com
 ***************************************************************/
 
-using System.Net.Sockets;
-
 namespace HiSocket
 {
-    class TcpConnection
+    class PluginBase : IPlugin
     {
-        public TcpConnection()
-        {
-        Socket socket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.);
-            new TcpSocket()
-        }
+        public string Name { get; }
 
-        public void Connect
+        public PluginBase(string name)
+        {
+            Name = name;
+        }
     }
 }
