@@ -34,7 +34,7 @@ namespace HiSocket
                     try
                     {
                         var socket = x.AsyncState as Socket;
-                        Assert.IsNotNull(socket, "Socket is null when connect end");
+                        Assert.NotNull(socket, "Socket is null when connect end");
                         if (!Socket.Connected)
                         {
                             throw new Exception("Connect faild");
@@ -66,7 +66,7 @@ namespace HiSocket
                     try
                     {
                         var socket = x.AsyncState as Socket;
-                        Assert.IsNotNull(socket, "Socket is null when send end");
+                        Assert.NotNull(socket, "Socket is null when send end");
                         int length = socket.EndSend(x);
                         //Todo: because this is udp protocol, this is no sence
                         if (length != bytes.Length) { }
@@ -101,7 +101,7 @@ namespace HiSocket
             try
             {
                 var socket = ar.AsyncState as Socket;
-                Assert.IsNotNull(socket, "Socket is null when receive end");
+                Assert.NotNull(socket, "Socket is null when receive end");
                 int length = socket.EndReceive(ar);
                 byte[] bytes = new byte[length];
                 Array.Copy(_buffer, 0, bytes, 0, bytes.Length);

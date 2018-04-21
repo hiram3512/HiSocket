@@ -45,8 +45,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assert.cs" />
+    <Compile Include="Connection\ConnectionBase.cs" />
+    <Compile Include="Connection\IConnection.cs" />
+    <Compile Include="Connection\Plugin\IPlugin.cs" />
+    <Compile Include="Connection\Tcp\Pack\ByteArray.cs" />
+    <Compile Include="Connection\Tcp\Pack\IByteArray.cs" />
+    <Compile Include="Connection\Tcp\Pack\IPackage.cs" />
+    <Compile Include="Connection\Plugin\PluginBase.cs" />
     <Compile Include="Connection\Tcp\TcpConnection.cs" />
-    <Compile Include="Connection\UdpConection.cs" />
+    <Compile Include="Connection\Udp\UdpConection.cs" />
     <Compile Include="NoUse\Connection.cs" />
     <Compile Include="Connection\Socket\ISocket.cs" />
     <Compile Include="Connection\ITick.cs" />
@@ -61,22 +68,17 @@
     <Compile Include="Connection\Socket\Tcp\WriteOperator.cs" />
     <Compile Include="Connection\Socket\Udp\IUdp.cs" />
     <Compile Include="Connection\Socket\Udp\UdpSocket.cs" />
-    <Compile Include="Msg\Aes.cs" />
-    <Compile Include="Connection\ByteArray.cs" />
-    <Compile Include="Connection\IByteArray.cs" />
-    <Compile Include="Connection\IPackage.cs" />
-    <Compile Include="Msg\MsgBase.cs" />
-    <Compile Include="Msg\MsgBytes.cs" />
-    <Compile Include="Msg\MsgProtobuf.cs" />
-    <Compile Include="Msg\MsgRegister.cs" />
-    <Compile Include="Msg\MsgRegistHelper.cs" />
+    <Compile Include="Message\Aes.cs" />
+    <Compile Include="Message\MsgBase.cs" />
+    <Compile Include="Message\MsgBytes.cs" />
+    <Compile Include="Message\MsgProtobuf.cs" />
+    <Compile Include="Message\MsgRegister.cs" />
+    <Compile Include="Message\MsgRegistHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Connection\Udp\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

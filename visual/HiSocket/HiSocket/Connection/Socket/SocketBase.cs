@@ -23,7 +23,7 @@ namespace HiSocket
         protected SocketBase(Socket socket)
         {
             Socket = socket;
-            Assert.IsNotNull(Socket, "Socket is null when construct");
+            Assert.NotNull(Socket, "Socket is null when construct");
         }
 
         public abstract void Connect(IPEndPoint iep);

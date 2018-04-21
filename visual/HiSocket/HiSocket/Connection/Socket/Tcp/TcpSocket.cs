@@ -52,7 +52,7 @@ namespace HiSocket
                 ErrorEvent("Already Connected");
                 return;
             }
-            Assert.IsNotNull(iep, "IPEndPoint is null");
+            Assert.NotNull(iep, "IPEndPoint is null");
             ConnectingEvent();
             try
             {
@@ -61,7 +61,7 @@ namespace HiSocket
                     try
                     {
                         var socket = ar.AsyncState as Socket;
-                        Assert.IsNotNull(socket, "Socket is null when connect end");
+                        Assert.NotNull(socket, "Socket is null when connect end");
                         if (!Socket.Connected)
                         {
                             throw new Exception("Connect faild");
