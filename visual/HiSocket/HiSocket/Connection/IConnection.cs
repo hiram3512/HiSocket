@@ -9,7 +9,7 @@ using System;
 
 namespace HiSocket
 {
-    interface IConnection : ISocket, ITick
+    interface IConnection : ISocket
     {
         /// <summary>
         /// When construct this will trigger, you can modify logic by yourself.
@@ -20,7 +20,7 @@ namespace HiSocket
         /// <summary>
         /// Trigger when send message
         /// </summary>
-        event Action OnSend;
+        event Action<byte[]> OnSend;//already packed
 
         /// <summary>
         /// Set plugins to extend logic

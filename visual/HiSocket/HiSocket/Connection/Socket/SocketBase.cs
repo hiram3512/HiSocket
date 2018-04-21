@@ -13,18 +13,12 @@ namespace HiSocket
 {
     public abstract class SocketBase : ISocket
     {
-        public Socket Socket { get; private set; }
+        public Socket Socket { get; protected set; }
         public event Action OnConnected;
         public event Action OnConnecting;
         public event Action OnDisconnected;
         public event Action<byte[]> OnReceive;
         public event Action<Exception> OnError;
-
-        protected SocketBase(Socket socket)
-        {
-            Socket = socket;
-            Assert.NotNull(Socket, "Socket is null when construct");
-        }
 
         public abstract void Connect(IPEndPoint iep);
 

@@ -7,7 +7,10 @@
 
 namespace HiSocket
 {
-    class UdpConection
+    class UdpConection : ConnectionBase
     {
+        public UdpConection() : base(new UdpSocket())
+        {
+        }
     }
 }

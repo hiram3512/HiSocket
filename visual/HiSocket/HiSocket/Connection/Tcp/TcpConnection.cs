@@ -5,18 +5,29 @@
  * Author: hiramtan@live.com
 ***************************************************************/
 
-using System.Net.Sockets;
-
 namespace HiSocket
 {
-    class TcpConnection
+    class TcpConnection : ConnectionBase
     {
-        public TcpConnection()
+        private IPackage _iPackage;
+        private IByteArray _writer = new ByteArray();
+        private IByteArray _reader = new ByteArray();
+        public TcpConnection(IPackage package) : base(new TcpSocket())
         {
-        Socket socket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.);
-            new TcpSocket()
+            _iPackage = package;
         }
 
-        public void Connect
+        public override void Send(byte[] bytes)
+        {
+            _iPackage.Pack(bytes, _writer);
+            base.Send(_writer.Read(_writer.Length));
+        }
+
+        protected override void OnReceiveFromSocket(byte[] bytes)
+        {
+            _reader.Write(bytes);
+            _iPackage.Unpack(_reader, bytes);
+            base.OnReceiveFromSocket(bytes);
+        }
     }
 }

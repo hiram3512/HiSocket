@@ -7,7 +7,7 @@
 
 namespace HiSocket
 {
-    interface IPlugin
+    public interface IPlugin
     {
         string Name { get; }
     }

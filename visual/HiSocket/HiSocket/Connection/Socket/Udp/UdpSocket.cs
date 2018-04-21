@@ -20,13 +20,12 @@ namespace HiSocket
         }
 
         private byte[] _buffer;
-        public UdpSocket(Socket socket) : base(socket)
-        {
-            _buffer = new byte[1024];
-        }
 
         public override void Connect(IPEndPoint iep)
         {
+            Assert.NotNull(iep, "IPEndPoint is null");
+            ConnectingEvent();
+            Socket = new Socket(iep.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
             try
             {
                 Socket.BeginConnect(iep, x =>

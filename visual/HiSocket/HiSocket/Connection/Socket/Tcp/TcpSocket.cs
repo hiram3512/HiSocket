@@ -41,10 +41,6 @@ namespace HiSocket
         private ByteBlockBuffer _sendBuffer = new ByteBlockBuffer();
         private ByteBlockBuffer _receiveBuffer = new ByteBlockBuffer();
 
-        public TcpSocket(Socket socket) : base(socket)
-        {
-
-        }
         public override void Connect(IPEndPoint iep)
         {
             if (IsConnected)
@@ -54,6 +50,7 @@ namespace HiSocket
             }
             Assert.NotNull(iep, "IPEndPoint is null");
             ConnectingEvent();
+            Socket = new Socket(iep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             try
             {
                 Socket.BeginConnect(iep, delegate (IAsyncResult ar)
