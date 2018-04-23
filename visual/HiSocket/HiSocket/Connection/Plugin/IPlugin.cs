@@ -10,5 +10,6 @@ namespace HiSocket
     public interface IPlugin
     {
         string Name { get; }
+        IConnection Connection { get; }
     }
 }

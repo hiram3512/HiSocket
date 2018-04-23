@@ -39,7 +39,6 @@
   <ItemGroup>
     <Compile Include="TestByteArray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestClass1.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

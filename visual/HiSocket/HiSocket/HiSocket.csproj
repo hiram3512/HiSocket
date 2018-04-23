@@ -47,6 +47,7 @@
     <Compile Include="Assert.cs" />
     <Compile Include="Connection\ConnectionBase.cs" />
     <Compile Include="Connection\IConnection.cs" />
+    <Compile Include="Connection\Plugin\CalculateData\CalculateData.cs" />
     <Compile Include="Connection\Plugin\IPlugin.cs" />
     <Compile Include="Connection\Tcp\Pack\ByteArray.cs" />
     <Compile Include="Connection\Tcp\Pack\IByteArray.cs" />
@@ -55,9 +56,7 @@
     <Compile Include="Connection\Tcp\Pack\Package.cs" />
     <Compile Include="Connection\Tcp\TcpConnection.cs" />
     <Compile Include="Connection\Udp\UdpConection.cs" />
-    <Compile Include="NoUse\Connection.cs" />
     <Compile Include="Connection\Socket\ISocket.cs" />
-    <Compile Include="Connection\ITick.cs" />
     <Compile Include="Connection\Socket\SocketBase.cs" />
     <Compile Include="Connection\Socket\Tcp\IByteBlockBuffer.cs" />
     <Compile Include="Connection\Socket\Tcp\TcpSocket.cs" />
@@ -65,7 +64,6 @@
     <Compile Include="Connection\Socket\Tcp\ByteBlockOperator.cs" />
     <Compile Include="Connection\Socket\Tcp\ITcp.cs" />
     <Compile Include="Connection\Socket\Tcp\ReadOperator.cs" />
-    <Compile Include="NoUse\TcpConnection.cs" />
     <Compile Include="Connection\Socket\Tcp\WriteOperator.cs" />
     <Compile Include="Connection\Socket\Udp\IUdp.cs" />
     <Compile Include="Connection\Socket\Udp\UdpSocket.cs" />

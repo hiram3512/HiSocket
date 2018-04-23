@@ -9,7 +9,7 @@ using System;
 
 namespace HiSocket
 {
-    interface IConnection : ISocket
+    public interface IConnection : ISocket
     {
         /// <summary>
         /// When construct this will trigger, you can modify logic by yourself.
@@ -23,13 +23,19 @@ namespace HiSocket
         event Action<byte[]> OnSend;//already packed
 
         /// <summary>
-        /// Set plugins to extend logic
+        /// Add plugin to extend logic
         /// </summary>
         /// <param name="plugin"></param>
-        void SetPlugin(IPlugin plugin);
+        void AddPlugin(IPlugin plugin);
 
         /// <summary>
-        /// Get plugin
+        /// Remove plugin 
+        /// </summary>
+        /// <param name="name">plugin's name</param>
+        void RemovePlugin(string name);
+
+        /// <summary>
+        /// Get plugin by name
         /// </summary>
         /// <param name="name">plugin's name</param>
         /// <returns>plugin</returns>

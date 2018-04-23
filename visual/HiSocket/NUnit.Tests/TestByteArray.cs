@@ -1,7 +1,6 @@
-﻿using System;
-using System.Configuration;
-using HiSocket;
+﻿using HiSocket;
 using NUnit.Framework;
+using System;
 using System.Text;
 
 namespace NUnit.Tests

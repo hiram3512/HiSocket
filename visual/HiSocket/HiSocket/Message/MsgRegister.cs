@@ -18,14 +18,7 @@ namespace HiSocket
         {
             lock (_locker)
             {
-                try
-                {
-                    _msgDic.Add(key, action);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.ToString());
-                }
+                _msgDic.Add(key, action);
             }
         }
 
@@ -33,14 +26,7 @@ namespace HiSocket
         {
             lock (_locker)
             {
-                try
-                {
-                    _msgDic.Remove(key);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.ToString());
-                }
+                _msgDic.Remove(key);
             }
         }
 
@@ -48,14 +34,7 @@ namespace HiSocket
         {
             lock (_locker)
             {
-                try
-                {
-                    _msgDic[key](iByteArray);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.ToString());
-                }
+                _msgDic[key](iByteArray);
             }
         }
 

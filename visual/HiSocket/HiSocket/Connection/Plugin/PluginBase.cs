@@ -7,13 +7,14 @@
 
 namespace HiSocket
 {
-    class PluginBase : IPlugin
+    public abstract class PluginBase : IPlugin
     {
         public string Name { get; }
-
-        public PluginBase(string name)
+        public IConnection Connection { get; }
+        public PluginBase(string name, IConnection connection)
         {
             Name = name;
+            Connection = connection;
         }
     }
 }

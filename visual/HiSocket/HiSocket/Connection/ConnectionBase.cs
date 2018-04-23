@@ -67,7 +67,7 @@ namespace HiSocket
             _iSocket.DisConnect();
         }
 
-        public void SetPlugin(IPlugin plugin)
+        public void AddPlugin(IPlugin plugin)
         {
             Assert.NotNull(plugin, "plugin is null");
             plugins.Add(plugin.Name, plugin);
@@ -77,6 +77,12 @@ namespace HiSocket
         {
             Assert.NotNullOrEmpty(name, "Plugin name is null or empty");
             return plugins[name];
+        }
+
+        public void RemovePlugin(string name)
+        {
+            Assert.NotNullOrEmpty(name, "Plugin name is null or empty");
+            plugins.Remove(name);
         }
 
         void ConstructEvent()
