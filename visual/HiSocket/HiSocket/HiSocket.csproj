@@ -52,6 +52,7 @@
     <Compile Include="Connection\Tcp\Pack\IByteArray.cs" />
     <Compile Include="Connection\Tcp\Pack\IPackage.cs" />
     <Compile Include="Connection\Plugin\PluginBase.cs" />
+    <Compile Include="Connection\Tcp\Pack\Package.cs" />
     <Compile Include="Connection\Tcp\TcpConnection.cs" />
     <Compile Include="Connection\Udp\UdpConection.cs" />
     <Compile Include="NoUse\Connection.cs" />

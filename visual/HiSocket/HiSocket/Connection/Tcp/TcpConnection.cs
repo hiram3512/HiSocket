@@ -10,8 +10,8 @@ namespace HiSocket
     class TcpConnection : ConnectionBase
     {
         private IPackage _iPackage;
-        private IByteArray _writer = new ByteArray();
-        private IByteArray _reader = new ByteArray();
+        private readonly IByteArray _send = new ByteArray();
+        private readonly IByteArray _receive = new ByteArray();
         public TcpConnection(IPackage package) : base(new TcpSocket())
         {
             _iPackage = package;
@@ -19,15 +19,14 @@ namespace HiSocket
 
         public override void Send(byte[] bytes)
         {
-            _iPackage.Pack(bytes, _writer);
-            base.Send(_writer.Read(_writer.Length));
+            _send.Write(bytes);
+            _iPackage.Pack(_send, x => { base.Send(x); });
         }
 
         protected override void OnReceiveFromSocket(byte[] bytes)
         {
-            _reader.Write(bytes);
-            _iPackage.Unpack(_reader, bytes);
-            base.OnReceiveFromSocket(bytes);
+            _receive.Write(bytes);
+            _iPackage.Unpack(_receive, x => { base.OnReceiveFromSocket(x); });
         }
     }
 }

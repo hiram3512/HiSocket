@@ -2,7 +2,6 @@ D:\MyGit\github\HiSocket_unity\visual\HiSocket\NUnit.Tests\bin\Release\NUnit.Tes
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\NUnit.Tests\bin\Release\NUnit.Tests.pdb
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\NUnit.Tests\bin\Release\HiSocket.dll
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\NUnit.Tests\bin\Release\nunit.framework.dll
-D:\MyGit\github\HiSocket_unity\visual\HiSocket\NUnit.Tests\bin\Release\UnityEngine.dll
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\NUnit.Tests\bin\Release\protobuf-net.dll
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\NUnit.Tests\bin\Release\HiSocket.pdb
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\NUnit.Tests\bin\Release\nunit.framework.xml
