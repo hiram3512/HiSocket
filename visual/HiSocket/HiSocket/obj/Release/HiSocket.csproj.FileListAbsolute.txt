@@ -12,5 +12,4 @@ D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\obj\Release\HiSocket.pdb
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\bin\Release\HiSocket.dll
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\bin\Release\HiSocket.pdb
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\bin\Release\protobuf-net.dll
-D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\bin\Release\UnityEngine.dll
 D:\MyGit\github\HiSocket_unity\visual\HiSocket\HiSocket\obj\Release\HiSocket.csprojResolveAssemblyReference.cache
