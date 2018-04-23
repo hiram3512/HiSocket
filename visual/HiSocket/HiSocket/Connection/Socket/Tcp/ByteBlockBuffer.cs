@@ -58,6 +58,7 @@ namespace HiSocket
                 bytes.AddRange(betweenReadAndWriterBytes);
                 bytes.AddRange(writerBlockBytes);
                 Reader.Node = Writer.Node;//finish and move reader
+                Reader.Position = 0;
                 Reader.MovePosition(Writer.Position);
                 return bytes.ToArray();
             }
@@ -70,6 +71,7 @@ namespace HiSocket
                 reader = LinkedList.First;
                 if (reader != writer)
                 {
+                    bytes.AddRange(reader.Value);
                     GetBytesBetweenReaderAndWriter(reader, writer, ref bytes);
                 }
             }
@@ -79,8 +81,8 @@ namespace HiSocket
             }
             else
             {
-                bytes.AddRange(reader.Next.Value);
                 reader = reader.Next;
+                bytes.AddRange(reader.Value);
                 GetBytesBetweenReaderAndWriter(reader, writer, ref bytes);
             }
         }
