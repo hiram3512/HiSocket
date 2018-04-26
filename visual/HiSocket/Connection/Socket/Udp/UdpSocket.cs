@@ -15,7 +15,7 @@ namespace HiSocket
     {
         public int BufferSize { get; }
         private byte[] _buffer;
-        public UdpSocket(int bufferSize = 2048)
+        public UdpSocket(int bufferSize)
         {
             BufferSize = bufferSize;
             _buffer = new byte[BufferSize];

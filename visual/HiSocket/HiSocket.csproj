@@ -11,7 +11,8 @@
     <AssemblyName>HiSocket</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,7 +53,7 @@
     <Compile Include="Connection\Tcp\Pack\IPackage.cs" />
     <Compile Include="Connection\Plugin\PluginBase.cs" />
     <Compile Include="Connection\Tcp\TcpConnection.cs" />
-    <Compile Include="Connection\Udp\UdpConection.cs" />
+    <Compile Include="Connection\Udp\UdpConnection.cs" />
     <Compile Include="Connection\Socket\ISocket.cs" />
     <Compile Include="Connection\Socket\SocketBase.cs" />
     <Compile Include="Connection\Socket\Tcp\IByteBlockBuffer.cs" />

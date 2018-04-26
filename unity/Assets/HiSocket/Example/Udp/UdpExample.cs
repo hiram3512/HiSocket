@@ -4,6 +4,7 @@
 //****************************************************************************
 
 using System;
+using System.Net;
 using HiSocket;
 using UnityEngine;
 
@@ -14,18 +15,13 @@ public class TestUdp : MonoBehaviour
     void Start()
     {
         _udp = new UdpConnection(1024);
-        _udp.ReceiveEvent += OnReceive;
+        _udp.OnReceive += OnReceive;
         Connect();
         Send();
     }
     void Connect()
     {
-        _udp.Connect("127.0.0.1", 7777);
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        _udp.Run();
+        _udp.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7777));
     }
     void Send()
     {

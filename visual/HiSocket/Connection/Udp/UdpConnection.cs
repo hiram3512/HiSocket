@@ -7,9 +7,9 @@
 
 namespace HiSocket
 {
-    class UdpConection : ConnectionBase
+    public class UdpConnection : ConnectionBase
     {
-        public UdpConection() : base(new UdpSocket())
+        public UdpConnection(int bufferSize = 2048) : base(new UdpSocket(bufferSize))
         {
         }
     }
