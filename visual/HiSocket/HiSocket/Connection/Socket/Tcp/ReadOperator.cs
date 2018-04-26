@@ -21,22 +21,26 @@ namespace HiSocket
         /// <param name="length"></param>
         public void MovePosition(int length)
         {
-            Position += length;
-            if (Position > ByteBlockBuffer.Size)
+            lock (Locker)
             {
-                throw new Exception("Reader position error");
-            }
-            if (ByteBlockBuffer.IsReaderAndWriterInSameNode())
-            {
-                if (Position > ByteBlockBuffer.Writer.Position)
+                Position += length;
+                if (Position > ByteBlockBuffer.Size)
                 {
-                    throw new Exception("When in same node, Reader's position must not large than Writer's postion");
+                    throw new Exception("Reader position error");
                 }
-            }
-            if (Position == ByteBlockBuffer.Size) //current block have already read finish
-            {
-                Position = 0;
-                ReaderNodeMove();
+                if (ByteBlockBuffer.IsReaderAndWriterInSameNode())
+                {
+                    if (Position > ByteBlockBuffer.Writer.Position)
+                    {
+                        throw new Exception(
+                            "When in same node, Reader's position must not large than Writer's postion");
+                    }
+                }
+                if (Position == ByteBlockBuffer.Size) //current block have already read finish
+                {
+                    Position = 0;
+                    ReaderNodeMove();
+                }
             }
         }
 
@@ -51,11 +55,15 @@ namespace HiSocket
                 Node = Node.Next;
             }
         }
+
         public int GetHowManyCountCanReadInThisBlock()
         {
-            if (Node == ByteBlockBuffer.Writer.Node) // if there are in same block
-                return ByteBlockBuffer.Writer.Position - Position;
-            return ByteBlockBuffer.Size - Position; //get rest of this block's bytes
+            lock (Locker)
+            {
+                if (Node == ByteBlockBuffer.Writer.Node) // if there are in same block
+                    return ByteBlockBuffer.Writer.Position - Position;
+                return ByteBlockBuffer.Size - Position; //get rest of this block's bytes
+            }
         }
     }
 }

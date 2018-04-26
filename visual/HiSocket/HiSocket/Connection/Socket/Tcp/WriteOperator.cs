@@ -14,6 +14,7 @@ namespace HiSocket
         public WriteOperator(IByteBlockBuffer byteBlockBuffer) : base(byteBlockBuffer)
         {
         }
+
         /// <summary>
         /// how many bytes you have already write in
         /// used to move postion
@@ -21,15 +22,19 @@ namespace HiSocket
         /// <param name="length"></param>
         public void MovePosition(int length)
         {
-            Position += length;
-            if (Position > ByteBlockBuffer.Size)
-                throw new Exception("Writer position error");
-            if (Position == ByteBlockBuffer.Size) //current block is full
+            lock (Locker)
             {
-                Position = 0;
-                WriterNodeMove();
+                Position += length;
+                if (Position > ByteBlockBuffer.Size)
+                    throw new Exception("Writer position error");
+                if (Position == ByteBlockBuffer.Size) //current block is full
+                {
+                    Position = 0;
+                    WriterNodeMove();
+                }
             }
         }
+
         void WriterNodeMove()
         {
             if (Node.Next == null) //next block is null
@@ -57,9 +62,13 @@ namespace HiSocket
                 }
             }
         }
+
         public int GetHowManyCountCanWriteInThisBlock()
         {
-            return ByteBlockBuffer.Size - Position;
+            lock (Locker)
+            {
+                return ByteBlockBuffer.Size - Position;
+            }
         }
     }
 }

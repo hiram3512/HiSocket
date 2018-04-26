@@ -11,6 +11,7 @@ namespace HiSocket
 {
     internal abstract class ByteBlockOperator
     {
+        protected readonly object Locker = new object();
         protected IByteBlockBuffer ByteBlockBuffer { get; }
         public LinkedListNode<byte[]> Node { get; set; }
         public int Position { get; set; }

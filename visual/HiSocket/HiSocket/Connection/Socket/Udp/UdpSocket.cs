@@ -11,15 +11,15 @@ using System.Net.Sockets;
 
 namespace HiSocket
 {
-    public class UdpSocketSocket : SocketBase, IUdpSocket
+    public class UdpSocket : SocketBase, IUdpSocket
     {
-        public int BufferSize
-        {
-            get { return _buffer.Length; }
-            set { _buffer = new byte[value]; }
-        }
-
+        public int BufferSize { get; }
         private byte[] _buffer;
+        public UdpSocket(int bufferSize = 2048)
+        {
+            BufferSize = bufferSize;
+            _buffer = new byte[BufferSize];
+        }
 
         public override void Connect(IPEndPoint iep)
         {

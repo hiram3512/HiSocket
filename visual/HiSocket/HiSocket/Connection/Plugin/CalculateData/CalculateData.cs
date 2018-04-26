@@ -19,15 +19,13 @@ namespace HiSocket
             connection.OnSend += x => { _howManyBytesSend += x.Length; };
         }
 
-
-        class Test
-        {
-            void Start()
-            {
-                IPackage iPackage = null;
-                var tcp = new TcpConnection(iPackage);
-                var plugin = new CalculateData("CalculateData", tcp);
-            }
-        }
+        //class Test
+        //{
+        //    void Start()
+        //    {
+        //        var tcp = new TcpConnection(iPackage);
+        //        var plugin = new CalculateData("CalculateData", tcp);
+        //    }
+        //}
     }
 }

@@ -15,6 +15,7 @@ namespace HiSocket
         {
             Name = name;
             Connection = connection;
+            Connection.AddPlugin(this);
         }
     }
 }

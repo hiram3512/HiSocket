@@ -20,6 +20,7 @@ namespace HiSocket
         public LinkedList<byte[]> LinkedList { get; private set; }
         public ReadOperator Reader { get; private set; }
         public WriteOperator Writer { get; private set; }
+        private readonly object locker = new object();
         public ByteBlockBuffer(int size = 1024)
         {
             Size = size;
@@ -30,37 +31,43 @@ namespace HiSocket
         }
         public bool IsReaderAndWriterInSameNode()
         {
-            // if reader and writer in same block, reader's position must not large than writer's position
-            return Reader.Node == Writer.Node;
+            lock (locker)
+            {
+                // if reader and writer in same block, reader's position must not large than writer's position
+                return Reader.Node == Writer.Node;
+            }
         }
         #region operate all blocks
 
         public byte[] ReadAllBytes()
         {
-            if (IsReaderAndWriterInSameNode())
+            lock (locker)
             {
-                var length = Writer.Position - Reader.Position;
-                var bytes = new byte[length];
-                Array.Copy(Reader.Node.Value, Reader.Position, bytes, 0, length);
-                Reader.MovePosition(length);
-                return bytes;
-            }
-            else
-            {
-                var readerBlockBytes = new byte[Size - Reader.Position];
-                Array.Copy(Reader.Node.Value, Reader.Position, readerBlockBytes, 0, readerBlockBytes.Length);
-                var betweenReadAndWriterBytes = new List<byte>();
-                GetBytesBetweenReaderAndWriter(Reader.Node, Writer.Node, ref betweenReadAndWriterBytes);
-                var writerBlockBytes = new byte[Writer.Position];
-                Array.Copy(Writer.Node.Value, 0, writerBlockBytes, 0, writerBlockBytes.Length);
-                List<byte> bytes = new List<byte>();
-                bytes.AddRange(readerBlockBytes);
-                bytes.AddRange(betweenReadAndWriterBytes);
-                bytes.AddRange(writerBlockBytes);
-                Reader.Node = Writer.Node;//finish and move reader
-                Reader.Position = 0;
-                Reader.MovePosition(Writer.Position);
-                return bytes.ToArray();
+                if (IsReaderAndWriterInSameNode())
+                {
+                    var length = Writer.Position - Reader.Position;
+                    var bytes = new byte[length];
+                    Array.Copy(Reader.Node.Value, Reader.Position, bytes, 0, length);
+                    Reader.MovePosition(length);
+                    return bytes;
+                }
+                else
+                {
+                    var readerBlockBytes = new byte[Size - Reader.Position];
+                    Array.Copy(Reader.Node.Value, Reader.Position, readerBlockBytes, 0, readerBlockBytes.Length);
+                    var betweenReadAndWriterBytes = new List<byte>();
+                    GetBytesBetweenReaderAndWriter(Reader.Node, Writer.Node, ref betweenReadAndWriterBytes);
+                    var writerBlockBytes = new byte[Writer.Position];
+                    Array.Copy(Writer.Node.Value, 0, writerBlockBytes, 0, writerBlockBytes.Length);
+                    List<byte> bytes = new List<byte>();
+                    bytes.AddRange(readerBlockBytes);
+                    bytes.AddRange(betweenReadAndWriterBytes);
+                    bytes.AddRange(writerBlockBytes);
+                    Reader.Node = Writer.Node;//finish and move reader
+                    Reader.Position = 0;
+                    Reader.MovePosition(Writer.Position);
+                    return bytes.ToArray();
+                }
             }
         }
         void GetBytesBetweenReaderAndWriter(LinkedListNode<byte[]> reader, LinkedListNode<byte[]> writer, ref List<byte> bytes)
@@ -108,7 +115,10 @@ namespace HiSocket
 
         public void WriteAllBytes(byte[] bytes)
         {
-            WriteAllBytes(bytes, 0);
+            lock (locker)
+            {
+                WriteAllBytes(bytes, 0);
+            }
         }
 
         /// <summary>
@@ -132,8 +142,11 @@ namespace HiSocket
         #endregion
         public byte[] CreateBlock()
         {
-            Count += 1;
-            return new byte[Size];
+            lock (locker)
+            {
+                Count += 1;
+                return new byte[Size];
+            }
         }
     }
 }
