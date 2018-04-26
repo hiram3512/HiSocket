@@ -9,9 +9,9 @@ using System;
 
 namespace HiSocket
 {
-    public class WriteOperator : ByteBlockOperator
+    internal class WriteOperator : ByteBlockOperator
     {
-        public WriteOperator(ByteBlockBuffer byteBlockBuffer) : base(byteBlockBuffer)
+        public WriteOperator(IByteBlockBuffer byteBlockBuffer) : base(byteBlockBuffer)
         {
         }
         /// <summary>
@@ -40,7 +40,7 @@ namespace HiSocket
                 }
                 else //create new block
                 {
-                    ByteBlockBuffer.LinkedList.AddAfter(Node, ByteBlockBuffer.GetBlock());
+                    ByteBlockBuffer.LinkedList.AddAfter(Node, ByteBlockBuffer.CreateBlock());
                     Node = Node.Next;
                 }
             }
@@ -48,7 +48,7 @@ namespace HiSocket
             {
                 if (Node.Next == ByteBlockBuffer.Reader.Node) //all blocks are occupied, create a new one
                 {
-                    ByteBlockBuffer.LinkedList.AddAfter(Node, ByteBlockBuffer.GetBlock());
+                    ByteBlockBuffer.LinkedList.AddAfter(Node, ByteBlockBuffer.CreateBlock());
                     Node = Node.Next;
                 }
                 else //reuse block

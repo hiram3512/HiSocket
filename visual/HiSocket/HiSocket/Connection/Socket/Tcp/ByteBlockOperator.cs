@@ -9,12 +9,12 @@ using System.Collections.Generic;
 
 namespace HiSocket
 {
-    public abstract class ByteBlockOperator
+    internal abstract class ByteBlockOperator
     {
-        protected ByteBlockBuffer ByteBlockBuffer { get; }
+        protected IByteBlockBuffer ByteBlockBuffer { get; }
         public LinkedListNode<byte[]> Node { get; set; }
         public int Position { get; set; }
-        public ByteBlockOperator(ByteBlockBuffer byteBlockBuffer)
+        public ByteBlockOperator(IByteBlockBuffer byteBlockBuffer)
         {
             ByteBlockBuffer = byteBlockBuffer;
             Node = ByteBlockBuffer.LinkedList.First;

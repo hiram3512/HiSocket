@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace HiSocket
 {
-    class TcpSocket : SocketBase, ITcp
+    public class TcpSocket : SocketBase, ITcpSocket
     {
         public bool IsConnected
         {
@@ -38,8 +38,8 @@ namespace HiSocket
 
         private static readonly object _sendLocker = new object();
         private static readonly object _receiveLocker = new object();
-        private ByteBlockBuffer _sendBuffer = new ByteBlockBuffer();
-        private ByteBlockBuffer _receiveBuffer = new ByteBlockBuffer();
+        private IByteBlockBuffer _sendBuffer = new ByteBlockBuffer();
+        private IByteBlockBuffer _receiveBuffer = new ByteBlockBuffer();
 
         public override void Connect(IPEndPoint iep)
         {

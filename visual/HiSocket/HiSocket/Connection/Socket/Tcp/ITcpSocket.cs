@@ -7,7 +7,7 @@
 
 namespace HiSocket
 {
-    public interface ITcp : ISocket
+    public interface ITcpSocket : ISocket
     {
         /// <summary>
         /// if connected

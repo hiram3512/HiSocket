@@ -9,7 +9,7 @@ namespace HiSocket
 {
     class UdpConection : ConnectionBase
     {
-        public UdpConection() : base(new UdpSocket())
+        public UdpConection() : base(new UdpSocketSocket())
         {
         }
     }

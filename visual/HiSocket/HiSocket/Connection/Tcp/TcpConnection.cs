@@ -7,7 +7,7 @@
 
 namespace HiSocket
 {
-    class TcpConnection : ConnectionBase
+    public class TcpConnection : ConnectionBase
     {
         private IPackage _iPackage;
         private readonly IByteArray _send = new ByteArray();

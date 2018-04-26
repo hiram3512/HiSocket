@@ -13,10 +13,10 @@ using System.Collections.Generic;
 
 namespace HiSocket
 {
-    public class ByteBlockBuffer
+    internal sealed class ByteBlockBuffer : IByteBlockBuffer
     {
-        public int Size;//block's size
-        public int Count;//how many blocks
+        public int Size { get; }
+        public int Count { get; private set; }
         public LinkedList<byte[]> LinkedList { get; private set; }
         public ReadOperator Reader { get; private set; }
         public WriteOperator Writer { get; private set; }
@@ -24,7 +24,7 @@ namespace HiSocket
         {
             Size = size;
             LinkedList = new LinkedList<byte[]>();
-            LinkedList.AddFirst(GetBlock());
+            LinkedList.AddFirst(CreateBlock());
             Reader = new ReadOperator(this);
             Writer = new WriteOperator(this);
         }
@@ -130,7 +130,7 @@ namespace HiSocket
             }
         }
         #endregion
-        public byte[] GetBlock()
+        public byte[] CreateBlock()
         {
             Count += 1;
             return new byte[Size];

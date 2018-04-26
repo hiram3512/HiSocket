@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiSocket", "HiSocket\HiSock
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiSocketTest", "HiSocketTest\HiSocketTest.csproj", "{7DA3903F-6522-4085-BA39-D6D260AFB5CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiSocketExample", "HiSocketExample\HiSocketExample.csproj", "{F27704A8-F0AF-4EC2-A0AE-29F2BE3B5284}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7DA3903F-6522-4085-BA39-D6D260AFB5CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DA3903F-6522-4085-BA39-D6D260AFB5CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DA3903F-6522-4085-BA39-D6D260AFB5CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F27704A8-F0AF-4EC2-A0AE-29F2BE3B5284}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F27704A8-F0AF-4EC2-A0AE-29F2BE3B5284}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F27704A8-F0AF-4EC2-A0AE-29F2BE3B5284}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F27704A8-F0AF-4EC2-A0AE-29F2BE3B5284}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

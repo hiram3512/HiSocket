@@ -9,9 +9,9 @@ using System;
 
 namespace HiSocket
 {
-    public class ReadOperator : ByteBlockOperator
+    internal class ReadOperator : ByteBlockOperator
     {
-        public ReadOperator(ByteBlockBuffer byteBlockBuffer) : base(byteBlockBuffer)
+        public ReadOperator(IByteBlockBuffer byteBlockBuffer) : base(byteBlockBuffer)
         {
         }
         /// <summary>
