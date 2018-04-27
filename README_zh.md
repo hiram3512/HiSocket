@@ -3,11 +3,11 @@
 ![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   [![Build Status](https://travis-ci.org/hiramtan/HiSocket.svg?branch=master)](https://travis-ci.org/hiramtan/HiSocket)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)
 
 -----
-[英文说明](https://github.com/hiramtan/HiSocket) 
 
 ### 如何使用
 - 如果用在c#项目中,可以从此下载 HiSocket.dll: [HiSocket](https://github.com/hiramtan/HiSocket/releases)
 - 如果用在unity3d项目中,可以从此下载 HiSocket.unitypackage: [HiSocket](https://github.com/hiramtan/HiSocket/releases)
+
 (ps. HiSocket.unitypackage 包含HiSocket.dll和一些示例)
 
  快速开始:
