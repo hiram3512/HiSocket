@@ -3,12 +3,12 @@
 ![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   [![Build Status](https://travis-ci.org/hiramtan/HiSocket.svg?branch=master)](https://travis-ci.org/hiramtan/HiSocket)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)
 
 -----
-[中文说明](https://github.com/hiramtan/HiSocket_unity/blob/master/README_zh.md) 
+[中文说明](https://github.com/hiramtan/HiSocket/blob/master/README_zh.md) 
 
 ### How to use
 - If you want to used in c# project, you can download HiSocket.dll from here: [HiSocket](https://github.com/hiramtan/HiSocket/releases)
 - If you want to used in unity3d, you can download HiSocket.unitypackage from here: [HiSocket](https://github.com/hiramtan/HiSocket/releases)
-(ps. HiSocket.unitypackage contains dll and some example)
+(ps. HiSocket.unitypackage contains HiSocket.dll and some example)
 
  Quick Start:
 ```csharp
@@ -125,7 +125,7 @@ If use Udp connection shold define send and receive's buffer size.
 ### Advanced
 - If you are clear about socket, you also can use TcpSocket(UdpSocket) to achieve your logic, anyway the recommend is TcpConnection(UdpConnection).
 - You can add many different plugins based on TcpConnection(UdpConnection) to achieve different functions.
-- There are a message register base class help user to quick register id and callback(use reflection)
+- There are a message register base class help user to quick register id and callback(based on reflection)
 - Byte block buffer use linked list and reuse block when some block is free.
 - .etc
 ---------
