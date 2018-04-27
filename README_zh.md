@@ -1,12 +1,57 @@
-# HiSocket_unity
-----------------------
+# HiSocket
 
+![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   [![Build Status](https://travis-ci.org/hiramtan/HiSocket.svg?branch=master)](https://travis-ci.org/hiramtan/HiSocket)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)
+
+-----
 
 ### 如何使用
- 可以从此链接下载最新的unity package: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket_unity/releases)
+- 如果用在c#项目中,可以从此下载 HiSocket.dll: [HiSocket](https://github.com/hiramtan/HiSocket/releases)
+- 如果用在unity3d项目中,可以从此下载 HiSocket.unitypackage: [HiSocket](https://github.com/hiramtan/HiSocket/releases)
 
+(ps. HiSocket.unitypackage 包含HiSocket.dll和一些示例)
 
----------
+ 快速开始:
+```csharp
+        private IPackage _package = new PackageExample();
+        private TcpConnection _tcp;
+        void Init()
+        {
+            _tcp = new TcpConnection(_package);
+            _tcp.OnConnected += OnConnected;
+            _tcp.OnReceive += OnReceive;
+            //_tcp.OnError
+            //_tcp.OnDisconnected
+        }
+        void OnConnected()
+        {
+            //connect success
+            _tcp.Send(new byte[10]);//send message
+            _tcp.DisConnect();//disconnect
+        }
+
+        void OnReceive(byte[] bytes)
+        {
+            //get message from server
+        }
+```
+
+-----
+
+### 总览
+项目包含:
+- Connection
+    - TcpConnection
+        - TcpSocket
+        - Package
+    - UdpConnection
+        - UdpSocket
+    - Plugin
+- Message
+    - Message register
+    - Aes encryption
+    - Byte message
+    - Protobuf message
+
 
 ### 功能
 - Tcp socket
@@ -18,148 +63,35 @@
 - Protobuf消息封装
 - AES消息加密
 
-
 ### 详情
 - Tcp和Udp都是采用主线程异步连接的方式(避免主线程阻塞).
 - 启动发送线程和接收线程处理数据传输(提高性能).
-- 供用户调用发送或接受数据的API在主线程中(方便直接操作unity的组件)
-- 监听连接事件获得当前的连接状态.
-- 监听接收事件获得接收的数据.
-- 存在字节数组队列,方便用来测试和数据重发.
 - 高性能字节缓冲区避免内存空间重复申请,减少GC.
+- 可以添加一系列的事件监听获取当前的连接状态.
 - 如果使用Tcp协议需要实现IPackage接口处理粘包拆包.
-- Ping接口因为mono底层的bug会在.net2.0平台报错(.net 4.6 没有问题,或者也可以使用unity的接口获得Ping,工程中有示例代码)
+- 如果使用Udp协议需要声明缓冲区大小.
+- Ping: 源码包含一个Ping插件可以使用,但是如果用在unity3d工程中会报错(因为mono的问题,在.net2.0会报错.net4.6可以正常使用)
 
----------
-### 细节
+
+### 介绍
 - Tcp 
+[Transmission Control Protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol)
 
-    - Tcp connection    
-    Tcp协议传输字节流,用户需要分割字节流获得正确的数据包,当创建一个tcp协议的socket时,需要传入一个Package对象来封包和解包.
-        ```csharp
-        private IPackage _packer = new Packer();
-        void Test()
-        {
-         _tcp = new TcpConnection(_packer);
-        }
+Tcp 协议提供可靠有序的流字节传输,用户需要自己分割数据,在这个框架中可以继承IPackage接口来实现.
 
-        public class Packer : IPackage
-        {
-            public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
-            {
-               //add your unpack logic here
-           }
+Tcp协议传输字节流,用户需要分割字节流获得正确的数据包,当创建一个tcp协议的socket时,需要传入一个Package对象来封包和解包.
 
-           public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
-           {
-               // add your pack logic here
-           }
-        }
-        ``` 
-
-    - 连接
-        ```csharp
-        _tcp.Connect("127.0.0.1", 7777);
-        ```
-
-    - 断开连接
-    当不再运行时需要主动调用接口断开与服务器的连接(比如响应unity的onapplicationquit执行时)
-        ```csharp
-        void OnApplicationQuit()
-        {
-            _tcp.DisConnect();
-        }
-        ```
-
-    - 连接状态变化
-    如果想获取当前的连接状态,可以订阅连接状态事件.
-        ```csharp
-        void Test()
-        {
-            _tcp.StateChangeEvent += OnState;
-        }
-        void OnState(SocketState state)
-        {
-            Debug.Log("current state is: " + state);
-            if (state == SocketState.Connected)
-            {
-                Debug.Log("connect success");
-                //can send or receive message
-            }
-            else if (state == SocketState.DisConnected)
-            {
-                Debug.Log("connect failed");
-            }
-            else if (state == SocketState.Connecting)
-            {
-                Debug.Log("connecting");
-            }
-        }
-        ```
-
-    - 发送消息
-        ```csharp
-        void Test()
-        {
-            var bytes = BitConverter.GetBytes(100);
-            _tcp.Send(bytes);
-        }
-        ```
-
-    - 接受消息
-    You can regist receiveevent and when message come from server, this event will be fire.
-        ```csharp
-            void Test()
-            {
-                _tcp.ReceiveEvent += OnReceive;
-            }
-            void OnReceive(byte[] bytes)
-            {
-                Debug.Log("receive msg: " + BitConverter.ToInt32(bytes, 0));
-            }
-        ```
-
-    - 封包和解包
-    最初创建连接时我们定义了一个packer来分割数据包,当发送消息时我们在数据头部插入消息长度/当接收到消息时我们根据头部的消息长度获得数据包的大小.
-        ```csharp
-        private bool _isGetHead = false;
-        private int _bodyLength;
-        public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
-        {
-            if (!_isGetHead)
-            {
-                if (reader.Length >= 2)//2 is example, get msg's head length
-                {
-                    var bodyLengthBytes = reader.Read(2);
-                    _bodyLength = BitConverter.ToUInt16(bodyLengthBytes, 0);
-                }
-                else
-                {
-                    if (reader.Length >= _bodyLength)//get body
-                    {
-                        var bytes = reader.Read(_bodyLength);
-                        receiveQueue.Enqueue(bytes);
-                        _isGetHead = false;
-                    }
-                }
-            }
-        }
-        public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
-        {
-            var bytesWaitToPack = sendQueue.Dequeue();
-            UInt16 length = (UInt16)bytesWaitToPack.Length;//get head lenth
-            var bytesHead = BitConverter.GetBytes(length);
-            writer.Write(bytesHead);//write head
-            writer.Write(bytesWaitToPack);//write body
-        }
-        ```
+最初创建连接时我们定义了一个packer来分割数据包,当发送消息时我们在数据头部插入消息长度/当接收到消息时我们根据头部的消息长度获得数据包的大小.
+        
 - Udp
-    - Udp connection
-    如果创建upd连接,需要指定发送接收缓冲区大小.
-        ```csharp
-        _udp = new UdpConnection(1024);
-        ```
-- Ping
+
+[User Datagram Protocol](https://www.assetstore.unity3d.com/en/#!/content/104658) 
+
+Udp协议提供不可靠的报文消息,用户无法知道当前连接状态,但是消息包时完整的.
+
+如果创建upd连接,需要指定发送接收缓冲区大小.
+
+- Ping 
     因为mono在.net2.0和2.0 subset的bug,可以使用如下逻辑获取ping值.
     ```csharp
     public int PingTime;
@@ -189,161 +121,102 @@
 - 字节消息
 - 加密
 
+### 高级功能
+- 如果对Socket很熟悉,也可以使用TcpSocket(UdpSocket)来实现功能,但是还是推荐使用TcpConnection(UdpConnection)的方式.
+- 可以向TcpConnection(UdpConnection)添加不同的插件完成所需的功能,
+- 注册基类可以方便快速注册消息(基于反射)
+- Byte block buffer 采用有序链表实现,当有区块空闲时会重用区块.
+- .etc
 ---------
 
-### Tcp Example
-[Transmission Control Protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol)
+### Example
+在**HiSocketExample** 和 **HiSocket.unitypackage**有很多示例, 其中有一些如下:
 
-Tcp 协议提供可靠有序的流字节传输,用户需要自己分割数据,在这个框架中可以继承IPackage接口来实现.
-
-[![](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)](https://i1.wp.com/hiramtan.files.wordpress.com/2017/05/11112.png)
-
-``` csharp
-    private ITcp _tcp;
-    private IPackage _packer = new Packer();
-    // Use this for initialization
-    void Start()
-    {
-        _tcp = new TcpConnection(_packer);
-        _tcp.StateChangeEvent += OnState;
-        _tcp.ReceiveEvent += OnReceive;
-        Connect();
-    }
-    void Update()
-    {
-        _tcp.Run();
-    }
-
-    void Connect()
-    {
-        _tcp.Connect("127.0.0.1", 7777);
-    }
-    // Update is called once per frame
-
-    void OnState(SocketState state)
-    {
-        Debug.Log("current state is: " + state);
-        if (state == SocketState.Connected)
+Package example:
+```csharp
+/// <summary>
+    /// Example: Used to pack or unpack message
+    /// You should inheritance IPackage interface and implement your own logic
+    /// </summary>
+    class PackageExample : IPackage
+    {  /// <summary>
+       /// Pack your message here(this is only an example)
+       /// </summary>
+       /// <param name="source"></param>
+       /// <param name="unpackedHandler"></param>
+        public void Unpack(IByteArray source, Action<byte[]> unpackedHandler)
         {
-            Debug.Log("connect success");
-            Send();
-        }
-        else if (state == SocketState.DisConnected)
-        {
-            Debug.Log("connect failed");
-        }
-        else if (state == SocketState.Connecting)
-        {
-            Debug.Log("connecting");
-        }
-    }
-    void OnApplicationQuit()
-    {
-        _tcp.DisConnect();
-    }
-    void Send()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            var bytes = BitConverter.GetBytes(i);
-            Debug.Log("send message: " + i);
-            _tcp.Send(bytes);
-        }
-    }
-    void OnReceive(byte[] bytes)
-    {
-        Debug.Log("receive msg: " + BitConverter.ToInt32(bytes, 0));
-    }
-    public class Packer : IPackage
-    {
-        public void Unpack(IByteArray reader, Queue<byte[]> receiveQueue)
-        {
-            //add your unpack logic here
-            if (reader.Length >= 1024)//1024 is example, it's msg's length
+            // Unpack your message(use int, 4 byte as head)
+            while (source.Length >= 4)
             {
-                var bytesWaitToUnpack = reader.Read(1024);
-                receiveQueue.Enqueue(bytesWaitToUnpack);
+                var head = source.Read(4);
+                int bodyLength = BitConverter.ToInt32(head, 0);// get body's length
+                if (source.Length >= bodyLength)
+                {
+                    var unpacked = source.Read(bodyLength);// get body
+                    unpackedHandler(unpacked);
+                }
+                else
+                {
+                    source.Insert(0, head);// rewrite in, used for next time
+                }
             }
         }
 
-        public void Pack(Queue<byte[]> sendQueue, IByteArray writer)
+        /// <summary>
+        /// Unpack your message here(this is only an example)
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="packedHandler"></param>
+        public void Pack(IByteArray source, Action<byte[]> packedHandler)
         {
-            var bytesWaitToPack = sendQueue.Dequeue();
-            // add your pack logic here
-            //
-
-            writer.Write(bytesWaitToPack);
+            // Add head length to your message(use int, 4 byte as head)
+            var length = source.Length;
+            var head = BitConverter.GetBytes(length);
+            source.Insert(0, head);// add head bytes
+            var packed = source.Read(source.Length);
+            packedHandler(packed);
         }
     }
 ```
----------------------
 
-### Udp Example
-[User Datagram Protocol](https://www.assetstore.unity3d.com/en/#!/content/104658) 
-
-Udp协议提供不可靠的报文消息,用户无法知道当前连接状态,但是消息包时完整的.
-
-``` csharp
-    private UdpConnection _udp;
-    // Use this for initialization
-    void Start()
-    {
-        _udp = new UdpConnection(1024);
-        _udp.ReceiveEvent += OnReceive;
-        Connect();
-        Send();
-    }
-    void Connect()
-    {
-        _udp.Connect("127.0.0.1", 7777);
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        _udp.Run();
-    }
-    void Send()
-    {
-        for (int i = 0; i < 10; i++)
+```csharp
+private IPackage _package = new PackageExample();
+        private TcpConnection _tcp;
+        static void Main(string[] args)
         {
-            var bytes = BitConverter.GetBytes(i);
-            _udp.Send(bytes);
-            Debug.Log("send message: " + i);
+
         }
-    }
-    private void OnApplicationQuit()
-    {
-        _udp.DisConnect();
-    }
-    void OnReceive(byte[] bytes)
-    {
-        Debug.Log("receive bytes: " + BitConverter.ToInt32(bytes, 0));
-    }
-```
------------------
-### Message Registration Example
-``` csharp
-    void RegistMsg()
-    {
-        MsgRegister.Regist("10001", OnMsg_Bytes);
-        MsgRegister.Regist("10002", OnMsg_Protobuf);
-    }
+        void Init()
+        {
+            _tcp = new TcpConnection(_package);
+            _tcp.OnConnected += OnConnected;
+            _tcp.OnReceive += Receive;
+            //_tcp.OnError
+            //_tcp.OnDisconnected
+        }
+        void OnConnected()
+        {
+            //connect success
+            _tcp.Send(new byte[10]);//send message
+            _tcp.DisConnect();//disconnect
+        }
 
-    void OnMsg_Bytes(IByteArray byteArray)
-    {
-        var msg = new MsgBytes(byteArray);
-        int getInt = msg.Read<int>();
-    }
-
-    void OnMsg_Protobuf(IByteArray byteArray)
-    {
-        var msg = new MsgProtobuf(byteArray);
-        GameObject testClass = msg.Read<GameObject>();//your class's type
-        var testName = testClass.name;
-    }
+        void Receive(byte[] bytes)
+        {
+            //get message from server
+        }
 ```
 
-点击链接加入QQ群【83596104】：https://jq.qq.com/?_wv=1027&k=5l6rZEr
+```csharp
+ void Init()
+        {
+            var tcp = new TcpConnection(new PackageExample());
+            tcp.AddPlugin(new PingPlugin("ping", tcp));
+            //tcp.GetPlugin("ping");
+        }
+```
+
 
 support: hiramtan@live.com
 
