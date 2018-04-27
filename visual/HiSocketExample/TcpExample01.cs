@@ -12,15 +12,30 @@ namespace HiSocketExample
 {
     class TcpExample01
     {
+        private IPackage _package = new PackageExample();
+        private TcpConnection _tcp;
         static void Main(string[] args)
         {
-            var tcp = new TcpConnection(new PackageExample());
-            tcp.OnReceive += Receive;
-            tcp.Send(new byte[1]);
+
+        }
+        void Init()
+        {
+            _tcp = new TcpConnection(_package);
+            _tcp.OnConnected += OnConnected;
+            _tcp.OnReceive += Receive;
+            //_tcp.OnError
+            //_tcp.OnDisconnected
+        }
+        void OnConnected()
+        {
+            //connect success
+            _tcp.Send(new byte[10]);//send message
+            _tcp.DisConnect();//disconnect
         }
 
-        static void Receive(byte[] bytes)
+        void Receive(byte[] bytes)
         {
+            //get message from server
         }
     }
 }
