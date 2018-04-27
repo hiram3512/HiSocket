@@ -1,9 +1,12 @@
 # HiSocket
+
+![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   [![Build Status](https://travis-ci.org/hiramtan/HiSocket.svg?branch=master)](https://travis-ci.org/hiramtan/HiSocket)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)
+
 -----
 [中文说明](https://github.com/hiramtan/HiSocket_unity/blob/master/README_zh.md) 
 
 ### How to use
- You can download unity package from here: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket_unity/releases)
+ You can download unity package from here: [HiSocket](https://github.com/hiramtan/HiSocket/releases) 
 
 -----
 
@@ -41,6 +44,7 @@ This project contains:
 - You can get current connect state and message by adding listener of event.
 - If you use Tcp socket, you should implement IPackage interface to pack or unpack message.
 - If you use Udp socket, you should declaring buffer size.
+- Ping: there is a ping plugin
 - There is ping logic, but because of the bug of mono, it will throw an error on .net2.0(.net 4.6 will be fine, also you can use unity's api to get ping time, project contain some example logic)
 
 
