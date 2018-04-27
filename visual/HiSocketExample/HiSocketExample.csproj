@@ -43,8 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TcpExample.cs" />
+    <Compile Include="PackageExample.cs" />
+    <Compile Include="TcpExample01.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TcpExample02.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

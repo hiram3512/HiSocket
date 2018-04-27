@@ -46,8 +46,9 @@
     <Compile Include="Assert.cs" />
     <Compile Include="Connection\ConnectionBase.cs" />
     <Compile Include="Connection\IConnection.cs" />
-    <Compile Include="Connection\Plugin\CalculateData\CalculateData.cs" />
+    <Compile Include="Connection\Plugin\CalculateData\StatisticalPlugin.cs" />
     <Compile Include="Connection\Plugin\IPlugin.cs" />
+    <Compile Include="Connection\Plugin\Ping\PingPlugin.cs" />
     <Compile Include="Connection\Tcp\Pack\ByteArray.cs" />
     <Compile Include="Connection\Tcp\Pack\IByteArray.cs" />
     <Compile Include="Connection\Tcp\Pack\IPackage.cs" />

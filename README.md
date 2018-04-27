@@ -1,11 +1,27 @@
-# HiSocket_unity
-----------------------
+# HiSocket
+-----
 [中文说明](https://github.com/hiramtan/HiSocket_unity/blob/master/README_zh.md) 
 
 ### How to use
  You can download unity package from here: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket_unity/releases)
 
----------
+-----
+
+### General
+This project contains:
+- Connection
+    - TcpConnection
+        - TcpSocket
+        - Package
+    - UdpConnection
+        - UdpSocket
+    - Plugin
+- Message
+    - Message register
+    - Aes encryption
+    - Byte message
+    - Protobuf message
+
 
 ### Features
 - Support Tcp socket
@@ -20,14 +36,15 @@
 
 ### Details
 - Tcp and Udp are all use async connection in main thread(avoid thread blocking).
-- There are send thread and receive thread in background to process bytes(high-performance).
-- The API for ueser to send and receive message is in main thread(so that you can operate unity's component).
-- You can get current connect state by adding listener of state event.
-- You can receive message by adding listener of receive event.
-- There is a bytes array queue, can use for debugging or resend message.
+- There are send thread and receive thread in background to process bytes(use high-performance block).
 - High-performance buffer avoid memory allocation every time, and reduce garbage collection.
+- You can get current connect state and message by adding listener of event.
 - If you use Tcp socket, you should implement IPackage interface to pack or unpack message.
+- If you use Udp socket, you should declaring buffer size.
 - There is ping logic, but because of the bug of mono, it will throw an error on .net2.0(.net 4.6 will be fine, also you can use unity's api to get ping time, project contain some example logic)
+
+
+
 
 ### Details
 - Tcp 
