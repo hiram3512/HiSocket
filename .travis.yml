@@ -1,2 +1,4 @@
 language: csharp
 solution: ./visual/HiSocket.sln
+script:
+  - xbuild ./visual/HiSocket.sln
