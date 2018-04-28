@@ -9,7 +9,7 @@
 - If you want to used in c# project, you can download HiSocket.dll from here: [HiSocket](https://github.com/hiramtan/HiSocket/releases)
 - If you want to used in unity3d, you can download HiSocket.unitypackage from here: [HiSocket](https://github.com/hiramtan/HiSocket/releases)
 
-(ps. HiSocket.unitypackage contains HiSocket.dll and some example)
+  (ps. HiSocket.unitypackage contains HiSocket.dll and some example)
 
  Quick Start:
 ```csharp
@@ -86,15 +86,14 @@ Because Tcp is a a stream of bytes protocol, user should split the bytes to get 
 Pack and Unpack message: In the beginning we define a packager to split bytes, when send message we add length in the head of every message and when receive message we use this length to get how long our message is.
         
 - Udp
-
 [User Datagram Protocol](https://www.assetstore.unity3d.com/en/#!/content/104658) 
 
 Udp provides checksums for data integrity, and port numbers for addressing different functions at the source and destination of the datagram. that means you don't know current connect state, but package is integrated.
 
 If use Udp connection shold define send and receive's buffer size.
 
-- Ping 
-    Because there is a bug with mono on .net 2.0 and subset, you can use logic as below.
+- Ping :
+    Because there is a bug with mono on .net 2.0 and subset in unity3d, you can use logic as below.
     ```csharp
     public int PingTime;
     private Ping p;
@@ -218,8 +217,6 @@ private IPackage _package = new PackageExample();
             //tcp.GetPlugin("ping");
         }
 ```
-
-Simple tcp connection example:
 
 
 support: hiramtan@live.com

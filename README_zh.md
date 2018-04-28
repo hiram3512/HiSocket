@@ -8,7 +8,7 @@
 - 如果用在c#项目中,可以从此下载 HiSocket.dll: [HiSocket](https://github.com/hiramtan/HiSocket/releases)
 - 如果用在unity3d项目中,可以从此下载 HiSocket.unitypackage: [HiSocket](https://github.com/hiramtan/HiSocket/releases)
 
-(ps. HiSocket.unitypackage 包含HiSocket.dll和一些示例)
+  (ps. HiSocket.unitypackage 包含HiSocket.dll和一些示例)
 
  快速开始:
 ```csharp
@@ -84,15 +84,14 @@ Tcp协议传输字节流,用户需要分割字节流获得正确的数据包,当
 最初创建连接时我们定义了一个packer来分割数据包,当发送消息时我们在数据头部插入消息长度/当接收到消息时我们根据头部的消息长度获得数据包的大小.
         
 - Udp
-
 [User Datagram Protocol](https://www.assetstore.unity3d.com/en/#!/content/104658) 
 
 Udp协议提供不可靠的报文消息,用户无法知道当前连接状态,但是消息包时完整的.
 
 如果创建upd连接,需要指定发送接收缓冲区大小.
 
-- Ping 
-    因为mono在.net2.0和2.0 subset的bug,可以使用如下逻辑获取ping值.
+- Ping :
+    因为mono在.net2.0和2.0 subset的bug,可以在unity3d使用如下逻辑获取ping值.
     ```csharp
     public int PingTime;
     private Ping p;
