@@ -48,9 +48,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Support\Common.cs" />
     <Compile Include="Connection\Scoket\TestByteBlockBuffer.cs" />
     <Compile Include="Connection\Scoket\TestSocket.cs" />
-    <Compile Include="Connection\TcpServer.cs" />
+    <Compile Include="Support\TcpServer.cs" />
+    <Compile Include="Connection\TcpConnectionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +62,10 @@
     <Folder Include="Message\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HiSocketExample\HiSocketExample.csproj">
+      <Project>{f27704a8-f0af-4ec2-a0ae-29f2be3b5284}</Project>
+      <Name>HiSocketExample</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HiSocket\HiSocket.csproj">
       <Project>{87d59d20-8e6f-44ef-b4ac-75f7a7c4dd1c}</Project>
       <Name>HiSocket</Name>

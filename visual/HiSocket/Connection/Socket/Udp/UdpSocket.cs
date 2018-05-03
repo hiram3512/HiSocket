@@ -11,7 +11,7 @@ using System.Net.Sockets;
 
 namespace HiSocket
 {
-    public class UdpSocket : SocketBase, IUdpSocket
+    public class UdpSocket : SocketBase, IUdp
     {
         public int BufferSize { get; }
         private byte[] _buffer;

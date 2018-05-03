@@ -16,7 +16,7 @@ namespace HiSocket
     {
         public Socket Socket
         {
-            get { return _iSocket.Socket; }
+            get { return ISocket.Socket; }
         }
         public event Action OnConnecting;
         public event Action OnConnected;
@@ -26,29 +26,29 @@ namespace HiSocket
         public event Action OnConstruct;
         public event Action<byte[]> OnSend;//already packed
 
-        private ISocket _iSocket;
+        protected ISocket ISocket;
         private Dictionary<string, IPlugin> plugins = new Dictionary<string, IPlugin>();
         public ConnectionBase(ISocket socket)
         {
             Assert.NotNull(socket, "ISocket is null");
-            _iSocket = socket;
-            _iSocket.OnConnecting += OnConnecting;
-            _iSocket.OnConnected += OnConnected;
-            _iSocket.OnDisconnected += OnDisconnected;
-            _iSocket.OnReceive += OnReceiveFromSocket;
-            _iSocket.OnError += OnError;
+            ISocket = socket;
+            ISocket.OnConnecting += OnConnecting;
+            ISocket.OnConnected += OnConnected;
+            ISocket.OnDisconnected += OnDisconnected;
+            ISocket.OnReceive += OnReceiveFromSocket;
+            ISocket.OnError += OnError;
             ConstructEvent();
         }
 
         public void Connect(IPEndPoint iep)
         {
             Assert.NotNull(iep, "IPEndPoint is null");
-            _iSocket.Connect(iep);
+            ISocket.Connect(iep);
         }
 
         public virtual void Send(byte[] bytes)
         {
-            _iSocket.Send(bytes);
+            ISocket.Send(bytes);
             SendEvent(bytes);
         }
 
@@ -59,12 +59,12 @@ namespace HiSocket
 
         public void DisConnect()
         {
-            _iSocket.OnConnecting -= OnConnecting;
-            _iSocket.OnConnected -= OnConnected;
-            _iSocket.OnDisconnected -= OnDisconnected;
-            _iSocket.OnReceive -= OnReceiveFromSocket;
-            _iSocket.OnError -= OnError;
-            _iSocket.DisConnect();
+            ISocket.OnConnecting -= OnConnecting;
+            ISocket.OnConnected -= OnConnected;
+            ISocket.OnDisconnected -= OnDisconnected;
+            ISocket.OnReceive -= OnReceiveFromSocket;
+            ISocket.OnError -= OnError;
+            ISocket.DisConnect();
         }
 
         public void AddPlugin(IPlugin plugin)
