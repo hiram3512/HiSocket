@@ -1,14 +1,17 @@
 ﻿/***************************************************************
- * Description: 
- * UDP Sockets are "connection-less", so the protocol does not know anything about whether or not the server and client are connected.
+ * Description: tcp's api 
+ *
  * Documents: https://github.com/hiramtan/HiSocket_unity
  * Author: hiramtan@live.com
 ***************************************************************/
 
 namespace HiSocket
 {
-    public interface IUdpSocket : ISocket
+    public interface ITcp : ISocket
     {
-        int BufferSize { get;  }
+        /// <summary>
+        /// if connected
+        /// </summary>
+        bool IsConnected { get; }
     }
 }

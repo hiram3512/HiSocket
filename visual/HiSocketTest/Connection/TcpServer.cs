@@ -6,19 +6,24 @@ namespace HiSocketTest
 {
     public class TcpServer
     {
+        private Socket _socket;
+        public TcpServer()
+        {
+            Init();
+        }
 
         void Init()
         {
             IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
             IPEndPoint iep = new IPEndPoint(ipAddress, 7777);
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Bind(iep);
-            socket.Listen(5);
-            socket.NoDelay = true;
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _socket.Bind(iep);
+            _socket.Listen(5);
+            _socket.NoDelay = true;
             byte[] buffer = new byte[2048];
             while (true)
             {
-                var client = socket.Accept();
+                var client = _socket.Accept();
                 int length = 0;
                 while ((length = client.Receive(buffer)) > 0)
                 {
@@ -28,6 +33,15 @@ namespace HiSocketTest
                     Console.WriteLine(toSend.Length);
                     client.Send(toSend);
                 }
+            }
+        }
+
+        public void Disconnect()
+        {
+            if (_socket != null)
+            {
+                _socket.Shutdown(SocketShutdown.Both);
+                _socket.Disconnect(false);
             }
         }
     }

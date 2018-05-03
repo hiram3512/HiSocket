@@ -7,10 +7,15 @@
 
 namespace HiSocket
 {
-    public class UdpConnection : ConnectionBase
+    public class UdpConnection : ConnectionBase, IUdp
     {
         public UdpConnection(int bufferSize = 2048) : base(new UdpSocket(bufferSize))
         {
+        }
+
+        public int BufferSize
+        {
+            get { return (ISocket as IUdp).BufferSize; }
         }
     }
 }

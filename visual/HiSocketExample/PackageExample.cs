@@ -14,7 +14,7 @@ namespace HiSocketExample
     /// Example: Used to pack or unpack message
     /// You should inheritance IPackage interface and implement your own logic
     /// </summary>
-    class PackageExample : IPackage
+    public class PackageExample : IPackage
     {  /// <summary>
        /// Pack your message here(this is only an example)
        /// </summary>

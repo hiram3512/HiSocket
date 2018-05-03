@@ -7,7 +7,7 @@
 
 namespace HiSocket
 {
-    public class TcpConnection : ConnectionBase
+    public class TcpConnection : ConnectionBase, ITcp
     {
         private IPackage _iPackage;
         private readonly IByteArray _send = new ByteArray();
@@ -27,6 +27,11 @@ namespace HiSocket
         {
             _receive.Write(bytes);
             _iPackage.Unpack(_receive, x => { base.OnReceiveFromSocket(x); });
+        }
+
+        public bool IsConnected
+        {
+            get { return (ISocket as ITcp).IsConnected; }
         }
     }
 }

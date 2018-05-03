@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace HiSocket
 {
-    public class TcpSocket : SocketBase, ITcpSocket
+    public class TcpSocket : SocketBase, ITcp
     {
         public bool IsConnected
         {
