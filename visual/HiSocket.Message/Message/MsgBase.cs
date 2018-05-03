@@ -3,7 +3,7 @@
 // Author: hiramtan@live.com
 //***************************************************************************
 
-namespace HiSocket
+namespace HiSocket.Message
 {
     public abstract class MsgBase
     {

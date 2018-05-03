@@ -9,32 +9,17 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace HiSocket
+namespace HiSocket.Udp
 {
     /// <summary>
     /// socket api
     /// </summary>
-    public interface ISocket
+    public interface IUdpSocket
     {
         /// <summary>
         /// Get socket and modify it(for example: set timeout)
         /// </summary>
         Socket Socket { get; }
-
-        /// <summary>
-        /// trigger when connecting
-        /// </summary>
-        event Action OnConnecting;
-
-        /// <summary>
-        /// trigger when connected
-        /// </summary>
-        event Action OnConnected;
-
-        /// <summary>
-        /// trigger when disconnected
-        /// </summary>
-        event Action OnDisconnected;
 
         /// <summary>
         /// trigger when get message

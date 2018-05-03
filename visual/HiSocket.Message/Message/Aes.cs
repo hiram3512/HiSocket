@@ -4,7 +4,7 @@
 //***************************************************************************
 using System;
 
-namespace HiSocket
+namespace HiSocket.Message
 {
     class Aes
     {

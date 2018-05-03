@@ -5,7 +5,7 @@
 using ProtoBuf;
 using System.IO;
 
-namespace HiSocket
+namespace HiSocket.Message
 {
     public class MsgProtobuf : MsgBase
     {

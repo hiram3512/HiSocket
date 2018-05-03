@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace HiSocket
+namespace HiSocket.Message
 {
     public static class MsgRegister
     {

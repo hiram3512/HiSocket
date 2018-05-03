@@ -6,7 +6,7 @@
 using System;
 using System.Text;
 
-namespace HiSocket
+namespace HiSocket.Message
 {
     public class MsgBytes : MsgBase
     {

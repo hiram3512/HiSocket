@@ -9,10 +9,13 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace HiSocket
+namespace HiSocket.Udp
 {
-    public class UdpSocket : SocketBase, IUdp
+    public class UdpSocket : IUdpSocket
     {
+        public Socket Socket { get; private set; }
+        public event Action<byte[]> OnReceive;
+        public event Action<Exception> OnError;
         public int BufferSize { get; }
         private byte[] _buffer;
         public UdpSocket(int bufferSize)
@@ -21,10 +24,9 @@ namespace HiSocket
             _buffer = new byte[BufferSize];
         }
 
-        public override void Connect(IPEndPoint iep)
+        public void Connect(IPEndPoint iep)
         {
             Assert.NotNull(iep, "IPEndPoint is null");
-            ConnectingEvent();
             Socket = new Socket(iep.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
             try
             {
@@ -39,7 +41,6 @@ namespace HiSocket
                             throw new Exception("Connect faild");
                         }
                         socket.EndConnect(x);
-                        ConnectedEvent();
                         StartReceive();
                     }
                     catch (Exception e)
@@ -56,7 +57,7 @@ namespace HiSocket
 
         }
 
-        public override void Send(byte[] bytes)
+        public void Send(byte[] bytes)
         {
             try
             {
@@ -81,6 +82,11 @@ namespace HiSocket
             {
                 throw new Exception(e.ToString());
             }
+        }
+
+        public void DisConnect()
+        {
+            Socket.Close();
         }
 
         private void StartReceive()
@@ -110,6 +116,14 @@ namespace HiSocket
             catch (Exception e)
             {
                 throw new Exception(e.ToString());
+            }
+        }
+
+        void ReceiveEvent(byte[] bytes)
+        {
+            if (OnReceive != null)
+            {
+                OnReceive(bytes);
             }
         }
     }

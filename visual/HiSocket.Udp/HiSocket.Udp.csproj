@@ -38,29 +38,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="Connection\ConnectionBase.cs" />
-    <Compile Include="Connection\IConnection.cs" />
-    <Compile Include="Connection\Plugin\IPlugin.cs" />
-    <Compile Include="Connection\Plugin\Ping\PingPlugin.cs" />
-    <Compile Include="Connection\Plugin\PluginBase.cs" />
-    <Compile Include="Connection\Plugin\Statistical\StatisticalPlugin.cs" />
-    <Compile Include="Connection\Socket\ISocket.cs" />
-    <Compile Include="Connection\Socket\SocketBase.cs" />
-    <Compile Include="Connection\Socket\Tcp\ByteBlockBuffer.cs" />
-    <Compile Include="Connection\Socket\Tcp\ByteBlockOperator.cs" />
-    <Compile Include="Connection\Socket\Tcp\IByteBlockBuffer.cs" />
-    <Compile Include="Connection\Socket\Tcp\ITcp.cs" />
-    <Compile Include="Connection\Socket\Tcp\ReadOperator.cs" />
-    <Compile Include="Connection\Socket\Tcp\TcpSocket.cs" />
-    <Compile Include="Connection\Socket\Tcp\WriteOperator.cs" />
-    <Compile Include="Connection\Socket\Udp\IUdp.cs" />
-    <Compile Include="Connection\Socket\Udp\UdpSocket.cs" />
-    <Compile Include="Connection\Tcp\Pack\ByteArray.cs" />
-    <Compile Include="Connection\Tcp\Pack\IByteArray.cs" />
-    <Compile Include="Connection\Tcp\Pack\IPackage.cs" />
-    <Compile Include="Connection\Tcp\TcpConnection.cs" />
-    <Compile Include="Connection\Udp\UdpConnection.cs" />
+    <Compile Include="Assert.cs" />
+    <Compile Include="IUdpSocket.cs" />
+    <Compile Include="UdpSocket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

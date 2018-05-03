@@ -8,7 +8,7 @@
 using System;
 using System.Reflection;
 
-namespace HiSocket
+namespace HiSocket.Message
 {
     public abstract class MsgRegistBase
     {
