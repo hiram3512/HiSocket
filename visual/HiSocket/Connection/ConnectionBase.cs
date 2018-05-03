@@ -18,6 +18,7 @@ namespace HiSocket
         {
             get { return ISocket.Socket; }
         }
+
         public event Action OnConnecting;
         public event Action OnConnected;
         public event Action OnDisconnected;
