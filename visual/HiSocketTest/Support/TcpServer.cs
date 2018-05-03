@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace HiSocketTest
 {
     public class TcpServer
     {
         private Socket _socket;
+        private bool _isOn = true;
+
         public TcpServer()
         {
             Init();
@@ -20,14 +23,18 @@ namespace HiSocketTest
             _socket.Bind(iep);
             _socket.Listen(5);
             _socket.NoDelay = true;
-            byte[] buffer = new byte[2048];
-            while (true)
+            new Thread(Watcher).Start();
+        }
+
+        void Watcher()
+        {
+            byte[] buffer = new byte[1024];
+            while (_isOn)
             {
                 var client = _socket.Accept();
                 int length = 0;
                 while ((length = client.Receive(buffer)) > 0)
                 {
-                    ;
                     byte[] toSend = new byte[length];
                     Array.Copy(buffer, 0, toSend, 0, toSend.Length);
                     Console.WriteLine(toSend.Length);
@@ -36,13 +43,10 @@ namespace HiSocketTest
             }
         }
 
-        public void Disconnect()
+        public void Close()
         {
-            if (_socket != null)
-            {
-                _socket.Shutdown(SocketShutdown.Both);
-                _socket.Disconnect(false);
-            }
+            _isOn = false;
+            _socket.Close();
         }
     }
 }

@@ -23,7 +23,7 @@ namespace HiSocketTest.Connection
         public void Cleanup()
         {
             if (_server != null)
-                _server.Disconnect();
+                _server.Close();
             _server = null;
         }
 

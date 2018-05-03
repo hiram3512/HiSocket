@@ -48,10 +48,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common.cs" />
+    <Compile Include="Support\Common.cs" />
     <Compile Include="Connection\Scoket\TestByteBlockBuffer.cs" />
     <Compile Include="Connection\Scoket\TestSocket.cs" />
-    <Compile Include="Connection\TcpServer.cs" />
+    <Compile Include="Support\TcpServer.cs" />
     <Compile Include="Connection\TcpConnectionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
