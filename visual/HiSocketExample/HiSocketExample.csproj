@@ -51,11 +51,5 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HiSocket\HiSocket.csproj">
-      <Project>{87d59d20-8e6f-44ef-b4ac-75f7a7c4dd1c}</Project>
-      <Name>HiSocket</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

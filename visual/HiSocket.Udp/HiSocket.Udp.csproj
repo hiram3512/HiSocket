@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>99538f11-3ca0-4860-b161-25120ae7a477</ProjectGuid>
+    <ProjectGuid>{99538F11-3CA0-4860-B161-25120AE7A477}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HiSocket.Udp</RootNamespace>
@@ -30,20 +30,38 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System"/>
-    
-    <Reference Include="System.Core"/>
-    <Reference Include="System.Xml.Linq"/>
-    <Reference Include="System.Data.DataSetExtensions"/>
-    
-    
-    <Reference Include="System.Data"/>
-    
-    <Reference Include="System.Xml"/>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Connection\ConnectionBase.cs" />
+    <Compile Include="Connection\IConnection.cs" />
+    <Compile Include="Connection\Plugin\IPlugin.cs" />
+    <Compile Include="Connection\Plugin\Ping\PingPlugin.cs" />
+    <Compile Include="Connection\Plugin\PluginBase.cs" />
+    <Compile Include="Connection\Plugin\Statistical\StatisticalPlugin.cs" />
+    <Compile Include="Connection\Socket\ISocket.cs" />
+    <Compile Include="Connection\Socket\SocketBase.cs" />
+    <Compile Include="Connection\Socket\Tcp\ByteBlockBuffer.cs" />
+    <Compile Include="Connection\Socket\Tcp\ByteBlockOperator.cs" />
+    <Compile Include="Connection\Socket\Tcp\IByteBlockBuffer.cs" />
+    <Compile Include="Connection\Socket\Tcp\ITcp.cs" />
+    <Compile Include="Connection\Socket\Tcp\ReadOperator.cs" />
+    <Compile Include="Connection\Socket\Tcp\TcpSocket.cs" />
+    <Compile Include="Connection\Socket\Tcp\WriteOperator.cs" />
+    <Compile Include="Connection\Socket\Udp\IUdp.cs" />
+    <Compile Include="Connection\Socket\Udp\UdpSocket.cs" />
+    <Compile Include="Connection\Tcp\Pack\ByteArray.cs" />
+    <Compile Include="Connection\Tcp\Pack\IByteArray.cs" />
+    <Compile Include="Connection\Tcp\Pack\IPackage.cs" />
+    <Compile Include="Connection\Tcp\TcpConnection.cs" />
+    <Compile Include="Connection\Udp\UdpConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
- </Project>
+</Project>

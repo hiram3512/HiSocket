@@ -1,0 +1,2 @@
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\obj\Debug\HiSocket.Message.csprojResolveAssemblyReference.cache
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\obj\Debug\HiSocket.Message.csproj.CoreCompileInputs.cache
