@@ -1,238 +1,147 @@
-﻿/***************************************************************
- * Description:
- *
- * Documents: https://github.com/hiramtan/HiSocket_unity
- * Author: hiramtan@live.com
-***************************************************************/
-
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 
 namespace HiSocket.Tcp
 {
     public class TcpSocket : ITcpSocket
     {
-        public Socket Socket { get; protected set; }
-        public event Action OnConnected;
-        public event Action OnConnecting;
-        public event Action OnDisconnected;
-        public event Action<byte[]> OnSocketReceive;
-        public event Action<Exception> OnError;
+        public Socket Socket { get; private set; }
         public bool IsConnected
         {
             get { return Socket != null && Socket.Connected; }
         }
-        /// <summary>
-        /// For send data
-        /// </summary>
-        private Thread sendThread;
-        /// <summary>
-        /// For receive data
-        /// </summary>
-        private Thread receiveThread;
+        public event Action OnConnecting;
+        public event Action OnConnected;
+        public event Action OnDisconnected;
+        public event Action<byte[]> OnSocketReceive;
 
-        /// <summary>
-        /// If send thread is run
-        /// </summary>
-        private bool IsSendThreadOn;
-        /// <summary>
-        /// If receive thread is run
-        /// </summary>
-        private bool IsReceiveThreadOn;
-
-        private static readonly object _sendLocker = new object();
-        private static readonly object _receiveLocker = new object();
         private IByteBlockBuffer _sendBuffer = new ByteBlockBuffer();
         private IByteBlockBuffer _receiveBuffer = new ByteBlockBuffer();
-
+        private readonly object locker = new object();
         public void Connect(IPEndPoint iep)
         {
-            if (IsConnected)
+            lock (locker)
             {
-                ErrorEvent("Already Connected");
-                return;
-            }
-            Assert.NotNull(iep, "IPEndPoint is null");
-            ConnectingEvent();
-            Socket = new Socket(iep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            try
-            {
-                Socket.BeginConnect(iep, delegate (IAsyncResult ar)
+                if (IsConnected)
                 {
-                    try
+                    throw new Exception("Already Connected");
+                }
+                Assert.NotNull(iep, "IPEndPoint is null");
+                ConnectingEvent();
+                Socket = new Socket(iep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                try
+                {
+                    Socket.BeginConnect(iep, delegate (IAsyncResult ar)
                     {
-                        var socket = ar.AsyncState as Socket;
-                        Assert.NotNull(socket, "Socket is null when connect end");
-                        if (!Socket.Connected)
+                        try
                         {
-                            throw new Exception("Connect faild");
+                            var socket = ar.AsyncState as Socket;
+                            Assert.NotNull(socket, "Socket is null when connect end");
+                            socket.EndConnect(ar);
+                            if (!IsConnected)
+                            {
+                                throw new Exception("Connect faild");
+                            }
+                            ConnectedEvent();
                         }
-                        socket.EndConnect(ar);
-                        ConnectedEvent();
-                        InitThread();
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(e.ToString());
-                    }
+                        catch (Exception e)
+                        {
+                            throw new Exception(e.ToString());
+                        }
 
-                }, Socket);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.ToString());
+                    }, Socket);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.ToString());
+                }
             }
         }
 
         public void Send(byte[] bytes)
         {
-            lock (_sendLocker)
+            lock (locker)
             {
+                if (!IsConnected)
+                {
+                    throw new Exception("From send : disconnected");
+                }
                 _sendBuffer.WriteAllBytes(bytes);
+                Send();
+            }
+        }
+
+        private void Send()
+        {
+            var count = _sendBuffer.Reader.GetHowManyCountCanReadInThisBlock();
+            if (count > 0)
+            {
+                Socket.BeginSend(_sendBuffer.Reader.Node.Value, _sendBuffer.Reader.Position, count, SocketFlags.None,
+                    EndSend, Socket);
+            }
+        }
+
+        private void EndSend(IAsyncResult ar)
+        {
+            var socket = ar.AsyncState as Socket;
+            Assert.NotNull(socket, "Socket is null when send end");
+            int length = socket.EndSend(ar);
+            _sendBuffer.Reader.MovePosition(length);
+            Send();
+        }
+
+        private void Receive()
+        {
+            var count = _receiveBuffer.Writer.GetHowManyCountCanWriteInThisBlock();
+            Socket.BeginReceive(_receiveBuffer.Writer.Node.Value, _receiveBuffer.Writer.Position, count, SocketFlags.None,
+                EndReceive, Socket);
+        }
+
+        private void EndReceive(IAsyncResult ar)
+        {
+            var socket = ar.AsyncState as Socket;
+            Assert.NotNull(socket, "Socket is null when receive end");
+            int length = socket.EndReceive(ar);
+            _receiveBuffer.Writer.MovePosition(length);
+            var bytes = _receiveBuffer.ReadAllBytes();
+            SocketReceiveEvent(bytes);
+            if (length > 0)
+            {
+                Receive();
             }
         }
 
         public void DisConnect()
         {
-            try
+            lock (locker)
             {
-                AbortThread();
                 Socket.Shutdown(SocketShutdown.Both);
                 Socket.Close();
-                Socket = null;
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Disconnect with error: " + e.ToString());
-            }
-            DisconnectedEvnet();
-        }
-
-        private void Send()
-        {
-            while (IsSendThreadOn)
-            {
-                if (!IsConnected)
-                {
-                    throw new Exception("From send thread: disconnected");
-                }
-                lock (_sendLocker)
-                {
-                    var count = _sendBuffer.Reader.GetHowManyCountCanReadInThisBlock();
-                    if (count > 0)
-                    {
-                        try
-                        {
-                            var length = Socket.Send(_sendBuffer.Reader.Node.Value, _sendBuffer.Reader.Position, count,
-                                SocketFlags.None);
-                            _sendBuffer.Reader.MovePosition(length);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(e.ToString());
-                        }
-                    }
-                }
+                DisconnectedEvnet();
             }
         }
-
-        private void Receive()
-        {
-            while (IsReceiveThreadOn)
-            {
-                if (!IsConnected)
-                {
-                    throw new Exception("From receive thread: disconnected");
-                }
-                lock (_receiveLocker)
-                {
-                    if (Socket.Available > 0)
-                    {
-                        try
-                        {
-                            var count = _receiveBuffer.Writer.GetHowManyCountCanWriteInThisBlock();
-                            var length = Socket.Receive(_receiveBuffer.Writer.Node.Value, _receiveBuffer.Writer.Position,
-                                count, SocketFlags.None);
-                            _receiveBuffer.Writer.MovePosition(length);
-                            var bytes = _receiveBuffer.ReadAllBytes();
-                            SocketReceiveEvent(bytes);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(e.ToString());
-                        }
-                    }
-                }
-            }
-        }
-        private void InitThread()
-        {
-            IsSendThreadOn = true;
-            sendThread = new Thread(Send);
-            sendThread.Start();
-            IsReceiveThreadOn = true;
-            receiveThread = new Thread(Receive);
-            receiveThread.Start();
-        }
-
-        private void AbortThread()
-        {
-            try
-            {
-                IsReceiveThreadOn = false;
-                if (sendThread != null)
-                    sendThread.Abort();
-                sendThread = null;
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Abort send thread with error: " + e.ToString());
-            }
-            try
-            {
-                IsReceiveThreadOn = false;
-                if (receiveThread != null)
-                    receiveThread.Abort();
-                receiveThread = null;
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Abort receive thread with error: " + e.ToString());
-            }
-        }
-        protected void ConnectingEvent()
+        void ConnectingEvent()
         {
             if (OnConnecting != null)
             {
                 OnConnecting();
             }
         }
-        protected void ErrorEvent(string info)
-        {
-            if (OnError != null)
-            {
-                OnError(new Exception(info));
-            }
-        }
-
-        protected void ConnectedEvent()
+        void ConnectedEvent()
         {
             if (OnConnected != null)
             {
                 OnConnected();
             }
         }
-
-        protected void SocketReceiveEvent(byte[] bytes)
+        void SocketReceiveEvent(byte[] bytes)
         {
             if (OnSocketReceive != null)
             {
                 OnSocketReceive(bytes);
             }
         }
-
         private void DisconnectedEvnet()
         {
             if (OnDisconnected != null)

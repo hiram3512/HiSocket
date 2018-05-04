@@ -51,6 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Socket\ReadOperator.cs" />
     <Compile Include="Socket\TcpSocket.cs" />
+    <Compile Include="Socket\TcpSocketWithThread.cs" />
     <Compile Include="Socket\WriteOperator.cs" />
     <Compile Include="Connection\Pack\ByteArray.cs" />
     <Compile Include="Connection\Pack\IByteArray.cs" />

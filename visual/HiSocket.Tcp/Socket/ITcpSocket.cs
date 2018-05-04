@@ -47,11 +47,6 @@ namespace HiSocket.Tcp
         event Action<byte[]> OnSocketReceive;
 
         /// <summary>
-        /// trigger when have error(for example: tcp already connect and connect again)
-        /// </summary>
-        event Action<Exception> OnError;
-
-        /// <summary>
         /// Connect to server
         /// </summary>
         /// <param name="iep">server</param>
