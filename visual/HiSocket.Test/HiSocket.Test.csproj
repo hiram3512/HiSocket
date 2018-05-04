@@ -54,8 +54,8 @@
     <Compile Include="TcpConnectionTest.cs" />
     <Compile Include="TcpExample01.cs" />
     <Compile Include="TcpExample02.cs" />
+    <Compile Include="TcpSocketTest.cs" />
     <Compile Include="TestByteBlockBuffer.cs" />
-    <Compile Include="TestSocket.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

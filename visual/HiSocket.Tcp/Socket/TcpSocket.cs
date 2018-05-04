@@ -1,4 +1,11 @@
-﻿using System;
+﻿/***************************************************************
+ * Description: 
+ *
+ * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Author: hiramtan@live.com
+***************************************************************/
+
+using System;
 using System.Net;
 using System.Net.Sockets;
 
@@ -16,9 +23,16 @@ namespace HiSocket.Tcp
         public event Action OnDisconnected;
         public event Action<byte[]> OnSocketReceive;
 
-        private IByteBlockBuffer _sendBuffer = new ByteBlockBuffer();
-        private IByteBlockBuffer _receiveBuffer = new ByteBlockBuffer();
+        private IByteBlockBuffer _sendBuffer;
+        private IByteBlockBuffer _receiveBuffer;
         private readonly object locker = new object();
+
+        public TcpSocket(int bufferSize = 1024)
+        {
+            _sendBuffer = new ByteBlockBuffer(bufferSize);
+            _receiveBuffer = new ByteBlockBuffer(bufferSize);
+        }
+
         public void Connect(IPEndPoint iep)
         {
             lock (locker)
@@ -44,6 +58,7 @@ namespace HiSocket.Tcp
                                 throw new Exception("Connect faild");
                             }
                             ConnectedEvent();
+                            Receive();
                         }
                         catch (Exception e)
                         {

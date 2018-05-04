@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace HiSocketTest
+namespace HiSocket.Test
 {
     public class TcpServer
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace HiSocketTest.Connection
+namespace HiSocket.Test
 {
     [TestClass]
     public class TcpConnectionTest
@@ -30,7 +30,7 @@ namespace HiSocketTest.Connection
         [TestMethod]
         public void TestCreate()
         {
-            var tcp = Common.GetTcp();
+            var tcp = Common.GetTcpConnection();
             Assert.IsNotNull(tcp);
             tcp.Connect(Common.GetIpEndPoint());
             Common.WaitConnect(tcp);
