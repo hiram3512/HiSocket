@@ -1,0 +1,5 @@
+D:\MyGit\github\HiSocket\visual\release\HiSocket.Udp.dll
+D:\MyGit\github\HiSocket\visual\release\HiSocket.Udp.pdb
+D:\MyGit\github\HiSocket\visual\HiSocket.Udp\obj\Release\HiSocket.Udp.csproj.CoreCompileInputs.cache
+D:\MyGit\github\HiSocket\visual\HiSocket.Udp\obj\Release\HiSocket.Udp.dll
+D:\MyGit\github\HiSocket\visual\HiSocket.Udp\obj\Release\HiSocket.Udp.pdb

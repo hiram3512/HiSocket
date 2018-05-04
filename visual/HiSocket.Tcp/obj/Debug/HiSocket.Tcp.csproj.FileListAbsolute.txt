@@ -1,0 +1,6 @@
+D:\MyGit\github\HiSocket\visual\HiSocket.Tcp\obj\Debug\HiSocket.Tcp.csproj.CoreCompileInputs.cache
+D:\MyGit\github\HiSocket\visual\HiSocket.Tcp\bin\Debug\HiSocket.Tcp.dll
+D:\MyGit\github\HiSocket\visual\HiSocket.Tcp\bin\Debug\HiSocket.Tcp.pdb
+D:\MyGit\github\HiSocket\visual\HiSocket.Tcp\obj\Debug\HiSocket.Tcp.dll
+D:\MyGit\github\HiSocket\visual\HiSocket.Tcp\obj\Debug\HiSocket.Tcp.pdb
+D:\MyGit\github\HiSocket\visual\HiSocket.Tcp\obj\Debug\HiSocket.Tcp.csprojResolveAssemblyReference.cache
