@@ -1,5 +1,4 @@
-﻿using System;
-using HiSocket.Tcp;
+﻿using HiSocket.Tcp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HiSocket.Test
@@ -17,6 +16,7 @@ namespace HiSocket.Test
         public void Cleanup()
         {
             _server.Close();
+            _server = null;
         }
 
 
