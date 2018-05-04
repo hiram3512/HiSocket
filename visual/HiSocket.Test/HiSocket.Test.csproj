@@ -48,15 +48,14 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PackageExample.cs" />
+    <Compile Include="Example\PackageExample.cs" />
     <Compile Include="Support\Common.cs" />
     <Compile Include="Support\TcpServer.cs" />
     <Compile Include="TcpConnectionTest.cs" />
-    <Compile Include="TcpExample01.cs" />
-    <Compile Include="TcpExample02.cs" />
+    <Compile Include="Example\TcpExample01.cs" />
+    <Compile Include="Example\TcpExample02.cs" />
     <Compile Include="TcpSocketTest.cs" />
     <Compile Include="TestByteBlockBuffer.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

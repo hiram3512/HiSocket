@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assert.cs" />
     <Compile Include="Message\Aes.cs" />
     <Compile Include="Message\MsgBase.cs" />
     <Compile Include="Message\MsgBytes.cs" />
