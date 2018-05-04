@@ -1,0 +1,11 @@
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\obj\Debug\HiSocket.Message.csprojResolveAssemblyReference.cache
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\obj\Debug\HiSocket.Message.csproj.CoreCompileInputs.cache
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\bin\Debug\HiSocket.Message.dll
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\bin\Debug\HiSocket.Message.pdb
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\bin\Debug\HiSocket.Tcp.dll
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\bin\Debug\HiSocket.Udp.dll
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\bin\Debug\protobuf-net.dll
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\bin\Debug\HiSocket.Tcp.pdb
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\bin\Debug\HiSocket.Udp.pdb
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\obj\Debug\HiSocket.Message.dll
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\obj\Debug\HiSocket.Message.pdb
