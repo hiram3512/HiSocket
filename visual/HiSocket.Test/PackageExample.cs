@@ -7,6 +7,7 @@
 
 using HiSocket;
 using System;
+using HiSocket.Tcp;
 
 namespace HiSocketExample
 {

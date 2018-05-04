@@ -5,7 +5,7 @@
  * Author: hiramtan@live.com
 ***************************************************************/
 
-namespace HiSocket
+namespace HiSocket.Tcp
 {
     public interface IByteArray
     {

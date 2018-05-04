@@ -6,6 +6,7 @@
 ***************************************************************/
 
 using HiSocket;
+using HiSocket.Tcp;
 
 namespace HiSocketExample
 {

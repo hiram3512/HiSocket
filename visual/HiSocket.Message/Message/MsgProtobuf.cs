@@ -4,6 +4,7 @@
 //***************************************************************************
 using ProtoBuf;
 using System.IO;
+using HiSocket.Tcp;
 
 namespace HiSocket.Message
 {

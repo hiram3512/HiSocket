@@ -24,12 +24,15 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>..\lib\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,6 +49,16 @@
     <Compile Include="Message\MsgRegistBase.cs" />
     <Compile Include="Message\MsgRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HiSocket.Tcp\HiSocket.Tcp.csproj">
+      <Project>{0b0fe68d-eb3f-42e0-b151-bbe221cfa10c}</Project>
+      <Name>HiSocket.Tcp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HiSocket.Udp\HiSocket.Udp.csproj">
+      <Project>{99538f11-3ca0-4860-b161-25120ae7a477}</Project>
+      <Name>HiSocket.Udp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

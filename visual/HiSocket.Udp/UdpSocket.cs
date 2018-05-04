@@ -15,7 +15,6 @@ namespace HiSocket.Udp
     {
         public Socket Socket { get; private set; }
         public event Action<byte[]> OnReceive;
-        public event Action<Exception> OnError;
         public int BufferSize { get; }
         private byte[] _buffer;
         public UdpSocket(int bufferSize)

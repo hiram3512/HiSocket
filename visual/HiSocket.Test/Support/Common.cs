@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Threading;
-using HiSocket;
+using HiSocket.Tcp;
 using HiSocketExample;
 
 namespace HiSocketTest
@@ -18,7 +18,7 @@ namespace HiSocketTest
             return new TcpConnection(new PackageExample());
         }
 
-        public static void WaitConnect(ITcp tcp, int timeOut = 1000)
+        public static void WaitConnect(ITcpConnection tcp, int timeOut = 1000)
         {
             int time = 0;
             while (!tcp.IsConnected && time < timeOut)

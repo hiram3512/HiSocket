@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace HiSocket
+namespace HiSocket.Tcp
 {
     public class ByteArray : IByteArray
     {

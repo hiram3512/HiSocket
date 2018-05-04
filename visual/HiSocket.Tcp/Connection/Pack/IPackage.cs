@@ -7,7 +7,7 @@
 
 using System;
 
-namespace HiSocket
+namespace HiSocket.Tcp
 {
     public interface IPackage
     {
