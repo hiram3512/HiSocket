@@ -9,7 +9,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace HiSocket.Udp
+namespace HiSocket
 {
     /// <summary>
     /// socket api
@@ -24,7 +24,7 @@ namespace HiSocket.Udp
         /// <summary>
         /// trigger when get message
         /// </summary>
-        event Action<byte[]> OnReceive;
+        event Action<byte[]> OnSocketReceive;
 
         /// <summary>
         /// Connect to server

@@ -36,6 +36,5 @@ namespace HiSocket
                 throw new ArgumentNullException(info);
             }
         }
-
     }
 }

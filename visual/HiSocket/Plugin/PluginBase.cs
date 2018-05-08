@@ -10,8 +10,8 @@ namespace HiSocket
     public abstract class PluginBase : IPlugin
     {
         public string Name { get; }
-        public ITcpConnection Connection { get; }
-        public PluginBase(string name, ITcpConnection connection)
+        public IConnection Connection { get; }
+        public PluginBase(string name, IConnection connection)
         {
             Name = name;
             Connection = connection;

@@ -13,7 +13,7 @@ namespace HiSocket
     public class PingPlugin : PluginBase
     {
         public long Ping;
-        public PingPlugin(string name, ITcpConnection connection) : base(name, connection)
+        public PingPlugin(string name, IConnection connection) : base(name, connection)
         {
             PingLogic();
         }

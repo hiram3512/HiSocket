@@ -9,15 +9,15 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace HiSocket.Udp
+namespace HiSocket
 {
     public class UdpSocket : IUdpSocket
     {
         public Socket Socket { get; private set; }
-        public event Action<byte[]> OnReceive;
+        public event Action<byte[]> OnSocketReceive;
         public int BufferSize { get; }
         private byte[] _buffer;
-        public UdpSocket(int bufferSize)
+        public UdpSocket(int bufferSize = 1 << 16)
         {
             BufferSize = bufferSize;
             _buffer = new byte[BufferSize];

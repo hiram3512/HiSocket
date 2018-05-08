@@ -9,7 +9,7 @@ using System;
 
 namespace HiSocket
 {
-    public interface ITcpConnection : ITcpSocket
+    public interface IConnection
     {
         /// <summary>
         /// When construct this will trigger, you can modify logic by yourself.

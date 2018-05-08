@@ -14,7 +14,7 @@ namespace HiSocket
     {
         private int _howManyBytesSend;
 
-        public StatisticalPlugin(string name, ITcpConnection connection) : base(name, connection)
+        public StatisticalPlugin(string name, IConnection connection) : base(name, connection)
         {
             connection.OnSend += x => { _howManyBytesSend += x.Length; };
         }
