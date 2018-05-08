@@ -120,9 +120,9 @@ namespace HiSocket
 
         void ReceiveEvent(byte[] bytes)
         {
-            if (OnReceive != null)
+            if (OnSocketReceive != null)
             {
-                OnReceive(bytes);
+                OnSocketReceive(bytes);
             }
         }
     }

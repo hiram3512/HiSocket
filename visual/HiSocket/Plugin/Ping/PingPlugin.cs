@@ -26,7 +26,7 @@ namespace HiSocket
         void PingLogic()
         {
             var sender = new Ping();
-            var ip = Connection.Socket.RemoteEndPoint as IPEndPoint;
+            var ip = (Connection as TcpSocket).Socket.RemoteEndPoint as IPEndPoint;
             var reply = sender.Send(ip.Address);
             if (reply.Status == IPStatus.Success)
             {
