@@ -5,7 +5,6 @@
 
 using System;
 using System.Text;
-using HiSocket;
 
 namespace HiSocket.Message
 {

@@ -6,7 +6,7 @@ using System;
 
 namespace HiSocket.Message
 {
-    class Aes
+    public class Aes
     {
         private string _key;
 

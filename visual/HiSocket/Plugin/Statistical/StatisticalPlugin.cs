@@ -10,7 +10,7 @@ namespace HiSocket
     /// <summary>
     /// For example
     /// </summary>
-    public class StatisticalPlugin : PluginBase
+    public sealed class StatisticalPlugin : PluginBase
     {
         private int _howManyBytesSend;
 

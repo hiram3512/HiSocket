@@ -3,7 +3,6 @@
 // Author: hiramtan@live.com
 //***************************************************************************
 
-using HiSocket;
 
 namespace HiSocket.Message
 {
