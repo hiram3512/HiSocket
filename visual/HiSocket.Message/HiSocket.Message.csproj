@@ -50,13 +50,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HiSocket.Tcp\HiSocket.Tcp.csproj">
+    <ProjectReference Include="..\HiSocket\HiSocket.csproj">
       <Project>{0b0fe68d-eb3f-42e0-b151-bbe221cfa10c}</Project>
-      <Name>HiSocket.Tcp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HiSocket.Udp\HiSocket.Udp.csproj">
-      <Project>{99538f11-3ca0-4860-b161-25120ae7a477}</Project>
-      <Name>HiSocket.Udp</Name>
+      <Name>HiSocket</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

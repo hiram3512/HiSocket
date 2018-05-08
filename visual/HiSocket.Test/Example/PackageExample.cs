@@ -5,7 +5,7 @@
  * Author: hiramtan@live.com
 ***************************************************************/
 
-using HiSocket.Tcp;
+using HiSocket;
 using System;
 
 namespace HiSocketExample

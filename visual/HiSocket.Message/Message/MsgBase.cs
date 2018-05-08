@@ -3,7 +3,7 @@
 // Author: hiramtan@live.com
 //***************************************************************************
 
-using HiSocket.Tcp;
+using HiSocket;
 
 namespace HiSocket.Message
 {

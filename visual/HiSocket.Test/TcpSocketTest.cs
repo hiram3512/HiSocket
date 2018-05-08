@@ -1,4 +1,4 @@
-﻿using HiSocket.Tcp;
+﻿using HiSocket;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HiSocket.Test

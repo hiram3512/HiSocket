@@ -5,7 +5,7 @@
 //***************************************************************************
 using System;
 using System.Collections.Generic;
-using HiSocket.Tcp;
+using HiSocket;
 
 namespace HiSocket.Message
 {

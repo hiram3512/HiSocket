@@ -1,6 +1,0 @@
-D:\MyGit\github\HiSocket\visual\HiSocket.Udp\obj\Debug\HiSocket.Udp.csprojResolveAssemblyReference.cache
-D:\MyGit\github\HiSocket\visual\HiSocket.Udp\obj\Debug\HiSocket.Udp.csproj.CoreCompileInputs.cache
-D:\MyGit\github\HiSocket\visual\HiSocket.Udp\bin\Debug\HiSocket.Udp.dll
-D:\MyGit\github\HiSocket\visual\HiSocket.Udp\bin\Debug\HiSocket.Udp.pdb
-D:\MyGit\github\HiSocket\visual\HiSocket.Udp\obj\Debug\HiSocket.Udp.dll
-D:\MyGit\github\HiSocket\visual\HiSocket.Udp\obj\Debug\HiSocket.Udp.pdb
