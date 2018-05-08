@@ -6,7 +6,6 @@
 ***************************************************************/
 
 using HiSocket;
-using System;
 
 namespace HiSocketExample
 {

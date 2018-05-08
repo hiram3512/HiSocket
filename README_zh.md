@@ -5,8 +5,8 @@
 -----
 
 ### 如何使用
-- 如果用在c#项目中,可以从此下载 HiSocket.dll: [HiSocket](https://github.com/hiramtan/HiSocket/releases)
-- 如果用在unity3d项目中,可以从此下载 HiSocket.unitypackage: [HiSocket](https://github.com/hiramtan/HiSocket/releases)
+- 如果用在c#项目中,可以从此下载 HiSocket.dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
+- 如果用在unity3d项目中,可以从此下载 HiSocket.unitypackage: [HiSocket_xx.unitypackage](https://github.com/hiramtan/HiSocket/releases)
 
   (ps. HiSocket.unitypackage 包含HiSocket.dll和一些示例)
 

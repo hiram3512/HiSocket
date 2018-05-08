@@ -5,9 +5,9 @@
  * Author: hiramtan@live.com
 ***************************************************************/
 
-using HiSocket;
 using HiSocketExample;
 using System.Net;
+using HiSocket;
 using UnityEngine;
 
 public class UnityTcpExample : MonoBehaviour
