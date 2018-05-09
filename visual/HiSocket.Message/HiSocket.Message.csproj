@@ -41,12 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Message\Aes.cs" />
-    <Compile Include="Message\MsgBase.cs" />
-    <Compile Include="Message\MsgBytes.cs" />
-    <Compile Include="Message\MsgProtobuf.cs" />
-    <Compile Include="Message\MsgRegistBase.cs" />
-    <Compile Include="Message\MsgRegister.cs" />
+    <Compile Include="Aes.cs" />
+    <Compile Include="MsgBase.cs" />
+    <Compile Include="MsgBytes.cs" />
+    <Compile Include="MsgProtobuf.cs" />
+    <Compile Include="MsgRegistBase.cs" />
+    <Compile Include="MsgRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
