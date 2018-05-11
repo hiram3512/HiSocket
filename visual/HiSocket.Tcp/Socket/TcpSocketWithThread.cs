@@ -1,5 +1,6 @@
 ﻿/***************************************************************
- * Description:
+ * Description: because recevie data is in thread, user should handle data to main thread.
+ * If you want socket handle in thread, you can use this logic
  *
  * Documents: https://github.com/hiramtan/HiSocket_unity
  * Author: hiramtan@live.com
