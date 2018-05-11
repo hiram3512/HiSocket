@@ -2,7 +2,7 @@
 //using HiSocket;
 //using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-//namespace HiSocketTest.Connection.Scoket
+//namespace HiSocketTest.TcpConnection.Scoket
 //{
 //    [TestClass]
 //    public class TestByteBlockBuffer

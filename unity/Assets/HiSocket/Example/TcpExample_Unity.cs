@@ -7,7 +7,7 @@
 
 using HiSocketExample;
 using System.Net;
-using HiSocket.Tcp;
+using HiSocket;
 using UnityEngine;
 
 public class UnityTcpExample : MonoBehaviour

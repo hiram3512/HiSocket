@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Threading;
-using HiSocket.Tcp;
+using HiSocket;
 using HiSocketExample;
 
 namespace HiSocket.Test
