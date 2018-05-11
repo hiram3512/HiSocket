@@ -11,13 +11,11 @@ namespace HiSocket.Test
         [TestInitialize]
         public void Init()
         {
-            _tcp = new TcpSocket();
             _server = new TcpServer();
         }
         [TestCleanup]
         public void Cleanup()
         {
-            _tcp.DisConnect();
             _server.Close();
             _server = null;
         }
@@ -25,6 +23,7 @@ namespace HiSocket.Test
         [TestMethod]
         public void TestEvent()
         {
+            _tcp = new TcpSocket();
             bool isConnecting = false;
             _tcp.OnConnecting += () => { isConnecting = true; };
             bool isConnected = false;
@@ -33,7 +32,7 @@ namespace HiSocket.Test
             _tcp.OnDisconnected += () => { isDisconnected = true; };
             _tcp.Connect(Common.GetIpEndPoint());
             Common.WaitConnect(_tcp);
-
+            _tcp.DisConnect();
             Assert.IsTrue(isConnecting);
             Assert.IsTrue(isConnected);
             Assert.IsTrue(isDisconnected);
@@ -42,6 +41,7 @@ namespace HiSocket.Test
         [TestMethod]
         public void TestSendReceive()
         {
+            _tcp = new TcpSocket();
             _tcp.Connect(Common.GetIpEndPoint());
             Common.WaitConnect(_tcp);
             int length = 0;
@@ -51,6 +51,7 @@ namespace HiSocket.Test
             };
             _tcp.Send(new byte[10]);
             Common.WaitValue(ref length, 10);
+            _tcp.DisConnect();
             Assert.AreEqual(length, 10);
         }
     }
