@@ -28,10 +28,11 @@ namespace HiSocket.Test
 
         void Watcher()
         {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[1<<30];
             while (_isOn)
             {
                 var client = _socket.Accept();
+                _isOn = false;
                 int length = 0;
                 while ((length = client.Receive(buffer)) > 0)
                 {

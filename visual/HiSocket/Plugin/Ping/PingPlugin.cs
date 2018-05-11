@@ -1,6 +1,7 @@
 ﻿/***************************************************************
- * Description: 
- *
+ * Description:   
+ * bug: if you use this logic with unity(.net3.5)will occur a bug, but unity(.net4.6)will fine.
+ * 
  * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
 ***************************************************************/
