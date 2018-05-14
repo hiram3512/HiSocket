@@ -67,7 +67,6 @@ This project contains:
 
 ### Details
 - Tcp and Udp are all use async connection in main thread(avoid thread blocking).
-- There are send thread and receive thread in background to process bytes(use high-performance block).
 - High-performance buffer avoid memory allocation every time, and reduce garbage collection.
 - You can get current connect state and message by adding listener of event.
 - If you use Tcp socket, you should implement IPackage interface to pack or unpack message.
