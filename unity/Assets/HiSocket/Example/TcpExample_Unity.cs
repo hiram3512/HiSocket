@@ -10,7 +10,7 @@ using System.Net;
 using HiSocket;
 using UnityEngine;
 
-public class UnityTcpExample : MonoBehaviour
+public class TcpExample_Unity : MonoBehaviour
 {
     private TcpConnection _tcp;
     // Use this for initialization
