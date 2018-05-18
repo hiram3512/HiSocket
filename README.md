@@ -6,10 +6,10 @@
 [中文说明](https://github.com/hiramtan/HiSocket/blob/master/README_zh.md) 
 
 ### How to use
-- If you want to used in c# project, you can download HiSocket.dll from here: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
-- If you want to used in unity3d, you can download HiSocket.unitypackage from here: [HiSocket_xx.unitypackage](https://github.com/hiramtan/HiSocket/releases)
+- You can download HiSocket.dll from here: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
+- If you want to used in unity3d, just copy dll to your project.
 
-  (ps. HiSocket.unitypackage contains HiSocket.dll and some example, there also a "HiSocket.Test" unit test project contains some example)
+  (ps. there also a "HiSocket.Test" unit test project contains some example)
 
  Quick Start:
 ```csharp
