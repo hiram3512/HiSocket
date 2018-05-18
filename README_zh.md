@@ -5,10 +5,11 @@
 -----
 
 ### 如何使用
-- 如果用在c#项目中,可以从此下载 HiSocket.dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
-- 如果用在unity3d项目中,可以从此下载 HiSocket.unitypackage: [HiSocket_xx.unitypackage](https://github.com/hiramtan/HiSocket/releases)
+- 可以从此下载 HiSocket.dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
+- 如果想在unity3d工程中使用,复制dll到unity项目即可.
 
-  (ps. HiSocket.unitypackage 包含HiSocket.dll和一些示例)
+  (ps. 单元测试项目HiSocket.Test包含一些示例代码)
+  
 
  快速开始:
 ```csharp
