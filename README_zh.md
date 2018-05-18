@@ -5,7 +5,7 @@
 -----
 
 ### 如何使用
-- 可以从此下载 HiSocket.dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
+- 可以从此下载 HiSocket dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
 - 如果想在unity3d工程中使用,复制dll到unity项目即可.
 
   (ps. 单元测试项目HiSocket.Test包含一些示例代码)
