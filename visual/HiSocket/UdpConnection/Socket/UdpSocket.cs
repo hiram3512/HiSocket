@@ -25,7 +25,7 @@ namespace HiSocket
 
         public void Connect(IPEndPoint iep)
         {
-            Assert.NotNull(iep, "IPEndPoint is null");
+            Assert.IsNotNull(iep);
             Socket = new Socket(iep.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
             try
             {
@@ -34,7 +34,7 @@ namespace HiSocket
                     try
                     {
                         var socket = x.AsyncState as Socket;
-                        Assert.NotNull(socket, "Socket is null when connect end");
+                        Assert.IsNotNull(socket);
                         if (!Socket.Connected)
                         {
                             throw new Exception("Connect faild");
@@ -65,7 +65,7 @@ namespace HiSocket
                     try
                     {
                         var socket = x.AsyncState as Socket;
-                        Assert.NotNull(socket, "Socket is null when send end");
+                        Assert.IsNotNull(socket);
                         int length = socket.EndSend(x);
                         //Todo: because this is udp protocol, this is no sence
                         if (length != bytes.Length) { }
@@ -105,7 +105,7 @@ namespace HiSocket
             try
             {
                 var socket = ar.AsyncState as Socket;
-                Assert.NotNull(socket, "Socket is null when receive end");
+                Assert.IsNotNull(socket);
                 int length = socket.EndReceive(ar);
                 byte[] bytes = new byte[length];
                 Array.Copy(_buffer, 0, bytes, 0, bytes.Length);

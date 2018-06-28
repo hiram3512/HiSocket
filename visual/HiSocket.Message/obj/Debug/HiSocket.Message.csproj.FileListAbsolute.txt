@@ -1,4 +1,3 @@
-D:\MyGit\github\HiSocket\visual\HiSocket.Message\obj\Debug\HiSocket.Message.csprojResolveAssemblyReference.cache
 D:\MyGit\github\HiSocket\visual\HiSocket.Message\obj\Debug\HiSocket.Message.csproj.CoreCompileInputs.cache
 D:\MyGit\github\HiSocket\visual\HiSocket.Message\bin\Debug\HiSocket.Message.dll
 D:\MyGit\github\HiSocket\visual\HiSocket.Message\bin\Debug\HiSocket.Message.pdb
@@ -9,3 +8,5 @@ D:\MyGit\github\HiSocket\visual\HiSocket.Message\bin\Debug\HiSocket.dll
 D:\MyGit\github\HiSocket\visual\HiSocket.Message\bin\Debug\HiSocket.pdb
 D:\MyGit\github\HiSocket\visual\release\HiSocket.Message.dll
 D:\MyGit\github\HiSocket\visual\release\HiSocket.Message.pdb
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\obj\Debug\HiSocket.Message.csprojAssemblyReference.cache
+D:\MyGit\github\HiSocket\visual\HiSocket.Message\obj\Debug\HiSocket.Message.csproj.CopyComplete

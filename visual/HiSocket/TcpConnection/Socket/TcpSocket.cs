@@ -41,7 +41,7 @@ namespace HiSocket
                 {
                     throw new Exception("Already Connected");
                 }
-                Assert.NotNull(iep, "IPEndPoint is null");
+                Assert.IsNotNull(iep);
                 ConnectingEvent();
                 Socket = new Socket(iep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 try
@@ -51,7 +51,7 @@ namespace HiSocket
                         try
                         {
                             var socket = ar.AsyncState as Socket;
-                            Assert.NotNull(socket, "Socket is null when connect end");
+                            Assert.IsNotNull(socket);
                             socket.EndConnect(ar);
                             if (!IsConnected)
                             {
@@ -100,7 +100,7 @@ namespace HiSocket
         private void EndSend(IAsyncResult ar)
         {
             var socket = ar.AsyncState as Socket;
-            Assert.NotNull(socket, "Socket is null when send end");
+            Assert.IsNotNull(socket);
             int length = socket.EndSend(ar);
             _sendBuffer.Reader.MovePosition(length);
             Send();
@@ -116,7 +116,7 @@ namespace HiSocket
         private void EndReceive(IAsyncResult ar)
         {
             var socket = ar.AsyncState as Socket;
-            Assert.NotNull(socket, "Socket is null when receive end");
+            Assert.IsNotNull(socket);
             int length = socket.EndReceive(ar);
             _receiveBuffer.Writer.MovePosition(length);
             var bytes = _receiveBuffer.ReadAllBytes();

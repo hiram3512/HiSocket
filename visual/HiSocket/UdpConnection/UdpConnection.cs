@@ -31,19 +31,19 @@ namespace HiSocket
 
         public void AddPlugin(IPlugin plugin)
         {
-            Assert.NotNull(plugin, "plugin is null");
+            Assert.IsNotNull(plugin);
             _plugins.Add(plugin.Name, plugin);
         }
 
         public IPlugin GetPlugin(string name)
         {
-            Assert.NotNullOrEmpty(name, "Plugin name is null or empty");
+            Assert.IsNotNullOrEmpty(name);
             return _plugins[name];
         }
 
         public void RemovePlugin(string name)
         {
-            Assert.NotNullOrEmpty(name, "Plugin name is null or empty");
+            Assert.IsNotNullOrEmpty(name);
             _plugins.Remove(name);
         }
         void ConstructEvent()
