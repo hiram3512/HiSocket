@@ -10,7 +10,6 @@
 可以选择使用dll或者使用源码,把它添加到自己的工程中即可使用.
 - Dll: 可以从此下载 HiSocket dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
 - 源码: 源码在此文件夹中"HiSocket/visual"
-
    (ps. 源码的单元测试项目HiSocket.Test包含一些示例代码)
   
 
