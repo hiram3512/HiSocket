@@ -1,14 +1,17 @@
 # HiSocket
 
+轻量Socket通信逻辑,可以在c#项目或Unity3d项目中使用.
+
 ![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   [![Build Status](https://travis-ci.org/hiramtan/HiSocket.svg?branch=master)](https://travis-ci.org/hiramtan/HiSocket)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)
 
 -----
 
 ### 如何使用
-- 可以从此下载 HiSocket dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
-- 如果想在unity3d工程中使用,复制dll到unity项目即可.
+可以选择使用dll或者使用源码,把它复制到自己的工程中即可使用.
+- Dll: 可以从此下载 HiSocket dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
+- 源码: 源码在此文件夹中"HiSocket/visual"
 
-  (ps. 单元测试项目HiSocket.Test包含一些示例代码)
+   (ps. 源码的单元测试项目HiSocket.Test包含一些示例代码)
   
 
  快速开始:
