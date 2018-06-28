@@ -22,7 +22,6 @@
             _tcp = new TcpConnection(_package);
             _tcp.OnConnected += OnConnected;
             _tcp.OnReceive += OnReceive;
-            //_tcp.OnError
             //_tcp.OnDisconnected
         }
         void OnConnected()
