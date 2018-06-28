@@ -1,15 +1,17 @@
 # HiSocket
 
+It is a lightweight socket solution, you can used it in Unity3d or C# project
+
 ![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   [![Build Status](https://travis-ci.org/hiramtan/HiSocket.svg?branch=master)](https://travis-ci.org/hiramtan/HiSocket)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)
 
 -----
 [中文说明](https://github.com/hiramtan/HiSocket/blob/master/README_zh.md) 
 
 ### How to use
-- You can download HiSocket dll from here: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
-- If you want to used in unity3d, just copy dll to your project.
-
-  (ps. there also a "HiSocket.Test" unit test project contains some example)
+You can choose use dll or source code, add it to your project.
+- Dll: You can download HiSocket dll from here: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
+- Source code: source code is in "HiSocket/visual" folder.
+  (ps. there also a "HiSocket.Test" unit test project contains some example in source code)
 
  Quick Start:
 ```csharp
@@ -20,7 +22,6 @@
             _tcp = new TcpConnection(_package);
             _tcp.OnConnected += OnConnected;
             _tcp.OnReceive += OnReceive;
-            //_tcp.OnError
             //_tcp.OnDisconnected
         }
         void OnConnected()
