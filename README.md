@@ -22,7 +22,8 @@ You can choose use dll or source code, add it to your project.
             _tcp = new TcpConnection(_package);
             _tcp.OnConnected += OnConnected;
             _tcp.OnReceive += OnReceive;
-            //_tcp.OnDisconnected
+            //...
+            //...
         }
         void OnConnected()
         {
