@@ -1,7 +1,7 @@
 ﻿/***************************************************************
  * Description: 
  *
- * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
 ***************************************************************/
 
@@ -31,6 +31,20 @@ namespace HiSocket
         /// </summary>
         /// <param name="iep">server</param>
         void Connect(IPEndPoint iep);
+
+        /// <summary>
+        /// Connect to server
+        /// </summary>
+        /// <param name="ip">ipv4/ipv6</param>
+        /// <param name="port"></param>
+        void Connect(string ip, int port);
+
+        /// <summary>
+        /// Connect to server
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        void Connect(IPAddress ip, int port);
 
         /// <summary>
         /// Send bytes to server

@@ -6,14 +6,14 @@ namespace HiSocket.Test
     [TestClass]
     public class TcpConnectionTest
     {
-        private TcpServer _server;
+        private TcpServer server;
         /// <summary>
         /// initialize server
         /// </summary>
         [TestInitialize]
         public void Init()
         {
-            _server = new TcpServer();
+            server = new TcpServer();
         }
 
         /// <summary>
@@ -22,9 +22,9 @@ namespace HiSocket.Test
         [TestCleanup]
         public void Cleanup()
         {
-            if (_server != null)
-                _server.Close();
-            _server = null;
+            if (server != null)
+                server.Close();
+            server = null;
         }
 
         [TestMethod]

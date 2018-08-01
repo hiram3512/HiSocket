@@ -1,13 +1,14 @@
 ﻿/***************************************************************
  * Description: 
  *
- * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
 ***************************************************************/
 
 using System;
 using System.Net;
 using System.Net.Sockets;
+using HiFramework;
 
 namespace HiSocket
 {
@@ -23,14 +24,14 @@ namespace HiSocket
         public event Action OnDisconnected;
         public event Action<byte[]> OnSocketReceive;
 
-        private IByteBlockBuffer _sendBuffer;
-        private IByteBlockBuffer _receiveBuffer;
+        private IByteBlockBuffer sendBuffer;
+        private IByteBlockBuffer receiveBuffer;
         private readonly object locker = new object();
 
         public TcpSocket(int bufferSize = 1 << 16)
         {
-            _sendBuffer = new ByteBlockBuffer(bufferSize);
-            _receiveBuffer = new ByteBlockBuffer(bufferSize);
+            sendBuffer = new ByteBlockBuffer(bufferSize);
+            receiveBuffer = new ByteBlockBuffer(bufferSize);
         }
 
         public void Connect(IPEndPoint iep)
@@ -41,7 +42,7 @@ namespace HiSocket
                 {
                     throw new Exception("Already Connected");
                 }
-                Assert.IsNotNull(iep);
+                AssertThat.IsNotNull(iep);
                 ConnectingEvent();
                 Socket = new Socket(iep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 try
@@ -51,7 +52,7 @@ namespace HiSocket
                         try
                         {
                             var socket = ar.AsyncState as Socket;
-                            Assert.IsNotNull(socket);
+                            AssertThat.IsNotNull(socket);
                             socket.EndConnect(ar);
                             if (!IsConnected)
                             {
@@ -74,6 +75,28 @@ namespace HiSocket
             }
         }
 
+        /// <summary>
+        /// Connect to server
+        /// </summary>
+        /// <param name="ip">ipv4/ipv6</param>
+        /// <param name="port"></param>
+        public void Connect(string ip, int port)
+        {
+            var iep = new IPEndPoint(IPAddress.Parse(ip), port);
+            Connect(iep);
+        }
+
+        /// <summary>
+        /// Connect to server
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        public void Connect(IPAddress ip, int port)
+        {
+            var iep = new IPEndPoint(ip, port);
+            Connect(iep);
+        }
+
         public void Send(byte[] bytes)
         {
             lock (locker)
@@ -82,17 +105,17 @@ namespace HiSocket
                 {
                     throw new Exception("From send : disconnected");
                 }
-                _sendBuffer.WriteAllBytes(bytes);
+                sendBuffer.WriteAllBytes(bytes);
                 Send();
             }
         }
 
         private void Send()
         {
-            var count = _sendBuffer.Reader.GetHowManyCountCanReadInThisBlock();
+            var count = sendBuffer.Reader.GetHowManyCountCanReadInThisBlock();
             if (count > 0)
             {
-                Socket.BeginSend(_sendBuffer.Reader.Node.Value, _sendBuffer.Reader.Position, count, SocketFlags.None,
+                Socket.BeginSend(sendBuffer.Reader.Node.Value, sendBuffer.Reader.Position, count, SocketFlags.None,
                     EndSend, Socket);
             }
         }
@@ -100,26 +123,26 @@ namespace HiSocket
         private void EndSend(IAsyncResult ar)
         {
             var socket = ar.AsyncState as Socket;
-            Assert.IsNotNull(socket);
+            AssertThat.IsNotNull(socket);
             int length = socket.EndSend(ar);
-            _sendBuffer.Reader.MovePosition(length);
+            sendBuffer.Reader.MovePosition(length);
             Send();
         }
 
         private void Receive()
         {
-            var count = _receiveBuffer.Writer.GetHowManyCountCanWriteInThisBlock();
-            Socket.BeginReceive(_receiveBuffer.Writer.Node.Value, _receiveBuffer.Writer.Position, count, SocketFlags.None,
+            var count = receiveBuffer.Writer.GetHowManyCountCanWriteInThisBlock();
+            Socket.BeginReceive(receiveBuffer.Writer.Node.Value, receiveBuffer.Writer.Position, count, SocketFlags.None,
                 EndReceive, Socket);
         }
 
         private void EndReceive(IAsyncResult ar)
         {
             var socket = ar.AsyncState as Socket;
-            Assert.IsNotNull(socket);
+            AssertThat.IsNotNull(socket);
             int length = socket.EndReceive(ar);
-            _receiveBuffer.Writer.MovePosition(length);
-            var bytes = _receiveBuffer.ReadAllBytes();
+            receiveBuffer.Writer.MovePosition(length);
+            var bytes = receiveBuffer.ReadAllBytes();
             SocketReceiveEvent(bytes);
             if (length > 0)
             {

@@ -1,7 +1,7 @@
 ﻿/***************************************************************
  * Description: pack and unpack message
  *
- * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
 ***************************************************************/
 

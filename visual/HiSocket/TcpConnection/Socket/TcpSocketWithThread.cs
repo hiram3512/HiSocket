@@ -2,7 +2,7 @@
  * Description: because recevie data is in thread, user should handle data to main thread.
  * If you want socket handle in thread, you can use this logic
  *
- * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
 ***************************************************************/
 
@@ -10,6 +10,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using HiFramework;
 
 namespace HiSocket
 {
@@ -43,10 +44,10 @@ namespace HiSocket
         /// </summary>
         private bool IsReceiveThreadOn;
 
-        private static readonly object _sendLocker = new object();
-        private static readonly object _receiveLocker = new object();
-        private IByteBlockBuffer _sendBuffer = new ByteBlockBuffer();
-        private IByteBlockBuffer _receiveBuffer = new ByteBlockBuffer();
+        private static readonly object sendLocker = new object();
+        private static readonly object receiveLocker = new object();
+        private IByteBlockBuffer sendBuffer = new ByteBlockBuffer();
+        private IByteBlockBuffer receiveBuffer = new ByteBlockBuffer();
 
         public void Connect(IPEndPoint iep)
         {
@@ -55,7 +56,7 @@ namespace HiSocket
                 ErrorEvent("Already Connected");
                 return;
             }
-            Assert.IsNotNull(iep);
+            AssertThat.IsNotNull(iep);
             ConnectingEvent();
             Socket = new Socket(iep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             try
@@ -65,7 +66,7 @@ namespace HiSocket
                     try
                     {
                         var socket = ar.AsyncState as Socket;
-                        Assert.IsNotNull(socket);
+                        AssertThat.IsNotNull(socket);
                         if (!Socket.Connected)
                         {
                             throw new Exception("Connect faild");
@@ -87,11 +88,33 @@ namespace HiSocket
             }
         }
 
+        /// <summary>
+        /// Connect to server
+        /// </summary>
+        /// <param name="ip">ipv4/ipv6</param>
+        /// <param name="port"></param>
+        public void Connect(string ip, int port)
+        {
+            var iep = new IPEndPoint(IPAddress.Parse(ip), port);
+            Connect(iep);
+        }
+
+        /// <summary>
+        /// Connect to server
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        public void Connect(IPAddress ip, int port)
+        {
+            var iep = new IPEndPoint(ip, port);
+            Connect(iep);
+        }
+
         public void Send(byte[] bytes)
         {
-            lock (_sendLocker)
+            lock (sendLocker)
             {
-                _sendBuffer.WriteAllBytes(bytes);
+                sendBuffer.WriteAllBytes(bytes);
             }
         }
 
@@ -119,16 +142,16 @@ namespace HiSocket
                 {
                     throw new Exception("From send thread: disconnected");
                 }
-                lock (_sendLocker)
+                lock (sendLocker)
                 {
-                    var count = _sendBuffer.Reader.GetHowManyCountCanReadInThisBlock();
+                    var count = sendBuffer.Reader.GetHowManyCountCanReadInThisBlock();
                     if (count > 0)
                     {
                         try
                         {
-                            var length = Socket.Send(_sendBuffer.Reader.Node.Value, _sendBuffer.Reader.Position, count,
+                            var length = Socket.Send(sendBuffer.Reader.Node.Value, sendBuffer.Reader.Position, count,
                                 SocketFlags.None);
-                            _sendBuffer.Reader.MovePosition(length);
+                            sendBuffer.Reader.MovePosition(length);
                         }
                         catch (Exception e)
                         {
@@ -147,17 +170,17 @@ namespace HiSocket
                 {
                     throw new Exception("From receive thread: disconnected");
                 }
-                lock (_receiveLocker)
+                lock (receiveLocker)
                 {
                     if (Socket.Available > 0)
                     {
                         try
                         {
-                            var count = _receiveBuffer.Writer.GetHowManyCountCanWriteInThisBlock();
-                            var length = Socket.Receive(_receiveBuffer.Writer.Node.Value, _receiveBuffer.Writer.Position,
+                            var count = receiveBuffer.Writer.GetHowManyCountCanWriteInThisBlock();
+                            var length = Socket.Receive(receiveBuffer.Writer.Node.Value, receiveBuffer.Writer.Position,
                                 count, SocketFlags.None);
-                            _receiveBuffer.Writer.MovePosition(length);
-                            var bytes = _receiveBuffer.ReadAllBytes();
+                            receiveBuffer.Writer.MovePosition(length);
+                            var bytes = receiveBuffer.ReadAllBytes();
                             SocketReceiveEvent(bytes);
                         }
                         catch (Exception e)

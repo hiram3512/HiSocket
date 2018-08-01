@@ -1,12 +1,13 @@
 ﻿/***************************************************************
  * Description: 
  *
- * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
 ***************************************************************/
 
 using System;
 using System.Collections.Generic;
+using HiFramework;
 
 namespace HiSocket
 {
@@ -16,7 +17,7 @@ namespace HiSocket
         public event Action<byte[]> OnSend;
         public event Action<byte[]> OnReceive;
 
-        private Dictionary<string, IPlugin> _plugins = new Dictionary<string, IPlugin>();
+        private Dictionary<string, IPlugin> plugins = new Dictionary<string, IPlugin>();
         public UdpConnection(int bufferSize = 1 << 16) : base(bufferSize)
         {
             ConstructEvent();
@@ -31,20 +32,20 @@ namespace HiSocket
 
         public void AddPlugin(IPlugin plugin)
         {
-            Assert.IsNotNull(plugin);
-            _plugins.Add(plugin.Name, plugin);
+            AssertThat.IsNotNull(plugin);
+            plugins.Add(plugin.Name, plugin);
         }
 
         public IPlugin GetPlugin(string name)
         {
-            Assert.IsNotNullOrEmpty(name);
-            return _plugins[name];
+            AssertThat.IsNotNullOrEmpty(name);
+            return plugins[name];
         }
 
         public void RemovePlugin(string name)
         {
-            Assert.IsNotNullOrEmpty(name);
-            _plugins.Remove(name);
+            AssertThat.IsNotNullOrEmpty(name);
+            plugins.Remove(name);
         }
         void ConstructEvent()
         {

@@ -38,7 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assert.cs" />
+    <Compile Include="AssertThat.cs" />
     <Compile Include="IConnection.cs" />
     <Compile Include="Plugin\IPlugin.cs" />
     <Compile Include="Plugin\Ping\PingPlugin.cs" />

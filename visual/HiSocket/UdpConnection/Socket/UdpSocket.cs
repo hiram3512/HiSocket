@@ -1,13 +1,14 @@
 ﻿/***************************************************************
  * Description: 
  *
- * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
 ***************************************************************/
 
 using System;
 using System.Net;
 using System.Net.Sockets;
+using HiFramework;
 
 namespace HiSocket
 {
@@ -16,16 +17,16 @@ namespace HiSocket
         public Socket Socket { get; private set; }
         public event Action<byte[]> OnSocketReceive;
         public int BufferSize { get; }
-        private byte[] _buffer;
+        private byte[] buffer;
         public UdpSocket(int bufferSize = 1 << 16)
         {
             BufferSize = bufferSize;
-            _buffer = new byte[BufferSize];
+            buffer = new byte[BufferSize];
         }
 
         public void Connect(IPEndPoint iep)
         {
-            Assert.IsNotNull(iep);
+            AssertThat.IsNotNull(iep);
             Socket = new Socket(iep.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
             try
             {
@@ -34,7 +35,7 @@ namespace HiSocket
                     try
                     {
                         var socket = x.AsyncState as Socket;
-                        Assert.IsNotNull(socket);
+                        AssertThat.IsNotNull(socket);
                         if (!Socket.Connected)
                         {
                             throw new Exception("Connect faild");
@@ -56,6 +57,28 @@ namespace HiSocket
 
         }
 
+        /// <summary>
+        /// Connect to server
+        /// </summary>
+        /// <param name="ip">ipv4/ipv6</param>
+        /// <param name="port"></param>
+        public void Connect(string ip, int port)
+        {
+            var iep = new IPEndPoint(IPAddress.Parse(ip), port);
+            Connect(iep);
+        }
+
+        /// <summary>
+        /// Connect to server
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        public void Connect(IPAddress ip, int port)
+        {
+            var iep = new IPEndPoint(ip, port);
+            Connect(iep);
+        }
+
         public void Send(byte[] bytes)
         {
             try
@@ -65,7 +88,7 @@ namespace HiSocket
                     try
                     {
                         var socket = x.AsyncState as Socket;
-                        Assert.IsNotNull(socket);
+                        AssertThat.IsNotNull(socket);
                         int length = socket.EndSend(x);
                         //Todo: because this is udp protocol, this is no sence
                         if (length != bytes.Length) { }
@@ -92,7 +115,7 @@ namespace HiSocket
         {
             try
             {
-                Socket.BeginReceive(_buffer, 0, BufferSize, SocketFlags.None, ReceiveEnd, Socket);
+                Socket.BeginReceive(buffer, 0, BufferSize, SocketFlags.None, ReceiveEnd, Socket);
             }
             catch (Exception e)
             {
@@ -105,10 +128,10 @@ namespace HiSocket
             try
             {
                 var socket = ar.AsyncState as Socket;
-                Assert.IsNotNull(socket);
+                AssertThat.IsNotNull(socket);
                 int length = socket.EndReceive(ar);
                 byte[] bytes = new byte[length];
-                Array.Copy(_buffer, 0, bytes, 0, bytes.Length);
+                Array.Copy(buffer, 0, bytes, 0, bytes.Length);
                 ReceiveEvent(bytes);
                 StartReceive();
             }

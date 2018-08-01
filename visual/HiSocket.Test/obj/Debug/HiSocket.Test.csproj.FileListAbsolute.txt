@@ -10,7 +10,6 @@ D:\MyGit\github\HiSocket\visual\HiSocket.Test\bin\Debug\Microsoft.VisualStudio.T
 D:\MyGit\github\HiSocket\visual\HiSocket.Test\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
 D:\MyGit\github\HiSocket\visual\HiSocket.Test\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
 D:\MyGit\github\HiSocket\visual\HiSocket.Test\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
-D:\MyGit\github\HiSocket\visual\HiSocket.Test\obj\Debug\HiSocket.Test.csprojResolveAssemblyReference.cache
 D:\MyGit\github\HiSocket\visual\HiSocket.Test\obj\Debug\HiSocket.Test.csproj.CoreCompileInputs.cache
 D:\MyGit\github\HiSocket\visual\HiSocket.Test\obj\Debug\HiSocket.Test.dll
 D:\MyGit\github\HiSocket\visual\HiSocket.Test\obj\Debug\HiSocket.Test.pdb
@@ -19,3 +18,5 @@ D:\MyGit\github\HiSocket\visual\HiSocket.Test\bin\Debug\protobuf-net.dll
 D:\MyGit\github\HiSocket\visual\HiSocket.Test\bin\Debug\HiSocket.Message.pdb
 D:\MyGit\github\HiSocket\visual\HiSocket.Test\bin\Debug\HiSocket.dll
 D:\MyGit\github\HiSocket\visual\HiSocket.Test\bin\Debug\HiSocket.pdb
+D:\MyGit\github\HiSocket\visual\HiSocket.Test\obj\Debug\HiSocket.Test.csprojAssemblyReference.cache
+D:\MyGit\github\HiSocket\visual\HiSocket.Test\obj\Debug\HiSocket.Test.csproj.CopyComplete

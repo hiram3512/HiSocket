@@ -11,39 +11,39 @@ namespace HiSocket.Message
 {
     public static class MsgRegister
     {
-        private static readonly Dictionary<string, Action<IByteArray>> _msgDic = new Dictionary<string, Action<IByteArray>>();
+        private static readonly Dictionary<string, Action<IByteArray>> msgs = new Dictionary<string, Action<IByteArray>>();
 
-        private static readonly object _locker = new object();
+        private static readonly object locker = new object();
 
         public static void Regist(string key, Action<IByteArray> action)
         {
-            lock (_locker)
+            lock (locker)
             {
-                _msgDic.Add(key, action);
+                msgs.Add(key, action);
             }
         }
 
         public static void Unregist(string key)
         {
-            lock (_locker)
+            lock (locker)
             {
-                _msgDic.Remove(key);
+                msgs.Remove(key);
             }
         }
 
         public static void Dispatch(string key, IByteArray iByteArray)
         {
-            lock (_locker)
+            lock (locker)
             {
-                _msgDic[key](iByteArray);
+                msgs[key](iByteArray);
             }
         }
 
         public static bool IsContain(string key)
         {
-            lock (_locker)
+            lock (locker)
             {
-                return _msgDic.ContainsKey(key);
+                return msgs.ContainsKey(key);
             }
         }
     }

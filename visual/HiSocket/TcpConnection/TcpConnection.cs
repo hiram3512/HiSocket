@@ -1,35 +1,36 @@
 ﻿/***************************************************************
  * Description: 
  *
- * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
 ***************************************************************/
 
 using System;
 using System.Collections.Generic;
+using HiFramework;
 
 namespace HiSocket
 {
     public class TcpConnection : TcpSocket, IConnection
     {
-        private IPackage _iPackage;
-        private readonly IByteArray _send = new ByteArray();
-        private readonly IByteArray _receive = new ByteArray();
-        private Dictionary<string, IPlugin> _plugins = new Dictionary<string, IPlugin>();
+        private IPackage package;
+        private readonly IByteArray send = new ByteArray();
+        private readonly IByteArray receive = new ByteArray();
+        private Dictionary<string, IPlugin> plugins = new Dictionary<string, IPlugin>();
         public event Action OnConstruct;
         public event Action<byte[]> OnSend;
         public event Action<byte[]> OnReceive;
         public TcpConnection(IPackage package)
         {
-            _iPackage = package;
+            this.package = package;
             OnSocketReceive += OnSocketReceiveHandler;
             ConstructEvent();
         }
 
         public new void Send(byte[] bytes)
         {
-            _send.Write(bytes);
-            _iPackage.Pack(_send, x =>
+            send.Write(bytes);
+            package.Pack(send, x =>
             {
                 SendEvent(x);
                 base.Send(x);
@@ -37,26 +38,26 @@ namespace HiSocket
         }
         void OnSocketReceiveHandler(byte[] bytes)
         {
-            _receive.Write(bytes);
-            _iPackage.Unpack(_receive, x => { ReceiveEvent(x); });
+            receive.Write(bytes);
+            package.Unpack(receive, x => { ReceiveEvent(x); });
         }
 
         public void AddPlugin(IPlugin plugin)
         {
-            Assert.IsNotNull(plugin);
-            _plugins.Add(plugin.Name, plugin);
+            AssertThat.IsNotNull(plugin);
+            plugins.Add(plugin.Name, plugin);
         }
 
         public IPlugin GetPlugin(string name)
         {
-            Assert.IsNotNullOrEmpty(name);
-            return _plugins[name];
+            AssertThat.IsNotNullOrEmpty(name);
+            return plugins[name];
         }
 
         public void RemovePlugin(string name)
         {
-            Assert.IsNotNullOrEmpty(name);
-            _plugins.Remove(name);
+            AssertThat.IsNotNullOrEmpty(name);
+            plugins.Remove(name);
         }
         void ConstructEvent()
         {

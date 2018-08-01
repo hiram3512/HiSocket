@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Net.Sockets;
 using HiSocket;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -7,17 +9,17 @@ namespace HiSocket.Test
     [TestClass]
     public class TcpSocketTest
     {
-        private TcpServer _server;
+        private TcpServer server;
         [TestInitialize]
         public void Init()
         {
-            _server = new TcpServer();
+            server = new TcpServer();
         }
         [TestCleanup]
         public void Cleanup()
         {
-            _server.Close();
-            _server = null;
+            server.Close();
+            server = null;
         }
 
         [TestMethod]

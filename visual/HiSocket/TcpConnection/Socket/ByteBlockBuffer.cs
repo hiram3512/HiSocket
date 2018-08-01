@@ -4,7 +4,7 @@
  * you can directly operate reader or writer's byte array
  * or you can use api: readall()/writeall() to read or write whole bytes in diffrent block
  *
- * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
 ***************************************************************/
 

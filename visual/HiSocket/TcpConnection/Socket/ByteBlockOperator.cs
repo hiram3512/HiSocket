@@ -1,7 +1,7 @@
 ﻿/***************************************************************
  * Description: operator's base class
  *
- * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
 ***************************************************************/
 

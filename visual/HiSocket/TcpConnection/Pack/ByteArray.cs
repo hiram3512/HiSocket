@@ -1,7 +1,7 @@
 ﻿/***************************************************************
  * Description: 
  *
- * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
 ***************************************************************/
 
@@ -12,44 +12,44 @@ namespace HiSocket
 {
     public class ByteArray : IByteArray
     {
-        private readonly List<byte> _bytes = new List<byte>();
-        private readonly object _locker = new object();
+        private readonly List<byte> bytes = new List<byte>();
+        private readonly object locker = new object();
         public int Length
         {
             get
             {
-                lock (_locker)
+                lock (locker)
                 {
-                    return _bytes.Count;
+                    return bytes.Count;
                 }
             }
         }
 
         public byte[] Read(int length)
         {
-            lock (_locker)
+            lock (locker)
             {
                 if (length > Length)
                     throw new Exception("length error: don't have so many bytes to read");
-                var bytes = _bytes.GetRange(0, length);
-                _bytes.RemoveRange(0, length);
+                var bytes = this.bytes.GetRange(0, length);
+                this.bytes.RemoveRange(0, length);
                 return bytes.ToArray();
             }
         }
 
         public void Write(byte[] bytes)
         {
-            lock (_locker)
+            lock (locker)
             {
-                _bytes.InsertRange(_bytes.Count, bytes);
+                this.bytes.InsertRange(this.bytes.Count, bytes);
             }
         }
 
         public void Insert(int index, byte[] bytes)
         {
-            lock (_locker)
+            lock (locker)
             {
-                _bytes.InsertRange(index, bytes);
+                this.bytes.InsertRange(index, bytes);
             }
         }
     }
