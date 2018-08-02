@@ -9,13 +9,15 @@ namespace HiSocket
 {
     public abstract class PluginBase : IPlugin
     {
+        /// <summary>
+        /// Plugins name
+        /// </summary>
         public string Name { get; }
-        public IConnection Connection { get; }
-        public PluginBase(string name, IConnection connection)
+        public IConnection Connection { get; set; }
+
+        public PluginBase(string name)
         {
             Name = name;
-            Connection = connection;
-            Connection.AddPlugin(this);
         }
     }
 }

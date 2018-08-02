@@ -14,7 +14,7 @@ namespace HiSocket
     public sealed class PingPlugin : PluginBase
     {
         public long Ping;
-        public PingPlugin(string name, IConnection connection) : base(name, connection)
+        public PingPlugin(string name) : base(name)
         {
             PingLogic();
         }

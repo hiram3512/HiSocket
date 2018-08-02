@@ -8,24 +8,19 @@
 namespace HiSocket
 {
     /// <summary>
-    /// For example
+    /// 
     /// </summary>
     public sealed class StatisticalPlugin : PluginBase
     {
-        private int _howManyBytesSend;
+        /// <summary>
+        /// How many bytes total send
+        /// </summary>
+        private int howManyBytesSend;
 
-        public StatisticalPlugin(string name, IConnection connection) : base(name, connection)
+        public StatisticalPlugin(string name) : base(name)
         {
-            connection.OnSend += x => { _howManyBytesSend += x.Length; };
-        }
+            Connection.OnSend += x => { howManyBytesSend += x.Length; };
 
-        //class Test
-        //{
-        //    void Start()
-        //    {
-        //        var tcp = new TcpConnection(iPackage);
-        //        var plugin = new StatisticalPlugin("Statistical", tcp);
-        //    }
-        //}
+        }
     }
 }

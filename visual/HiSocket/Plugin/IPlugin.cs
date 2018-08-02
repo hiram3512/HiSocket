@@ -9,7 +9,14 @@ namespace HiSocket
 {
     public interface IPlugin
     {
+        /// <summary>
+        /// Plugins name
+        /// </summary>
         string Name { get; }
-        IConnection Connection { get; }
+
+        /// <summary>
+        /// Plugin belong to this connection
+        /// </summary>
+        IConnection Connection { get; set; }
     }
 }

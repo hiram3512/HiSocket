@@ -24,6 +24,23 @@ namespace HiSocket
             OnSocketReceive += OnSocketReceiveHandler;
         }
 
+        /// <summary>
+        /// To quickly get plugin
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IPlugin this[string name]
+        {
+            get
+            {
+                return GetPlugin(name);
+            }
+            set
+            {
+                AddPlugin(value);
+            }
+        }
+
         public new void Send(byte[] bytes)
         {
             base.Send(bytes);

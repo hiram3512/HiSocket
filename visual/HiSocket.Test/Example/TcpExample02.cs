@@ -14,7 +14,7 @@ namespace HiSocketExample
         void Init()
         {
             var tcp = new TcpConnection(new PackageExample());
-            tcp.AddPlugin(new PingPlugin("ping", tcp));
+            tcp.AddPlugin( new PingPlugin("Ping"));
             //tcp.GetPlugin("ping");
         }
     }

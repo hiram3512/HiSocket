@@ -5,9 +5,9 @@
  * Author: hiramtan@live.com
 ***************************************************************/
 
+using HiFramework;
 using System;
 using System.Collections.Generic;
-using HiFramework;
 
 namespace HiSocket
 {
@@ -25,6 +25,23 @@ namespace HiSocket
             this.package = package;
             OnSocketReceive += OnSocketReceiveHandler;
             ConstructEvent();
+        }
+
+        /// <summary>
+        /// To quickly get plugin
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IPlugin this[string name]
+        {
+            get
+            {
+                return GetPlugin(name);
+            }
+            set
+            {
+                AddPlugin(value);
+            }
         }
 
         public new void Send(byte[] bytes)
@@ -45,6 +62,7 @@ namespace HiSocket
         public void AddPlugin(IPlugin plugin)
         {
             AssertThat.IsNotNull(plugin);
+            plugin.Connection = this;
             plugins.Add(plugin.Name, plugin);
         }
 
