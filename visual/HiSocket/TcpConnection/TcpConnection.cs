@@ -47,11 +47,8 @@ namespace HiSocket
         public new void Send(byte[] bytes)
         {
             send.Write(bytes);
-            package.Pack(send, x =>
-            {
-                SendEvent(x);
-                base.Send(x);
-            });
+            SendEvent(bytes);
+            package.Pack(send, x => { base.Send(x); });
         }
         void OnSocketReceiveHandler(byte[] bytes)
         {

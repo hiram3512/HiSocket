@@ -14,7 +14,7 @@ namespace HiSocket
     /// <summary>
     /// socket api
     /// </summary>
-    public interface ITcpSocket
+    public interface ITcpSocket : IDisposable
     {
         /// <summary>
         /// Get socket and modify it(for example: set timeout)
@@ -37,14 +37,21 @@ namespace HiSocket
         event Action OnConnected;
 
         /// <summary>
-        /// trigger when disconnected
+        /// trigger when disconnected when user initiate close socket
         /// </summary>
         event Action OnDisconnected;
 
         /// <summary>
-        /// trigger when get message
+        /// trigger when get message from server, it havent unpacked
+        /// use .net socket api
         /// </summary>
         event Action<byte[]> OnSocketReceive;
+
+        /// <summary>
+        /// trigger when send message to server, it already packed
+        /// use .net socket api
+        /// </summary>
+        event Action<byte[]> OnSocketSend;
 
         /// <summary>
         /// Connect to server
@@ -71,6 +78,12 @@ namespace HiSocket
         /// </summary>
         /// <param name="bytes"></param>
         void Send(byte[] bytes);
+
+        /// <summary>
+        /// Send bytes to server
+        /// </summary>
+        /// <param name="bytes"></param>
+        void Send(ArraySegment<byte> bytes);
 
         /// <summary>
         /// Disconnect

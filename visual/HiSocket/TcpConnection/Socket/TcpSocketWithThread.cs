@@ -1,5 +1,5 @@
 ﻿/***************************************************************
- * Description: because recevie data is in thread, user should handle data to main thread.
+ * Description: because recevie data is in thread, user should operate unity's component main thread.
  * If you want socket handle in thread, you can use this logic
  *
  * Documents: https://github.com/hiramtan/HiSocket
@@ -21,6 +21,7 @@ namespace HiSocket
         public event Action OnConnecting;
         public event Action OnDisconnected;
         public event Action<byte[]> OnSocketReceive;
+        public event Action<byte[]> OnSocketSend;
         public event Action<Exception> OnError;
         public bool IsConnected
         {
@@ -118,6 +119,15 @@ namespace HiSocket
             }
         }
 
+        /// <summary>
+        /// Send bytes to server
+        /// </summary>
+        /// <param name="bytes"></param>
+        public void Send(ArraySegment<byte> bytes)
+        {
+          Send(bytes.Array);
+        }
+
         public void DisConnect()
         {
             try
@@ -151,6 +161,9 @@ namespace HiSocket
                         {
                             var length = Socket.Send(sendBuffer.Reader.Node.Value, sendBuffer.Reader.Position, count,
                                 SocketFlags.None);
+                            byte[] sendBytes = new byte[length];
+                            Array.Copy(sendBuffer.Reader.Node.Value, sendBuffer.Reader.Position, sendBytes, 0, sendBytes.Length);
+                            SocketSendEvent(sendBytes);
                             sendBuffer.Reader.MovePosition(length);
                         }
                         catch (Exception e)
@@ -263,6 +276,29 @@ namespace HiSocket
             {
                 OnDisconnected();
             }
+        }
+
+        private void SocketSendEvent(byte[] bytes)
+        {
+            if (OnSocketSend != null)
+            {
+                OnSocketSend(bytes);
+            }
+        }
+
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        public void Dispose()
+        {
+            DisConnect();
+
+            Socket = null;
+            OnConnecting = null;
+            OnConnected = null;
+            OnDisconnected = null;
+            OnSocketReceive = null;
+            OnSocketSend = null;
+            sendBuffer = null;
+            receiveBuffer = null;
         }
     }
 }

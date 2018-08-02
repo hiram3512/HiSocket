@@ -20,7 +20,7 @@ namespace HiSocket
         /// <summary>
         /// Trigger when send message
         /// </summary>
-        event Action<byte[]> OnSend;//already packed
+        event Action<byte[]> OnSend;//havent packed
 
         /// <summary>
         /// Trigger when recieve message
