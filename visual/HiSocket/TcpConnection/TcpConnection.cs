@@ -1,5 +1,5 @@
 ﻿/***************************************************************
- * Description: 
+ * Description: This class for user simply use tcp socket in project
  *
  * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
