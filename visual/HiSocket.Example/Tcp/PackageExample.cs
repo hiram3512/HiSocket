@@ -1,5 +1,5 @@
 ﻿/***************************************************************
- * Description: 
+ * Description: Split byte stream, also you can do encription or zip/unzip here
  *
  * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
