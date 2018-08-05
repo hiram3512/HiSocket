@@ -12,27 +12,19 @@ namespace HiSocket.Test
 
         public TcpServer()
         {
-            Init();
-        }
-
-        void Init()
-        {
-            IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
-            IPEndPoint iep = new IPEndPoint(ipAddress, 7777);
+            IPEndPoint iep = Common.GetIpEndPoint();
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(iep);
             socket.Listen(5);
             socket.NoDelay = true;
             new Thread(Watcher).Start();
         }
-
         void Watcher()
         {
-            byte[] buffer = new byte[1<<30];
+            byte[] buffer = new byte[1<<16];
             while (isOn)
             {
                 var client = socket.Accept();
-                isOn = false;
                 int length = 0;
                 while ((length = client.Receive(buffer)) > 0)
                 {
