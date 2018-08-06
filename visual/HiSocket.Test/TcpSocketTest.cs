@@ -144,6 +144,5 @@ namespace HiSocket.Test
             server.Close();
             server = null;
         }
-
     }
 }

@@ -17,14 +17,12 @@ namespace HiSocket
         private readonly IByteArray send = new ByteArray();
         private readonly IByteArray receive = new ByteArray();
         private Dictionary<string, IPlugin> plugins = new Dictionary<string, IPlugin>();
-        public event Action OnConstruct;
         public event Action<byte[]> OnSend;
         public event Action<byte[]> OnReceive;
         public TcpConnection(IPackage package)
         {
             this.package = package;
             OnSocketReceive += OnSocketReceiveHandler;
-            ConstructEvent();
         }
 
         /// <summary>
@@ -73,13 +71,6 @@ namespace HiSocket
         {
             AssertThat.IsNotNullOrEmpty(name);
             plugins.Remove(name);
-        }
-        void ConstructEvent()
-        {
-            if (OnConstruct != null)
-            {
-                OnConstruct();
-            }
         }
 
         void SendEvent(byte[] bytes)

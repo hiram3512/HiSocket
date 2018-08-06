@@ -12,12 +12,6 @@ namespace HiSocket
     public interface IConnection
     {
         /// <summary>
-        /// When construct this will trigger, you can modify logic by yourself.
-        /// For exmaple, you can change socket's ipv6 or modify udp's buffer. etc.
-        /// </summary>
-        event Action OnConstruct;
-
-        /// <summary>
         /// Trigger when send message
         /// </summary>
         event Action<byte[]> OnSend;//havent packed

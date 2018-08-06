@@ -13,14 +13,12 @@ namespace HiSocket
 {
     public class UdpConnection : UdpSocket, IConnection
     {
-        public event Action OnConstruct;
         public event Action<byte[]> OnSend;
         public event Action<byte[]> OnReceive;
 
         private Dictionary<string, IPlugin> plugins = new Dictionary<string, IPlugin>();
         public UdpConnection(int bufferSize = 1 << 16) : base(bufferSize)
         {
-            ConstructEvent();
             OnSocketReceive += OnSocketReceiveHandler;
         }
 
@@ -63,13 +61,6 @@ namespace HiSocket
         {
             AssertThat.IsNotNullOrEmpty(name);
             plugins.Remove(name);
-        }
-        void ConstructEvent()
-        {
-            if (OnConstruct != null)
-            {
-                OnConstruct();
-            }
         }
         void OnSocketReceiveHandler(byte[] bytes)
         {
