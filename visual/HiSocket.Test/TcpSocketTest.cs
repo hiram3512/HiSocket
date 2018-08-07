@@ -125,11 +125,11 @@ namespace HiSocket.Test
             {
                 length += x.Length;
             };
-            tcp.Send(new byte[1 << 20]);
-            Common.WaitValue(ref length, 1 << 20, 10000);
+            tcp.Send(new byte[1 << 10]);
+            Common.WaitValue(ref length, 1 << 10, 10000);
             tcp.DisConnect();
             Console.WriteLine(length);
-            Assert.AreEqual(length, 1 << 20);
+            Assert.AreEqual(length, 1 << 10);
         }
 
         [TestInitialize]

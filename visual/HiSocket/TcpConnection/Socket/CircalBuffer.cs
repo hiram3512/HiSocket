@@ -8,7 +8,11 @@ using System;
 
 namespace HiFramework
 {
-    public class CircullarBuffer<T> : ICircullarBuffer<T>
+    /// <summary>
+    /// This is a circular buffer class for reuse memory
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class CircularBuffer<T> : ICircularBuffer<T>
     {
         /// <summary>
         /// Read and write state
@@ -87,7 +91,7 @@ namespace HiFramework
             }
         }
 
-        public CircullarBuffer(int size = 2 << 13)
+        public CircularBuffer(int size = 2 << 13)
         {
             Size = size;
             Array = new T[Size];
@@ -101,11 +105,11 @@ namespace HiFramework
         {
             if (length > Size)
             {
-                throw new Exception("Length is large than array's capacity");
+                throw new ArgumentOutOfRangeException("Length is large than array's capacity");
             }
             if (length > HowManyCanRead)
             {
-                throw new Exception("Read length large than data's length");
+                throw new ArgumentOutOfRangeException("Read length large than data's length");
             }
             var index = ReadPosition + length;
             if (index > Size)

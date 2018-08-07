@@ -90,7 +90,7 @@ namespace HiSocket
                         var socket = x.AsyncState as Socket;
                         AssertThat.IsNotNull(socket);
                         int length = socket.EndSend(x);
-                        //Todo: because this is udp protocol, this is no sence
+                        //Todo: because this is udp protocol
                         if (length != bytes.Length) { }
                     }
                     catch (Exception e)
@@ -147,6 +147,13 @@ namespace HiSocket
             {
                 OnSocketReceive(bytes);
             }
+        }
+
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        public void Dispose()
+        {
+            buffer = null;
+            Socket = null;
         }
     }
 }

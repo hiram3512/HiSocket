@@ -5,4 +5,3 @@ D:\MyGit\github\HiSocket\visual\HiSocket\obj\Debug\HiSocket.dll
 D:\MyGit\github\HiSocket\visual\HiSocket\obj\Debug\HiSocket.pdb
 D:\MyGit\github\HiSocket\visual\release\HiSocket.dll
 D:\MyGit\github\HiSocket\visual\release\HiSocket.pdb
-D:\MyGit\github\HiSocket\visual\HiSocket\obj\Debug\HiSocket.csprojAssemblyReference.cache

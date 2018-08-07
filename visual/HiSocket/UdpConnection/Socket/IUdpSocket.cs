@@ -14,7 +14,7 @@ namespace HiSocket
     /// <summary>
     /// socket api
     /// </summary>
-    public interface IUdpSocket
+    public interface IUdpSocket : IDisposable
     {
         /// <summary>
         /// Get socket and modify it(for example: set timeout)

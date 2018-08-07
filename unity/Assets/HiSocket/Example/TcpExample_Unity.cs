@@ -12,26 +12,30 @@ using UnityEngine;
 
 public class TcpExample_Unity : MonoBehaviour
 {
-    private TcpConnection _tcp;
+    private TcpConnection tcp;
     // Use this for initialization
     void Start()
     {
         var ip = IPAddress.Parse("127.0.0.1");
         var iep = new IPEndPoint(ip, 7777);
-        _tcp = new TcpConnection(new PackageExample());
-        _tcp.OnConnected += OnConnected;
-        _tcp.OnReceive += OnReceive;
-        //_tcp.OnError
-        //_tcp.OnDisconnected
+        tcp = new TcpConnection(new PackageExample());
+        tcp.OnConnecting += OnConnecting;
+        tcp.OnConnected += OnConnected;
+        tcp.OnReceive += OnReceive;
+        //tcp.OnDisconnected
 
+        tcp.Connect(iep);//start connect
+    }
 
-        _tcp.Connect(iep);
+    void OnConnecting()
+    {
+        Debug.Log("connecting...");
     }
 
     void OnConnected()
     {
         Debug.Log("connect success");
-        _tcp.Send(new byte[10]);
+        tcp.Send(new byte[10]);
     }
 
     void OnReceive(byte[] bytes)
@@ -41,8 +45,6 @@ public class TcpExample_Unity : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        _tcp.OnConnected -= OnConnected;
-        _tcp.OnReceive -= OnReceive;
-        _tcp.DisConnect();
+        tcp.Dispose();
     }
 }

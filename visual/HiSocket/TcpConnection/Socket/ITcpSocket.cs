@@ -1,5 +1,5 @@
 ﻿/***************************************************************
- * Description: 
+ * Description: Note: the recommand is TtcpConnection.cs
  *
  * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
@@ -8,6 +8,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using HiFramework;
 
 namespace HiSocket
 {
@@ -25,6 +26,17 @@ namespace HiSocket
         /// if connected
         /// </summary>
         bool IsConnected { get; }
+
+        /// <summary>
+        /// Send buffer
+        /// If disconnect, user can operate the remain data
+        /// </summary>
+        ICircularBuffer<byte> SendBuffer { get; }
+
+        /// <summary>
+        /// Receive buffer
+        /// </summary>
+        ICircularBuffer<byte> ReceiveBuffer { get; }
 
         /// <summary>
         /// trigger when connecting

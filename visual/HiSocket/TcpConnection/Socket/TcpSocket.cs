@@ -14,24 +14,56 @@ namespace HiSocket
 {
     public class TcpSocket : ITcpSocket
     {
+        /// <summary>
+        /// Get socket and modify it(for example: set timeout)
+        /// </summary>
         public Socket Socket { get; private set; }
 
+        /// <summary>
+        /// if connected
+        /// </summary>
         public bool IsConnected
         {
             get { return Socket != null && Socket.Connected; }
         }
 
+        /// <summary>
+        /// trigger when connecting
+        /// </summary>
         public event Action OnConnecting;
+
+        /// <summary>
+        /// trigger when connected
+        /// </summary>
         public event Action OnConnected;
+
+        /// <summary>
+        /// trigger when disconnected when user initiate close socket
+        /// </summary>
         public event Action OnDisconnected;
+
+        /// <summary>
+        /// trigger when get message from server, it havent unpacked
+        /// use .net socket api
+        /// </summary>
         public event Action<byte[]> OnSocketReceive;
+
+        /// <summary>
+        /// trigger when send message to server, it already packed
+        /// use .net socket api
+        /// </summary>
         public event Action<byte[]> OnSocketSend;
 
-        //private IByteBlockBuffer sendBuffer;
-        //private IByteBlockBuffer receiveBuffer;
+        /// <summary>
+        /// Send buffer
+        /// If disconnect, user can operate the remain data
+        /// </summary>
+        public ICircularBuffer<byte> SendBuffer { get; private set; }
 
-        private ICircullarBuffer<byte> sendBuffer;
-        private ICircullarBuffer<byte> receiveBuffer;
+        /// <summary>
+        /// Receive buffer
+        /// </summary>
+        public ICircularBuffer<byte> ReceiveBuffer { get; private set; }
 
         private readonly object locker = new object();
 
@@ -41,10 +73,13 @@ namespace HiSocket
         /// <param name="bufferSize"></param>
         public TcpSocket(int bufferSize = 1 << 16)
         {
-            sendBuffer = new CircullarBuffer<byte>(bufferSize);
-            receiveBuffer = new CircullarBuffer<byte>(bufferSize);
+            SendBuffer = new CircularBuffer<byte>(bufferSize);
+            ReceiveBuffer = new CircularBuffer<byte>(bufferSize);
         }
 
+        /// <summary>
+        /// Connect to server
+        /// </summary>
         public void Connect(IPEndPoint iep)
         {
             lock (locker)
@@ -53,9 +88,17 @@ namespace HiSocket
                 {
                     throw new Exception("Already Connected");
                 }
-                AssertThat.IsNotNull(iep);
+                AssertThat.IsNotNull(iep, "iep is null");
                 ConnectingEvent();
-                Socket = new Socket(iep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                try
+                {
+                    Socket = new Socket(iep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.ToString());
+                }
+                //Start connect
                 try
                 {
                     Socket.BeginConnect(iep, delegate (IAsyncResult ar)
@@ -111,6 +154,10 @@ namespace HiSocket
             Connect(iep);
         }
 
+        /// <summary>
+        /// Send bytes to server
+        /// </summary>
+        /// <param name="bytes"></param>
         public void Send(byte[] bytes)
         {
             lock (locker)
@@ -119,7 +166,7 @@ namespace HiSocket
                 {
                     throw new Exception("From send : disconnected");
                 }
-                sendBuffer.Write(bytes);
+                SendBuffer.Write(bytes);
             }
         }
 
@@ -134,41 +181,74 @@ namespace HiSocket
 
         private void Send()
         {
-            var count = sendBuffer.EState == CircullarBuffer<byte>.State.WriteAhead
-                ? sendBuffer.WritePosition - sendBuffer.ReadPosition
-                : sendBuffer.Size - sendBuffer.ReadPosition;
-            Socket.BeginSend(sendBuffer.Array, sendBuffer.ReadPosition, count, SocketFlags.None,
-                EndSend, Socket);
+            var count = SendBuffer.EState == CircularBuffer<byte>.State.WriteAhead
+                ? SendBuffer.WritePosition - SendBuffer.ReadPosition
+                : SendBuffer.Size - SendBuffer.ReadPosition;
+            try
+            {
+                Socket.BeginSend(SendBuffer.Array, SendBuffer.ReadPosition, count, SocketFlags.None,
+                    EndSend, Socket);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.ToString());
+            }
+
         }
 
         private void EndSend(IAsyncResult ar)
         {
-            var socket = ar.AsyncState as Socket;
-            AssertThat.IsNotNull(socket);
-            int length = socket.EndSend(ar);
+            int length = 0;
+            try
+            {
+                var socket = ar.AsyncState as Socket;
+                AssertThat.IsNotNull(socket);
+                length = socket.EndSend(ar);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
             byte[] sendBytes = new byte[length];
-            Array.Copy(sendBuffer.Array, sendBuffer.ReadPosition, sendBytes, 0, sendBytes.Length);
+            Array.Copy(SendBuffer.Array, SendBuffer.ReadPosition, sendBytes, 0, sendBytes.Length);
             SocketSendEvent(sendBytes);
-            sendBuffer.MoveReadPosition(length);
+            SendBuffer.MoveReadPosition(length);
             Send();
         }
 
         private void Receive()
         {
-            var count = sendBuffer.EState == CircullarBuffer<byte>.State.WriteAhead
-                ? sendBuffer.Size - sendBuffer.WritePosition
-                : sendBuffer.ReadPosition - sendBuffer.WritePosition;
-            Socket.BeginReceive(receiveBuffer.Array, receiveBuffer.WritePosition, count, SocketFlags.None,
-                EndReceive, Socket);
+            var count = SendBuffer.EState == CircularBuffer<byte>.State.WriteAhead
+                ? SendBuffer.Size - SendBuffer.WritePosition
+                : SendBuffer.ReadPosition - SendBuffer.WritePosition;
+            try
+            {
+                Socket.BeginReceive(ReceiveBuffer.Array, ReceiveBuffer.WritePosition, count, SocketFlags.None,
+                    EndReceive, Socket);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.ToString());
+            }
         }
 
         private void EndReceive(IAsyncResult ar)
         {
-            var socket = ar.AsyncState as Socket;
-            AssertThat.IsNotNull(socket);
-            int length = socket.EndReceive(ar);
-            receiveBuffer.MoveWritePosition(length);
-            var bytes = receiveBuffer.Read();
+            int length = 0;
+            try
+            {
+                var socket = ar.AsyncState as Socket;
+                AssertThat.IsNotNull(socket);
+                length = socket.EndReceive(ar);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            ReceiveBuffer.MoveWritePosition(length);
+            var bytes = ReceiveBuffer.Read();
             SocketReceiveEvent(bytes);
             Receive();
         }
@@ -179,8 +259,15 @@ namespace HiSocket
             {
                 if (IsConnected)
                 {
-                    Socket.Shutdown(SocketShutdown.Both);
-                    Socket.Close();
+                    try
+                    {
+                        Socket.Shutdown(SocketShutdown.Both);
+                        Socket.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.ToString());
+                    }
                     DisconnectedEvnet();
                 }
             }
@@ -206,7 +293,7 @@ namespace HiSocket
         {
             if (OnSocketReceive != null)
             {
-                OnSocketReceive(bytes);
+                OnSocketReceive( bytes);
             }
         }
 
@@ -237,8 +324,8 @@ namespace HiSocket
             OnDisconnected = null;
             OnSocketReceive = null;
             OnSocketSend = null;
-            sendBuffer = null;
-            receiveBuffer = null;
+            SendBuffer = null;
+            ReceiveBuffer = null;
         }
     }
 }
