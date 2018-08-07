@@ -8,28 +8,27 @@
 
 ### 如何使用
 可以选择使用dll或者使用源码,把它添加到自己的工程中即可使用.
-- Dll: 可以从此下载 HiSocket dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
-- 源码: 源码在此文件夹中"HiSocket/visual"
-   (ps. 源码的单元测试项目HiSocket.Test包含一些示例代码)
+- Dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
+- 源码: [源码](https://github.com/hiramtan/HiSocket/tree/master/visual)
   
 
  快速开始:
 ```csharp
-        private IPackage _package = new PackageExample();
-        private TcpConnection _tcp;
+        //tcp example
+        private IPackage package = new PackageExample();
+        private TcpConnection tcp;
         void Init()
         {
-            _tcp = new TcpConnection(_package);
-            _tcp.OnConnected += OnConnected;
-            _tcp.OnReceive += OnReceive;
+            tcp = new TcpConnection(package);
+            tcp.OnConnected += OnConnected;
+            tcp.OnReceive += OnReceive;
             //...
             //...
         }
         void OnConnected()
         {
             //connect success
-            _tcp.Send(new byte[10]);//send message
-            _tcp.DisConnect();//disconnect
+            tcp.Send(new byte[10]);//send message
         }
 
         void OnReceive(byte[] bytes)
@@ -37,6 +36,9 @@
             //get message from server
         }
 ```
+更多示例:
+- C#项目示例:[示例](https://github.com/hiramtan/HiSocket/tree/master/visual/HiSocket.Example)
+- Unity项目示例:[示例](https://github.com/hiramtan/HiSocket/tree/master/unity)
 
 -----
 
@@ -73,6 +75,17 @@
 - 如果使用Tcp协议需要实现IPackage接口处理粘包拆包.
 - 如果使用Udp协议需要声明缓冲区大小.
 - Ping: 源码包含一个Ping插件可以使用,但是如果用在unity3d工程中会报错(因为mono的问题,在.net2.0会报错.net4.6可以正常使用)
+
+### 高级功能
+- 如果对Socket很熟悉,也可以使用TcpSocket(UdpSocket)来实现功能,但是还是推荐使用TcpConnection(UdpConnection)的方式.
+- 通过接口可以访问底层Socket对象扩展逻辑,比如修改超时时间.
+- 通过接口可以获得发送接收缓冲区,比如断开连接时是否要将发送缓冲区数据全部发出?重连后怎样处理发送缓冲区的数据.
+- OnSocketReceive和OnReceive是不同的,比如当OnSocketReceive接受大小是100字节,当用户解包时不做操作,OnReceive大小是100字节,当用户解包时做解压缩(解密等)操作后,OnReceive大小不再是100.
+- 可以向TcpConnection(UdpConnection)添加不同的插件完成所需的功能,
+- 注册基类可以方便快速注册消息(基于反射)
+- Byte block buffer 采用有序链表实现,当有区块空闲时会重用区块.
+- .etc
+---------
 
 
 ### 介绍
@@ -122,13 +135,7 @@ Udp协议提供不可靠的报文消息,用户无法知道当前连接状态,但
 - 字节消息
 - 加密
 
-### 高级功能
-- 如果对Socket很熟悉,也可以使用TcpSocket(UdpSocket)来实现功能,但是还是推荐使用TcpConnection(UdpConnection)的方式.
-- 可以向TcpConnection(UdpConnection)添加不同的插件完成所需的功能,
-- 注册基类可以方便快速注册消息(基于反射)
-- Byte block buffer 采用有序链表实现,当有区块空闲时会重用区块.
-- .etc
----------
+
 
 ### Example
 在**HiSocketExample** 和 **HiSocket.unitypackage**有很多示例, 其中有一些如下:

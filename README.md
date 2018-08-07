@@ -9,27 +9,26 @@ It is a lightweight socket solution, you can used it in Unity3d or C# project
 
 ### How to use
 You can choose use dll or source code, add it to your project.
-- Dll: You can download HiSocket dll from here: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
-- Source code: source code is in "HiSocket/visual" folder.
-  (ps. there also a "HiSocket.Test" unit test project contains some example in source code)
+- Dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
+- Source code: [Source code](https://github.com/hiramtan/HiSocket/tree/master/visual)
 
  Quick Start:
 ```csharp
-        private IPackage _package = new PackageExample();
-        private TcpConnection _tcp;
+        //tcp example
+        private IPackage package = new PackageExample();
+        private TcpConnection tcp;
         void Init()
         {
-            _tcp = new TcpConnection(_package);
-            _tcp.OnConnected += OnConnected;
-            _tcp.OnReceive += OnReceive;
+            tcp = new TcpConnection(package);
+            tcp.OnConnected += OnConnected;
+            tcp.OnReceive += OnReceive;
             //...
             //...
         }
         void OnConnected()
         {
             //connect success
-            _tcp.Send(new byte[10]);//send message
-            _tcp.DisConnect();//disconnect
+            tcp.Send(new byte[10]);//send message
         }
 
         void OnReceive(byte[] bytes)
@@ -37,6 +36,10 @@ You can choose use dll or source code, add it to your project.
             //get message from server
         }
 ```
+
+More example:
+- C# project example:[Example](https://github.com/hiramtan/HiSocket/tree/master/visual/HiSocket.Example)
+- Unity project example:[Example](https://github.com/hiramtan/HiSocket/tree/master/unity)
 
 -----
 
@@ -74,6 +77,17 @@ This project contains:
 - If you use Tcp socket, you should implement IPackage interface to pack or unpack message.
 - If you use Udp socket, you should declaring buffer size.
 - Ping: there is a ping plugin you can used, but if you are used in unity3d because of the bug of mono, it will throw an error on .net2.0(.net 4.6 will be fine, also you can use unity's api to get ping time)
+
+
+### Advanced
+- If you are clear about socket, you also can use TcpSocket(UdpSocket) to achieve your logic, anyway the recommend is TcpConnection(UdpConnection).
+- You can use API get socket and do extra logic, for example modify time out time
+- You can use API get send and receive buffer, for example when disconnect should send all send buffer's data to server? or when reconnect how to process send buffer's data
+- OnSocketReceive and OnReceive are diffrent, for example OnSocketReceive size is 100 byte, if user do nothing when uppack OnReceive size is 100. but when user do some zip/unzip(encription.etc) OnReceive size is not 100 anymore. 
+- You can add many different plugins based on TcpConnection(UdpConnection) to achieve different functions.
+- There are a message register base class help user to quick register id and callback(based on reflection)
+- Byte block buffer reuse block when some block is free.
+- .etc
 
 
 ### Instructions
@@ -123,12 +137,7 @@ If use Udp connection shold define send and receive's buffer size.
 - Bytes message
 - Encription
 
-### Advanced
-- If you are clear about socket, you also can use TcpSocket(UdpSocket) to achieve your logic, anyway the recommend is TcpConnection(UdpConnection).
-- You can add many different plugins based on TcpConnection(UdpConnection) to achieve different functions.
-- There are a message register base class help user to quick register id and callback(based on reflection)
-- Byte block buffer use linked list and reuse block when some block is free.
-- .etc
+
 ---------
 
 ### Example
