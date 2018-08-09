@@ -84,10 +84,7 @@ namespace HiSocket
         {
             lock (locker)
             {
-                if (IsConnected)
-                {
-                    throw new Exception("Already Connected");
-                }
+                AssertThat.IsFalse(IsConnected, "Already Connected");
                 AssertThat.IsNotNull(iep, "iep is null");
                 ConnectingEvent();
                 try
@@ -293,7 +290,7 @@ namespace HiSocket
         {
             if (OnSocketReceive != null)
             {
-                OnSocketReceive( bytes);
+                OnSocketReceive(bytes);
             }
         }
 
@@ -324,8 +321,8 @@ namespace HiSocket
             OnDisconnected = null;
             OnSocketReceive = null;
             OnSocketSend = null;
-            SendBuffer = null;
-            ReceiveBuffer = null;
+            SendBuffer.Dispose();
+            ReceiveBuffer.Dispose();
         }
     }
 }
