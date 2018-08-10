@@ -24,6 +24,7 @@ You can choose use dll or source code, add it to your project.
             tcp.OnReceive += OnReceive;
             //...
             //...
+            tcp.Connect("127.0.0.1",999);
         }
         void OnConnected()
         {
