@@ -10,7 +10,7 @@ It is a lightweight socket solution, you can used it in Unity3d or C# project
 ### How to use
 You can choose use dll or source code, add it to your project.
 - Dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
-- Source code: [Source code](https://github.com/hiramtan/HiSocket/tree/master/visual)
+- Source code: [Source code](https://github.com/hiramtan/HiSocket/tree/master/src)
 
  Quick Start:
 ```csharp

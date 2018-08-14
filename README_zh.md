@@ -9,7 +9,7 @@
 ### 如何使用
 可以选择使用dll或者使用源码,把它添加到自己的工程中即可使用.
 - Dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
-- 源码: [源码](https://github.com/hiramtan/HiSocket/tree/master/visual)
+- 源码: [源码](https://github.com/hiramtan/HiSocket/tree/master/src)
   
 
  快速开始:
