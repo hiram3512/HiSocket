@@ -190,25 +190,25 @@ Package example:
 ```
 
 ```csharp
-private IPackage _package = new PackageExample();
-        private TcpConnection _tcp;
+private IPackage package = new PackageExample();
+        private TcpConnection tcp;
         static void Main(string[] args)
         {
 
         }
         void Init()
         {
-            _tcp = new TcpConnection(_package);
-            _tcp.OnConnected += OnConnected;
-            _tcp.OnReceive += Receive;
+            tcp = new TcpConnection(package);
+            tcp.OnConnected += OnConnected;
+            tcp.OnReceive += Receive;
             //_tcp.OnError
             //_tcp.OnDisconnected
         }
         void OnConnected()
         {
             //connect success
-            _tcp.Send(new byte[10]);//send message
-            _tcp.DisConnect();//disconnect
+            tcp.Send(new byte[10]);//send message
+            tcp.DisConnect();//disconnect
         }
 
         void Receive(byte[] bytes)
