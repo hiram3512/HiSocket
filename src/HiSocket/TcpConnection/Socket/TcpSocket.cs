@@ -216,9 +216,9 @@ namespace HiSocket
 
         private void Receive()
         {
-            var count = SendBuffer.EState == CircularBuffer<byte>.State.WriteAhead
-                ? SendBuffer.Size - SendBuffer.WritePosition
-                : SendBuffer.ReadPosition - SendBuffer.WritePosition;
+            var count = ReceiveBuffer.EState == CircularBuffer<byte>.State.WriteAhead
+                ? ReceiveBuffer.Size - ReceiveBuffer.WritePosition
+                : ReceiveBuffer.ReadPosition - ReceiveBuffer.WritePosition;
             try
             {
                 Socket.BeginReceive(ReceiveBuffer.Array, ReceiveBuffer.WritePosition, count, SocketFlags.None,
