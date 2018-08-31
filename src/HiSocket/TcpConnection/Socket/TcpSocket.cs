@@ -245,7 +245,7 @@ namespace HiSocket
                 throw;
             }
             ReceiveBuffer.MoveWritePosition(length);
-            var bytes = ReceiveBuffer.Read();
+            var bytes = ReceiveBuffer.ReadAll();
             SocketReceiveEvent(bytes);
             Receive();
         }

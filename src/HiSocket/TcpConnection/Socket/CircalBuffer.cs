@@ -112,7 +112,7 @@ namespace HiFramework
                 throw new ArgumentOutOfRangeException("Read length large than data's length");
             }
             var index = ReadPosition + length;
-            if (index > Size)
+            if (index >= Size)
             {
                 index -= Size;
             }
@@ -134,7 +134,7 @@ namespace HiFramework
                 throw new Exception("Write length large than space");
             }
             var index = WritePosition + length;
-            if (index > Size)
+            if (index >= Size)
             {
                 index -= Size;
             }
@@ -178,7 +178,7 @@ namespace HiFramework
         /// Read all from array
         /// </summary>
         /// <returns></returns>
-        public T[] Read()
+        public T[] ReadAll()
         {
             T[] ts = new T[HowManyCanRead];
             if (EState == State.WriteAhead)

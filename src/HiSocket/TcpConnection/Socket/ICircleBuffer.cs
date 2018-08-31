@@ -71,6 +71,6 @@ namespace HiFramework
         /// Read all from array
         /// </summary>
         /// <returns></returns>
-        T[] Read();
+        T[] ReadAll();
     }
 }
