@@ -110,7 +110,6 @@ namespace HiSocket
                                 throw new Exception("Connect faild");
                             }
                             ConnectedEvent();
-                            Send();
                             Receive();
                         }
                         catch (Exception e)
@@ -163,7 +162,15 @@ namespace HiSocket
                 {
                     throw new Exception("From send : disconnected");
                 }
-                SendBuffer.Write(bytes);
+                SendBuffer.Write(bytes);//use for geting havent send successfull data
+                try
+                {
+                    Socket.BeginSend(bytes, 0, bytes.Length, SocketFlags.None, EndSend, Socket);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.ToString());
+                }
             }
         }
 
@@ -176,25 +183,13 @@ namespace HiSocket
             Send(bytes.Array);
         }
 
-        private void Send()
-        {
-            var count = SendBuffer.EState == CircularBuffer<byte>.State.WriteAhead
-                ? SendBuffer.WritePosition - SendBuffer.ReadPosition
-                : SendBuffer.Size - SendBuffer.ReadPosition;
-            try
-            {
-                Socket.BeginSend(SendBuffer.Array, SendBuffer.ReadPosition, count, SocketFlags.None,
-                    EndSend, Socket);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.ToString());
-            }
-
-        }
-
         private void EndSend(IAsyncResult ar)
         {
+            //User disconnect connection proactively
+            if (!IsConnected)
+            {
+                return;
+            }
             int length = 0;
             try
             {
@@ -211,14 +206,6 @@ namespace HiSocket
             Array.Copy(SendBuffer.Array, SendBuffer.ReadPosition, sendBytes, 0, sendBytes.Length);
             SocketSendEvent(sendBytes);
             SendBuffer.MoveReadPosition(length);
-            if (length > 0)
-            {
-                Send();
-            }
-            else
-            {
-                DisconnectedEvnet();
-            }
         }
 
         private void Receive()
@@ -239,6 +226,11 @@ namespace HiSocket
 
         private void EndReceive(IAsyncResult ar)
         {
+            //User disconnect connection proactively
+            if (!IsConnected)
+            {
+                return;
+            }
             int length = 0;
             try
             {
@@ -257,10 +249,6 @@ namespace HiSocket
             if (length > 0)
             {
                 Receive();
-            }
-            else
-            {
-                DisconnectedEvnet();
             }
         }
 

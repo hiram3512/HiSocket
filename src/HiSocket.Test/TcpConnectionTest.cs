@@ -50,7 +50,10 @@ namespace HiSocket.Test
             {
                 Console.WriteLine("send:" + BitConverter.ToInt32(x, 0)); sendList.Add(BitConverter.ToInt32(x, 0));
             };
-            tcp.OnReceive += x => { Console.WriteLine("receive:" + BitConverter.ToInt32(x, 0)); receiveList.Add(BitConverter.ToInt32(x, 0)); };
+            tcp.OnReceive += x =>
+            {
+                Console.WriteLine("receive:" + BitConverter.ToInt32(x, 0)); receiveList.Add(BitConverter.ToInt32(x, 0));
+            };
             tcp.Connect(Common.GetIpEndPoint());
             Common.WaitConnected(tcp);
             for (int i = 0; i < 10000; i++)
@@ -58,7 +61,7 @@ namespace HiSocket.Test
                 tcp.Send(BitConverter.GetBytes(i));
             }
             //Wait receive data
-            Common.WaitListCountEqual(sendList, receiveList, 10000);
+            Common.WaitListCountEqual(sendList, receiveList);
             for (int i = 0; i < sendList.Count; i++)
             {
                 Assert.AreEqual(sendList[i], receiveList[i]);
