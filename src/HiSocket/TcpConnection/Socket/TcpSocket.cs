@@ -211,7 +211,14 @@ namespace HiSocket
             Array.Copy(SendBuffer.Array, SendBuffer.ReadPosition, sendBytes, 0, sendBytes.Length);
             SocketSendEvent(sendBytes);
             SendBuffer.MoveReadPosition(length);
-            Send();
+            if (length > 0)
+            {
+                Send();
+            }
+            else
+            {
+                DisconnectedEvnet();
+            }
         }
 
         private void Receive()
@@ -247,7 +254,14 @@ namespace HiSocket
             ReceiveBuffer.MoveWritePosition(length);
             var bytes = ReceiveBuffer.ReadAll();
             SocketReceiveEvent(bytes);
-            Receive();
+            if (length > 0)
+            {
+                Receive();
+            }
+            else
+            {
+                DisconnectedEvnet();
+            }
         }
 
         public void DisConnect()
