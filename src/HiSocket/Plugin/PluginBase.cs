@@ -12,7 +12,7 @@ namespace HiSocket
         /// <summary>
         /// Plugins name
         /// </summary>
-        public string Name { get; }
+        public string Name { get; set; }
         public IConnection Connection { get; set; }
 
         public PluginBase(string name)
