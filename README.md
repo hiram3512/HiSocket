@@ -39,7 +39,7 @@ You can choose use dll or source code, add it to your project.
 ```
 
 More example:
-- C# project example:[Example](https://github.com/hiramtan/HiSocket/tree/master/visual/HiSocket.Example)
+- C# project example:[Example](https://github.com/hiramtan/HiSocket/tree/master/src/HiSocket.Example)
 - Unity project example:[Example](https://github.com/hiramtan/HiSocket/tree/master/unity)
 
 -----

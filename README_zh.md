@@ -38,7 +38,7 @@
         }
 ```
 更多示例:
-- C#项目示例:[示例](https://github.com/hiramtan/HiSocket/tree/master/visual/HiSocket.Example)
+- C#项目示例:[示例](https://github.com/hiramtan/HiSocket/tree/master/src/HiSocket.Example)
 - Unity项目示例:[示例](https://github.com/hiramtan/HiSocket/tree/master/unity)
 
 -----
