@@ -10,11 +10,19 @@ namespace HiSocket.Example
         }
     }
 
-    class PerMsg : MsgRegistBase
+    public class OneMsg : MsgRegistBase
     {
         public override void Regist()
         {
-            MsgRegister.Regist("key", (x) => { });
+            MsgRegister.Regist("key1", (x) => { });//This will auto regist
+        }
+    }
+
+    public class TwoMsg : MsgRegistBase
+    {
+        public override void Regist()
+        {
+            MsgRegister.Regist("key2", (x) => { });//This will auto regist
         }
     }
 }
