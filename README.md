@@ -74,7 +74,7 @@ This project contains:
 
 ### Details
 - Tcp and Udp are all use async connection in main thread(avoid thread blocking).
-- High-performance buffer avoid memory allocation every time, and reduce garbage collection.[Circular_buffer](https://en.wikipedia.org/wiki/Circular_buffer) 
+- Using [Circular_buffer](https://en.wikipedia.org/wiki/Circular_buffer) to avoid memory allocation every time, and reduce garbage collection.
 - You can get current connect state and message by adding listener of event.
 - If you use Tcp socket, you should implement IPackage interface to pack or unpack message.
 - If you use Udp socket, you should declaring buffer size.
@@ -88,7 +88,7 @@ This project contains:
 - OnSocketReceive and OnReceive are diffrent, for example OnSocketReceive size is 100 byte, if user do nothing when uppack OnReceive size is 100. but when user do some zip/unzip(encription.etc) OnReceive size is not 100 anymore. 
 - You can add many different plugins based on TcpConnection(UdpConnection) to achieve different functions.
 - There are a message register base class help user to quick register id and callback(based on reflection)
-- The encryption is use AES.
+- The encryption is use AES, if you want to use encryption you can use the API to encrypte your bytes.
 - .etc
 
 
