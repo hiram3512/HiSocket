@@ -85,7 +85,7 @@
 - OnSocketReceive和OnReceive是不同的,比如当OnSocketReceive接受大小是100字节,当用户解包时不做操作,OnReceive大小是100字节,当用户解包时做解压缩(解密等)操作后,OnReceive大小不再是100.
 - 可以向TcpConnection(UdpConnection)添加不同的插件完成所需的功能,
 - 注册基类可以方便快速注册消息(基于反射)
-- 加密采用AES的方式,如果想使用加密可以调用这部分的接口.
+- 加密采用AES的方式,如果想使用加密可以调用这部分的接口加密字节数据.
 - .etc
 ---------
 
