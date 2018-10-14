@@ -7,7 +7,7 @@
 -----
 
 ### 如何使用
-可以选择使用NuGet包,dll或者源码,把它添加到自己的工程中即可使用.(最方便的使用方法是使用NuGet包)
+可以选择使用NuGet包,dll或者源码,把它添加到自己的工程中即可使用.
 - NuGet: [HiSocket NuGet package](https://www.nuget.org/packages/HiSocket)
 - Dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
 - 源码: [源码](https://github.com/hiramtan/HiSocket/tree/master/src)
