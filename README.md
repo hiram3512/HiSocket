@@ -8,7 +8,7 @@ It is a lightweight socket solution, you can used it in Unity3d or C# project
 [中文说明](https://github.com/hiramtan/HiSocket/blob/master/README_zh.md) 
 
 ### How to use
-You can choose use NuGet package, dll or source code, add it to your project.(The easiest way how to use HiSocket is via the HiSocket NuGet package)
+You can choose use NuGet package, dll or source code, add it to your project.
 - NuGet: [HiSocket NuGet package](https://www.nuget.org/packages/HiSocket)
 - Dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
 - Source code: [Source code](https://github.com/hiramtan/HiSocket/tree/master/src)
@@ -74,7 +74,7 @@ This project contains:
 
 ### Details
 - Tcp and Udp are all use async connection in main thread(avoid thread blocking).
-- High-performance buffer avoid memory allocation every time, and reduce garbage collection.
+- Using [Circular_buffer](https://en.wikipedia.org/wiki/Circular_buffer) to avoid memory allocation every time, and reduce garbage collection.
 - You can get current connect state and message by adding listener of event.
 - If you use Tcp socket, you should implement IPackage interface to pack or unpack message.
 - If you use Udp socket, you should declaring buffer size.
@@ -83,12 +83,12 @@ This project contains:
 
 ### Advanced
 - If you are clear about socket, you also can use TcpSocket(UdpSocket) to achieve your logic, anyway the recommend is TcpConnection(UdpConnection).
-- You can use API get socket and do extra logic, for example modify time out time
-- You can use API get send and receive buffer, for example when disconnect should send all send buffer's data to server? or when reconnect how to process send buffer's data
+- You can use API get socket and do extra logic, for example modify socket's out time
+- You can use API get send and receive buffer, for example when disconnect, how to handle buffer's data? just clear or resend to server. 
 - OnSocketReceive and OnReceive are diffrent, for example OnSocketReceive size is 100 byte, if user do nothing when uppack OnReceive size is 100. but when user do some zip/unzip(encription.etc) OnReceive size is not 100 anymore. 
 - You can add many different plugins based on TcpConnection(UdpConnection) to achieve different functions.
 - There are a message register base class help user to quick register id and callback(based on reflection)
-- Byte block buffer reuse block when some block is free.
+- The encryption is use AES, if you want to use encryption you can use the API to encrypte your bytes.
 - .etc
 
 

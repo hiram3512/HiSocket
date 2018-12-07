@@ -7,7 +7,7 @@
 -----
 
 ### 如何使用
-可以选择使用NuGet包,dll或者源码,把它添加到自己的工程中即可使用.(最方便的使用方法是使用NuGet包)
+可以选择使用NuGet包,dll或者源码,把它添加到自己的工程中即可使用.
 - NuGet: [HiSocket NuGet package](https://www.nuget.org/packages/HiSocket)
 - Dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
 - 源码: [源码](https://github.com/hiramtan/HiSocket/tree/master/src)
@@ -72,7 +72,7 @@
 
 ### 详情
 - Tcp和Udp都是采用主线程异步连接的方式(避免主线程阻塞).
-- 高性能字节缓冲区避免内存空间重复申请,减少GC.
+- 使用[Circular_buffer](https://en.wikipedia.org/wiki/Circular_buffer)避免内存空间重复申请,减少GC.
 - 可以添加一系列的事件监听获取当前的连接状态.
 - 如果使用Tcp协议需要实现IPackage接口处理粘包拆包.
 - 如果使用Udp协议需要声明缓冲区大小.
@@ -81,11 +81,11 @@
 ### 高级功能
 - 如果对Socket很熟悉,也可以使用TcpSocket(UdpSocket)来实现功能,但是还是推荐使用TcpConnection(UdpConnection)的方式.
 - 通过接口可以访问底层Socket对象扩展逻辑,比如修改超时时间.
-- 通过接口可以获得发送接收缓冲区,比如断开连接时是否要将发送缓冲区数据全部发出?重连后怎样处理发送缓冲区的数据.
+- 通过接口可以获得发送接收缓冲区,比如断开连接时用户如何处理缓冲区数据?直接清空还是重连后继续发送.n
 - OnSocketReceive和OnReceive是不同的,比如当OnSocketReceive接受大小是100字节,当用户解包时不做操作,OnReceive大小是100字节,当用户解包时做解压缩(解密等)操作后,OnReceive大小不再是100.
 - 可以向TcpConnection(UdpConnection)添加不同的插件完成所需的功能,
 - 注册基类可以方便快速注册消息(基于反射)
-- Byte block buffer 采用有序链表实现,当有区块空闲时会重用区块.
+- 加密采用AES的方式,如果想使用加密可以调用这部分的接口加密字节数据.
 - .etc
 ---------
 
