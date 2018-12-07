@@ -1,7 +1,7 @@
 ﻿/***************************************************************
  * Description: 
  *
- * Documents: https://github.com/hiramtan/HiSocket_unity
+ * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
 ***************************************************************/
 
@@ -9,17 +9,12 @@ using HiSocket;
 
 namespace HiSocketExample
 {
-    class TcpExample01
+    class PluginExample
     {
-        static void Main(string[] args)
+        void Init()
         {
             var tcp = new TcpConnection(new PackageExample());
-            tcp.OnReceive += Receive;
-            tcp.Send(new byte[1]);
-        }
-
-        static void Receive(byte[] bytes)
-        {
+            tcp.AddPlugin(new PingPlugin("ping"));
         }
     }
 }
