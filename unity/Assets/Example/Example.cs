@@ -48,12 +48,15 @@ public class Example : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("send:" + _counter);
-        var data = BitConverter.GetBytes(_counter);
-        _tcp.Send(data);
-        _counter++;
-        if (_counter > 10000)
-            _isSendOn = false;
+        if (_isSendOn)
+        {
+            Debug.Log("send:" + _counter);
+            var data = BitConverter.GetBytes(_counter);
+            _tcp.Send(data);
+            _counter++;
+            if (_counter > 10000)
+                _isSendOn = false;
+        }
     }
 
 
