@@ -5,21 +5,18 @@
  * Author: hiramtan@live.com
 ***************************************************************/
 
-using System;
-using System.Collections;
-using HiSocketExample;
-using System.Net;
-using System.Threading;
 using HiSocket;
+using HiSocketExample;
+using System;
+using System.Net;
 using UnityEngine;
 
 public class Example : MonoBehaviour
 {
     private TcpConnection _tcp;
 
-    private TestServer _testServer = new TestServer();
-
-    private bool _isSendOn;
+    private TestServer _server = new TestServer();
+    private bool _isConnected;
     // Use this for initialization
     void Start()
     {
@@ -35,27 +32,27 @@ public class Example : MonoBehaviour
 
     void OnConnecting()
     {
-        Debug.Log("connecting...");
+        Debug.Log("<color=green>connecting...</color>");
     }
 
     void OnConnected()
     {
-        Debug.Log("connect success");
-        _isSendOn = true;
+        Debug.Log("<color=green>connected</color>");
+        _isConnected = true;
     }
 
     private int _counter;
 
     void Update()
     {
-        if (_isSendOn)
+        if (_isConnected)
         {
             Debug.Log("send:" + _counter);
             var data = BitConverter.GetBytes(_counter);
             _tcp.Send(data);
             _counter++;
-            if (_counter > 10000)
-                _isSendOn = false;
+            if (_counter > 1000)
+                _isConnected = false;
         }
     }
 
@@ -68,7 +65,7 @@ public class Example : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        if (_tcp != null) _tcp.Dispose();
-        if (_testServer != null) _testServer.Close();
+        _tcp.Dispose();
+        _server.Close();
     }
 }
