@@ -1,6 +1,6 @@
 # HiSocket
 
-轻量Socket通信逻辑,可以在C#项目或Unity3d项目中使用.
+客户端轻量Socket通信逻辑,可以在C#项目或Unity3d项目中使用.
 
 ![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   [![Build Status](https://travis-ci.org/hiramtan/HiSocket.svg?branch=master)](https://travis-ci.org/hiramtan/HiSocket)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)
 
