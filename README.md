@@ -1,6 +1,6 @@
 # HiSocket
 
-It is a lightweight socket solution, you can used it in Unity3d or C# project
+It is a lightweight client socket solution, you can used it in Unity3d or C# project
 
 ![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   [![Build Status](https://travis-ci.org/hiramtan/HiSocket.svg?branch=master)](https://travis-ci.org/hiramtan/HiSocket)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)
 
