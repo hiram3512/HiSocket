@@ -7,10 +7,10 @@
 -----
 
 ### 如何使用
-可以选择使用NuGet包,dll或者源码,把它添加到自己的工程中即可使用.
-- NuGet: [HiSocket NuGet package](https://www.nuget.org/packages/HiSocket)
-- Dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
-- 源码: [源码](https://github.com/hiramtan/HiSocket/tree/master/src)
+
+[![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
+
+从此处下载dll并复制到工程中(或者从此处下载NuGet:[HiSocket NuGet package](https://www.nuget.org/packages/HiSocket))
   
 
  快速开始:

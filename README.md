@@ -8,10 +8,10 @@ It is a lightweight client socket solution, you can used it in Unity3d or C# pro
 [中文说明](https://github.com/hiramtan/HiSocket/blob/master/README_zh.md) 
 
 ### How to use
-You can choose use NuGet package, dll or source code, add it to your project.
-- NuGet: [HiSocket NuGet package](https://www.nuget.org/packages/HiSocket)
-- Dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
-- Source code: [Source code](https://github.com/hiramtan/HiSocket/tree/master/src)
+
+[![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
+
+Download dll and copy to your project(or you can use NuGet from here:[HiSocket NuGet package](https://www.nuget.org/packages/HiSocket))
 
  Quick Start:
 ```csharp
