@@ -61,11 +61,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\HiSocket\Example\HiSocketExample\PackageExample.cs" />
-    <Compile Include="Assets\HiSocket\Example\HiSocketExample\TcpExample01.cs" />
-    <Compile Include="Assets\HiSocket\Example\HiSocketExample\TcpExample02.cs" />
-    <Compile Include="Assets\HiSocket\Example\TcpExample_Unity.cs" />
-    <None Include="Assets\HiSocket\readme.txt" />
+    <Compile Include="Assets\Example\Example.cs" />
+    <Compile Include="Assets\Example\HiSocketExample\PackageExample.cs" />
+    <Compile Include="Assets\Example\HiSocketExample\PluginExample.cs" />
+    <Compile Include="Assets\Example\TestServer.cs" />
+    <Compile Include="Assets\NewBehaviourScript.cs" />
+    <None Include="Assets\readme.txt" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>D:/MyGit/github/HiSocket/unity/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
@@ -274,13 +275,13 @@
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="HiSocket">
-      <HintPath>D:/MyGit/github/HiSocket/unity/Assets/HiSocket/Plugins/HiSocket.dll</HintPath>
+      <HintPath>D:/MyGit/github/HiSocket/unity/Assets/HiSocket/HiSocket.dll</HintPath>
     </Reference>
     <Reference Include="HiSocket.Message">
-      <HintPath>D:/MyGit/github/HiSocket/unity/Assets/HiSocket/Plugins/HiSocket.Message.dll</HintPath>
+      <HintPath>D:/MyGit/github/HiSocket/unity/Assets/HiSocket/HiSocket.Message.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>D:/MyGit/github/HiSocket/unity/Assets/HiSocket/Plugins/protobuf-net.dll</HintPath>
+      <HintPath>D:/MyGit/github/HiSocket/unity/Assets/HiSocket/protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Analytics">
       <HintPath>C:/Users/tanxiaoliang.hiram/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/UnityEngine.Analytics.dll</HintPath>

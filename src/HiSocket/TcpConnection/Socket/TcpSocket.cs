@@ -242,7 +242,7 @@ namespace HiSocket
                 throw new Exception(e.ToString());
             }
             ReceiveBuffer.MoveWritePosition(length);
-            var bytes = ReceiveBuffer.ReadAll();
+            var bytes = ReceiveBuffer.Read(ReceiveBuffer.HowManyCanRead);
             SocketReceiveEvent(bytes);
             if (length > 0)
             {

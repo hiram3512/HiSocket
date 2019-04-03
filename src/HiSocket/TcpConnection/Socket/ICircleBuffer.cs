@@ -68,9 +68,10 @@ namespace HiFramework
         void Write(T[] bytes);
 
         /// <summary>
-        /// Read all from array
+        /// How many data to read
         /// </summary>
+        /// <param name="length"></param>
         /// <returns></returns>
-        T[] ReadAll();
+        T[] Read(int length);
     }
 }
