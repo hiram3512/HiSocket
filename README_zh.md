@@ -1,32 +1,36 @@
 # HiSocket
 
+客户端轻量Socket通信逻辑,可以在C#项目或Unity3d项目中使用.
+
 ![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   [![Build Status](https://travis-ci.org/hiramtan/HiSocket.svg?branch=master)](https://travis-ci.org/hiramtan/HiSocket)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)
 
 -----
 
 ### 如何使用
-- 如果用在c#项目中,可以从此下载 HiSocket.dll: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
-- 如果用在unity3d项目中,可以从此下载 HiSocket.unitypackage: [HiSocket_xx.unitypackage](https://github.com/hiramtan/HiSocket/releases)
 
-  (ps. HiSocket.unitypackage 包含HiSocket.dll和一些示例)
+[![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
+
+从此处下载dll并复制到工程中(或者从此处下载NuGet:[HiSocket NuGet package](https://www.nuget.org/packages/HiSocket))
+  
 
  快速开始:
 ```csharp
-        private IPackage _package = new PackageExample();
-        private TcpConnection _tcp;
+        //tcp example
+        private IPackage package = new PackageExample();
+        private TcpConnection tcp;
         void Init()
         {
-            _tcp = new TcpConnection(_package);
-            _tcp.OnConnected += OnConnected;
-            _tcp.OnReceive += OnReceive;
-            //_tcp.OnError
-            //_tcp.OnDisconnected
+            tcp = new TcpConnection(package);
+            tcp.OnConnected += OnConnected;
+            tcp.OnReceive += OnReceive;
+            //...
+            //...
+            tcp.Connect("127.0.0.1",999);
         }
         void OnConnected()
         {
             //connect success
-            _tcp.Send(new byte[10]);//send message
-            _tcp.DisConnect();//disconnect
+            tcp.Send(new byte[10]);//send message
         }
 
         void OnReceive(byte[] bytes)
@@ -34,6 +38,9 @@
             //get message from server
         }
 ```
+更多示例:
+- C#项目示例:[示例](https://github.com/hiramtan/HiSocket/tree/master/src/HiSocket.Example)
+- Unity项目示例:[示例](https://github.com/hiramtan/HiSocket/tree/master/unity)
 
 -----
 
@@ -65,12 +72,22 @@
 
 ### 详情
 - Tcp和Udp都是采用主线程异步连接的方式(避免主线程阻塞).
-- 启动发送线程和接收线程处理数据传输(提高性能).
-- 高性能字节缓冲区避免内存空间重复申请,减少GC.
+- 使用[Circular_buffer](https://en.wikipedia.org/wiki/Circular_buffer)避免内存空间重复申请,减少GC.
 - 可以添加一系列的事件监听获取当前的连接状态.
 - 如果使用Tcp协议需要实现IPackage接口处理粘包拆包.
 - 如果使用Udp协议需要声明缓冲区大小.
 - Ping: 源码包含一个Ping插件可以使用,但是如果用在unity3d工程中会报错(因为mono的问题,在.net2.0会报错.net4.6可以正常使用)
+
+### 高级功能
+- 如果对Socket很熟悉,也可以使用TcpSocket(UdpSocket)来实现功能,但是还是推荐使用TcpConnection(UdpConnection)的方式.
+- 通过接口可以访问底层Socket对象扩展逻辑,比如修改超时时间.
+- 通过接口可以获得发送接收缓冲区,比如断开连接时用户如何处理缓冲区数据?直接清空还是重连后继续发送.n
+- OnSocketReceive和OnReceive是不同的,比如当OnSocketReceive接受大小是100字节,当用户解包时不做操作,OnReceive大小是100字节,当用户解包时做解压缩(解密等)操作后,OnReceive大小不再是100.
+- 可以向TcpConnection(UdpConnection)添加不同的插件完成所需的功能,
+- 注册基类可以方便快速注册消息(基于反射)
+- 加密采用AES的方式,如果想使用加密可以调用这部分的接口加密字节数据.
+- .etc
+---------
 
 
 ### 介绍
@@ -120,13 +137,7 @@ Udp协议提供不可靠的报文消息,用户无法知道当前连接状态,但
 - 字节消息
 - 加密
 
-### 高级功能
-- 如果对Socket很熟悉,也可以使用TcpSocket(UdpSocket)来实现功能,但是还是推荐使用TcpConnection(UdpConnection)的方式.
-- 可以向TcpConnection(UdpConnection)添加不同的插件完成所需的功能,
-- 注册基类可以方便快速注册消息(基于反射)
-- Byte block buffer 采用有序链表实现,当有区块空闲时会重用区块.
-- .etc
----------
+
 
 ### Example
 在**HiSocketExample** 和 **HiSocket.unitypackage**有很多示例, 其中有一些如下:
@@ -180,25 +191,25 @@ Package example:
 ```
 
 ```csharp
-private IPackage _package = new PackageExample();
-        private TcpConnection _tcp;
+private IPackage package = new PackageExample();
+        private TcpConnection tcp;
         static void Main(string[] args)
         {
 
         }
         void Init()
         {
-            _tcp = new TcpConnection(_package);
-            _tcp.OnConnected += OnConnected;
-            _tcp.OnReceive += Receive;
+            tcp = new TcpConnection(package);
+            tcp.OnConnected += OnConnected;
+            tcp.OnReceive += Receive;
             //_tcp.OnError
             //_tcp.OnDisconnected
         }
         void OnConnected()
         {
             //connect success
-            _tcp.Send(new byte[10]);//send message
-            _tcp.DisConnect();//disconnect
+            tcp.Send(new byte[10]);//send message
+            tcp.DisConnect();//disconnect
         }
 
         void Receive(byte[] bytes)

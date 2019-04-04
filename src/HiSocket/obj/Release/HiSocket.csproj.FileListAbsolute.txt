@@ -1,0 +1,10 @@
+D:\MyGit\github\HiSocket\visual\release\HiSocket.dll
+D:\MyGit\github\HiSocket\visual\release\HiSocket.pdb
+D:\MyGit\github\HiSocket\visual\HiSocket\obj\Release\HiSocket.csproj.CoreCompileInputs.cache
+D:\MyGit\github\HiSocket\visual\HiSocket\obj\Release\HiSocket.dll
+D:\MyGit\github\HiSocket\visual\HiSocket\obj\Release\HiSocket.pdb
+D:\MyGit\github\HiSocket\src\release\HiSocket.dll
+D:\MyGit\github\HiSocket\src\release\HiSocket.pdb
+D:\MyGit\github\HiSocket\src\HiSocket\obj\Release\HiSocket.csproj.CoreCompileInputs.cache
+D:\MyGit\github\HiSocket\src\HiSocket\obj\Release\HiSocket.dll
+D:\MyGit\github\HiSocket\src\HiSocket\obj\Release\HiSocket.pdb

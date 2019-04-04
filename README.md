@@ -1,33 +1,36 @@
 # HiSocket
 
+It is a lightweight client socket solution, you can used it in Unity3d or C# project
+
 ![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   [![Build Status](https://travis-ci.org/hiramtan/HiSocket.svg?branch=master)](https://travis-ci.org/hiramtan/HiSocket)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)
 
 -----
 [中文说明](https://github.com/hiramtan/HiSocket/blob/master/README_zh.md) 
 
 ### How to use
-- If you want to used in c# project, you can download HiSocket.dll from here: [HiSocket_xx.zip](https://github.com/hiramtan/HiSocket/releases)
-- If you want to used in unity3d, you can download HiSocket.unitypackage from here: [HiSocket_xx.unitypackage](https://github.com/hiramtan/HiSocket/releases)
 
-  (ps. HiSocket.unitypackage contains HiSocket.dll and some example)
+[![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
+
+Download dll and copy to your project(or you can use NuGet from here:[HiSocket NuGet package](https://www.nuget.org/packages/HiSocket))
 
  Quick Start:
 ```csharp
-        private IPackage _package = new PackageExample();
-        private TcpConnection _tcp;
+        //tcp example
+        private IPackage package = new PackageExample();
+        private TcpConnection tcp;
         void Init()
         {
-            _tcp = new TcpConnection(_package);
-            _tcp.OnConnected += OnConnected;
-            _tcp.OnReceive += OnReceive;
-            //_tcp.OnError
-            //_tcp.OnDisconnected
+            tcp = new TcpConnection(package);
+            tcp.OnConnected += OnConnected;
+            tcp.OnReceive += OnReceive;
+            //...
+            //...
+            tcp.Connect("127.0.0.1",999);
         }
         void OnConnected()
         {
             //connect success
-            _tcp.Send(new byte[10]);//send message
-            _tcp.DisConnect();//disconnect
+            tcp.Send(new byte[10]);//send message
         }
 
         void OnReceive(byte[] bytes)
@@ -35,6 +38,10 @@
             //get message from server
         }
 ```
+
+More example:
+- C# project example:[Example](https://github.com/hiramtan/HiSocket/tree/master/src/HiSocket.Example)
+- Unity project example:[Example](https://github.com/hiramtan/HiSocket/tree/master/unity)
 
 -----
 
@@ -67,12 +74,22 @@ This project contains:
 
 ### Details
 - Tcp and Udp are all use async connection in main thread(avoid thread blocking).
-- There are send thread and receive thread in background to process bytes(use high-performance block).
-- High-performance buffer avoid memory allocation every time, and reduce garbage collection.
+- Using [Circular_buffer](https://en.wikipedia.org/wiki/Circular_buffer) to avoid memory allocation every time, and reduce garbage collection.
 - You can get current connect state and message by adding listener of event.
 - If you use Tcp socket, you should implement IPackage interface to pack or unpack message.
 - If you use Udp socket, you should declaring buffer size.
 - Ping: there is a ping plugin you can used, but if you are used in unity3d because of the bug of mono, it will throw an error on .net2.0(.net 4.6 will be fine, also you can use unity's api to get ping time)
+
+
+### Advanced
+- If you are clear about socket, you also can use TcpSocket(UdpSocket) to achieve your logic, anyway the recommend is TcpConnection(UdpConnection).
+- You can use API get socket and do extra logic, for example modify socket's out time
+- You can use API get send and receive buffer, for example when disconnect, how to handle buffer's data? just clear or resend to server. 
+- OnSocketReceive and OnReceive are diffrent, for example OnSocketReceive size is 100 byte, if user do nothing when uppack OnReceive size is 100. but when user do some zip/unzip(encription.etc) OnReceive size is not 100 anymore. 
+- You can add many different plugins based on TcpConnection(UdpConnection) to achieve different functions.
+- There are a message register base class help user to quick register id and callback(based on reflection)
+- The encryption is use AES, if you want to use encryption you can use the API to encrypte your bytes.
+- .etc
 
 
 ### Instructions
@@ -122,12 +139,7 @@ If use Udp connection shold define send and receive's buffer size.
 - Bytes message
 - Encription
 
-### Advanced
-- If you are clear about socket, you also can use TcpSocket(UdpSocket) to achieve your logic, anyway the recommend is TcpConnection(UdpConnection).
-- You can add many different plugins based on TcpConnection(UdpConnection) to achieve different functions.
-- There are a message register base class help user to quick register id and callback(based on reflection)
-- Byte block buffer use linked list and reuse block when some block is free.
-- .etc
+
 ---------
 
 ### Example
@@ -182,7 +194,7 @@ Package example:
 ```
 
 ```csharp
-private IPackage _package = new PackageExample();
+private IPackage package = new PackageExample();
         private TcpConnection _tcp;
         static void Main(string[] args)
         {
@@ -190,17 +202,17 @@ private IPackage _package = new PackageExample();
         }
         void Init()
         {
-            _tcp = new TcpConnection(_package);
-            _tcp.OnConnected += OnConnected;
-            _tcp.OnReceive += Receive;
+            tcp = new TcpConnection(package);
+            tcp.OnConnected += OnConnected;
+            tcp.OnReceive += Receive;
             //_tcp.OnError
             //_tcp.OnDisconnected
         }
         void OnConnected()
         {
             //connect success
-            _tcp.Send(new byte[10]);//send message
-            _tcp.DisConnect();//disconnect
+            tcp.Send(new byte[10]);//send message
+            tcp.DisConnect();//disconnect
         }
 
         void Receive(byte[] bytes)
