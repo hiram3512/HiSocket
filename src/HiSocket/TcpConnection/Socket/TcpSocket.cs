@@ -209,7 +209,18 @@ namespace HiSocket
 
         private void Receive()
         {
-            var count = ReceiveBuffer.HowManyCanWrite;
+            //var count = ReceiveBuffer.HowManyCanWrite;//可写下标不连续
+            var count = 0;
+            if (ReceiveBuffer.EState == CircularBuffer<byte>.State.WriteAhead)
+                count = ReceiveBuffer.Size - ReceiveBuffer.WritePosition;
+            else if (ReceiveBuffer.EState == CircularBuffer<byte>.State.ReadAhead)
+                count = ReceiveBuffer.ReadPosition - ReceiveBuffer.WritePosition;
+            else if (ReceiveBuffer.EState == CircularBuffer<byte>.State.WriteEqualRead)
+                count = ReceiveBuffer.Size - ReceiveBuffer.WritePosition;
+            else
+            {
+                throw new Exception("state error");
+            }
             try
             {
                 Socket.BeginReceive(ReceiveBuffer.Array, ReceiveBuffer.WritePosition, count, SocketFlags.None,
