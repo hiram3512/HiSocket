@@ -8,7 +8,7 @@
 
 ### 如何使用
 
-- 使用源码: [source code](src\HiSocket)
+- 使用源码: [source code](src/HiSocket)
 - 发布页下载dll: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
 - 使用 Nuget: [HiSocket NuGet package](https://www.nuget.org/packages/HiSocket)
   
