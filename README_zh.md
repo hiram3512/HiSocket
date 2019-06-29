@@ -8,9 +8,9 @@
 
 ### 如何使用
 
-[![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
-
-从此处下载dll并复制到工程中(或者从此处下载NuGet:[HiSocket NuGet package](https://www.nuget.org/packages/HiSocket))
+- 使用源码: [source code](src\HiSocket)
+- 发布页下载dll: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
+- 使用 Nuget: [HiSocket NuGet package](https://www.nuget.org/packages/HiSocket)
   
 
  快速开始:

@@ -9,9 +9,9 @@ It is a lightweight client socket solution, you can used it in Unity3d or C# pro
 
 ### How to use
 
-[![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
-
-Download dll and copy to your project(or you can use NuGet from here:[HiSocket NuGet package](https://www.nuget.org/packages/HiSocket))
+- Use source code: [source code](src\HiSocket)
+- Download dll from release path: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
+- Use Nuget: [HiSocket NuGet package](https://www.nuget.org/packages/HiSocket)
 
  Quick Start:
 ```csharp
