@@ -11,3 +11,4 @@ D:\MyGit\github\HiSocket\src\HiSocket\obj\Debug\HiSocket.csproj.CoreCompileInput
 D:\MyGit\github\HiSocket\src\HiSocket\obj\Debug\HiSocket.dll
 D:\MyGit\github\HiSocket\src\HiSocket\obj\Debug\HiSocket.pdb
 D:\MyGit\github\HiSocket\src\HiSocket\obj\Debug\HiSocket.csprojAssemblyReference.cache
+D:\MyGit\github\HiSocket\src\HiSocket\obj\Debug\HiSocket.csproj.CopyComplete

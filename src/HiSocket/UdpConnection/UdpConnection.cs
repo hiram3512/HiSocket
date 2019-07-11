@@ -7,7 +7,7 @@
 
 using System;
 using System.Collections.Generic;
-using HiFramework;
+using HiFramework.Assert;
 
 namespace HiSocket
 {

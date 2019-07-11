@@ -5,9 +5,9 @@
  * Author: hiramtan@live.com
 ***************************************************************/
 
-using HiFramework;
 using System;
 using System.Collections.Generic;
+using HiFramework.Assert;
 
 namespace HiSocket
 {

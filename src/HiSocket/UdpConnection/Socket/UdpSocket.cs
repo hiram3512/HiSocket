@@ -5,10 +5,10 @@
  * Author: hiramtan@live.com
 ***************************************************************/
 
+using HiFramework.Assert;
 using System;
 using System.Net;
 using System.Net.Sockets;
-using HiFramework;
 
 namespace HiSocket
 {

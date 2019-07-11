@@ -24,3 +24,4 @@ D:\MyGit\github\HiSocket\src\HiSocket.Example\obj\Debug\HiSocket.Example.csproj.
 D:\MyGit\github\HiSocket\src\HiSocket.Example\obj\Debug\HiSocket.Example.csproj.CopyComplete
 D:\MyGit\github\HiSocket\src\HiSocket.Example\obj\Debug\HiSocket.Example.exe
 D:\MyGit\github\HiSocket\src\HiSocket.Example\obj\Debug\HiSocket.Example.pdb
+D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Debug\HiFramework.Assert.dll
