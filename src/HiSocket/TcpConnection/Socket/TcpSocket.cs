@@ -9,6 +9,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using HiFramework;
+using HiFramework.Assert;
 
 namespace HiSocket
 {

@@ -2,10 +2,10 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>$version$</version>
+    <version>2.7.4</version>
     <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <authors>Hiram</authors>
+    <owners>Hiram</owners>
     <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/hiramtan/HiSocket</projectUrl>
     <iconUrl>https://github.com/hiramtan/HiSocket/blob/master/others/logo.jpg</iconUrl>
