@@ -1,5 +1,5 @@
 ﻿/***************************************************************
- * Description: Note: the recommand is TtcpConnection.cs
+ * Description: Note: the recommand is tcpConnection.cs
  *
  * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
@@ -31,12 +31,12 @@ namespace HiSocket
         /// Send buffer
         /// If disconnect, user can operate the remain data
         /// </summary>
-        ICircularBuffer<byte> SendBuffer { get; }
+        ICircleBuffer<byte> SendBuffer { get; }
 
         /// <summary>
         /// Receive buffer
         /// </summary>
-        ICircularBuffer<byte> ReceiveBuffer { get; }
+        ICircleBuffer<byte> ReceiveBuffer { get; }
 
         /// <summary>
         /// trigger when connecting
@@ -54,16 +54,16 @@ namespace HiSocket
         event Action OnDisconnected;
 
         /// <summary>
-        /// trigger when get message from server, it havent unpacked
+        /// trigger when get bytes from server
         /// use .net socket api
         /// </summary>
-        event Action<byte[]> OnSocketReceive;
+        event Action<byte[]> OnReceiveBytes;
 
         /// <summary>
-        /// trigger when send message to server, it already packed
+        /// trigger when send bytes to server
         /// use .net socket api
         /// </summary>
-        event Action<byte[]> OnSocketSend;
+        event Action<byte[]> OnSendBytes;
 
         /// <summary>
         /// Connect to server
@@ -94,12 +94,14 @@ namespace HiSocket
         /// <summary>
         /// Send bytes to server
         /// </summary>
-        /// <param name="bytes"></param>
-        void Send(ArraySegment<byte> bytes);
+        /// <param name="source"></param>
+        /// <param name="index"></param>
+        /// <param name="length"></param>
+        void Send(byte[] source, int index, int length);
 
         /// <summary>
-        /// Disconnect
+        /// Close
         /// </summary>
-        void DisConnect();
+        void Close();
     }
 }

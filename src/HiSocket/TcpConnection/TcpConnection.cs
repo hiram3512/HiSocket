@@ -13,57 +13,44 @@ namespace HiSocket
 {
     public class TcpConnection : TcpSocket, IConnection
     {
-        private IPackage package;
-
-        private readonly IByteArray send = new ByteArray();
-
-        private readonly IByteArray receive = new ByteArray();
-
-        private Dictionary<string, IPlugin> plugins = new Dictionary<string, IPlugin>();
-
         /// <summary>
         /// Trigger when send message
         /// </summary>
-        public event Action<byte[]> OnSend;
+        public event Action<byte[]> OnSendMessage;
 
         /// <summary>
         /// Trigger when recieve message
         /// </summary>
-        public event Action<byte[]> OnReceive;
+        public event Action<byte[]> OnReceiveMessage;
+
+
+        private readonly IPackage _package;
+
+        private Dictionary<string, IPlugin> _plugins = new Dictionary<string, IPlugin>();
+
+        private readonly object _locker = new object();
 
         public TcpConnection(IPackage package)
         {
-            this.package = package;
-            OnSocketReceive += OnSocketReceiveHandler;
-        }
-
-        /// <summary>
-        /// To quickly get plugin
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public IPlugin this[string name]
-        {
-            get
-            {
-                return GetPlugin(name);
-            }
-            set
-            {
-                AddPlugin(value);
-            }
+            this._package = package;
+            OnReceiveBytes += OnSocketReceiveHandler;
         }
 
         public new void Send(byte[] bytes)
         {
-            send.Write(bytes);
-            SendEvent(bytes);
-            package.Pack(send, x => { base.Send(x); });
+            lock (_locker)
+            {
+                SendEvent(bytes);
+                _package.Pack(bytes, x => { base.Send(x); });
+            }
         }
+
         void OnSocketReceiveHandler(byte[] bytes)
         {
-            receive.Write(bytes);
-            package.Unpack(receive, x => { ReceiveEvent(x); });
+            lock (_locker)
+            {
+                _package.Unpack(bytes, x => { ReceiveEvent(x); });
+            }
         }
 
         /// <summary>
@@ -74,7 +61,7 @@ namespace HiSocket
         {
             AssertThat.IsNotNull(plugin);
             plugin.Connection = this;
-            plugins.Add(plugin.Name, plugin);
+            _plugins.Add(plugin.Name, plugin);
         }
 
         /// <summary>
@@ -85,7 +72,7 @@ namespace HiSocket
         public IPlugin GetPlugin(string name)
         {
             AssertThat.IsNotNullOrEmpty(name);
-            return plugins[name];
+            return _plugins[name];
         }
 
         /// <summary>
@@ -95,22 +82,22 @@ namespace HiSocket
         public void RemovePlugin(string name)
         {
             AssertThat.IsNotNullOrEmpty(name);
-            plugins.Remove(name);
+            _plugins.Remove(name);
         }
 
         void SendEvent(byte[] bytes)
         {
-            if (OnSend != null)
+            if (OnSendMessage != null)
             {
-                OnSend(bytes);
+                OnSendMessage(bytes);
             }
         }
 
         void ReceiveEvent(byte[] bytes)
         {
-            if (OnReceive != null)
+            if (OnReceiveMessage != null)
             {
-                OnReceive(bytes);
+                OnReceiveMessage(bytes);
             }
         }
     }

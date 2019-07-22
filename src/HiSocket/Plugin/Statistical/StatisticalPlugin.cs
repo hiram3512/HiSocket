@@ -19,7 +19,7 @@ namespace HiSocket
 
         public StatisticalPlugin(string name) : base(name)
         {
-            Connection.OnSend += x => { howManyBytesSend += x.Length; };
+            Connection.OnSendMessage += x => { howManyBytesSend += x.Length; };
 
         }
     }

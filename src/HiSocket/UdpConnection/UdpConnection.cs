@@ -13,8 +13,8 @@ namespace HiSocket
 {
     public class UdpConnection : UdpSocket, IConnection
     {
-        public event Action<byte[]> OnSend;
-        public event Action<byte[]> OnReceive;
+        public event Action<byte[]> OnSendMessage;
+        public event Action<byte[]> OnReceiveMessage;
 
         private Dictionary<string, IPlugin> plugins = new Dictionary<string, IPlugin>();
         public UdpConnection(int bufferSize = 1 << 16) : base(bufferSize)
@@ -68,17 +68,17 @@ namespace HiSocket
         }
         void SendEvent(byte[] bytes)
         {
-            if (OnSend != null)
+            if (OnSendMessage != null)
             {
-                OnSend(bytes);
+                OnSendMessage(bytes);
             }
         }
 
         void ReceiveEvent(byte[] bytes)
         {
-            if (OnReceive != null)
+            if (OnReceiveMessage != null)
             {
-                OnReceive(bytes);
+                OnReceiveMessage(bytes);
             }
         }
     }

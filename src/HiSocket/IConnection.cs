@@ -14,12 +14,12 @@ namespace HiSocket
         /// <summary>
         /// Trigger when send message
         /// </summary>
-        event Action<byte[]> OnSend;//havent packed
+        event Action<byte[]> OnSendMessage;
 
         /// <summary>
         /// Trigger when recieve message
         /// </summary>
-        event Action<byte[]> OnReceive;//already unpacked
+        event Action<byte[]> OnReceiveMessage;
 
         /// <summary>
         /// Add plugin to extend logic
