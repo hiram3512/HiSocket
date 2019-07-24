@@ -9,7 +9,7 @@ It is a lightweight client socket solution, you can used it in Unity3d or C# pro
 
 ### How to use
 
-- Use source code: [source code](src/HiSocket)
+- Use source code: [source code](/src)
 - Download dll from release path: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
 - Use Nuget: [HiSocket NuGet package](https://www.nuget.org/packages/HiSocket)
 
