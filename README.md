@@ -40,30 +40,27 @@ It is a lightweight client socket solution, you can used it in Unity3d or C# pro
 ```
 
 More example:
-- C# project example:[Example](https://github.com/hiramtan/HiSocket/tree/master/src/HiSocket.Example)
-- Unity project example:[Example](https://github.com/hiramtan/HiSocket/tree/master/unity)
+- C# project example:[Example](/example/csharp)
+- Unity project example:[Example](/example/unity)
 
 -----
 
 ### General
 This project contains:
-- Connection
+- Tcp
     - TcpConnection
-        - TcpSocket
-        - Package
-    - UdpConnection
-        - UdpSocket
+    - TcpSocket
     - Plugin
+      - Ping
+      - Statistical
 - Message
-    - Message register
+    - Binary Message
+    - Protobuf Message
     - Aes encryption
-    - Byte message
-    - Protobuf message
-
+- BlockBuffer
 
 ### Features
 - Support Tcp socket
-- Support Udp socket
 - Scalable byte Array
 - High-performance byte block buffer
 - Message registration and call back
@@ -73,11 +70,10 @@ This project contains:
 
 
 ### Details
-- Tcp and Udp are all use async connection in main thread(avoid thread blocking).
+- Use async connection in main thread(avoid thread blocking).
 - Using [Circular_buffer](https://en.wikipedia.org/wiki/Circular_buffer) to avoid memory allocation every time, and reduce garbage collection.
 - You can get current connect state and message by adding listener of event.
 - If you use Tcp socket, you should implement IPackage interface to pack or unpack message.
-- If you use Udp socket, you should declaring buffer size.
 - Ping: there is a ping plugin you can used, but if you are used in unity3d because of the bug of mono, it will throw an error on .net2.0(.net 4.6 will be fine, also you can use unity's api to get ping time)
 
 
@@ -134,11 +130,6 @@ If use Udp connection shold define send and receive's buffer size.
         StartCoroutine(Ping());
     }
     ```
-- Message Register
-- Protobuf
-- Bytes message
-- Encription
-
 
 ---------
 
@@ -147,48 +138,31 @@ There are many example in **HiSocketExample** project or in **HiSocket.unitypack
 
 Package example:
 ```csharp
-/// <summary>
-    /// Example: Used to pack or unpack message
-    /// You should inheritance IPackage interface and implement your own logic
-    /// </summary>
-    class PackageExample : IPackage
-    {  /// <summary>
-       /// Pack your message here(this is only an example)
-       /// </summary>
-       /// <param name="source"></param>
-       /// <param name="unpackedHandler"></param>
-        public void Unpack(IByteArray source, Action<byte[]> unpackedHandler)
+public class Package : PackageBase
+    {
+        protected override void Pack(BlockBuffer<byte> bytes, Action<byte[]> onPacked)
         {
-            // Unpack your message(use int, 4 byte as head)
-            while (source.Length >= 4)
-            {
-                var head = source.Read(4);
-                int bodyLength = BitConverter.ToInt32(head, 0);// get body's length
-                if (source.Length >= bodyLength)
-                {
-                    var unpacked = source.Read(bodyLength);// get body
-                    unpackedHandler(unpacked);
-                }
-                else
-                {
-                    source.Insert(0, head);// rewrite in, used for next time
-                }
-            }
+            int length = bytes.WritePosition;
+            var header = BitConverter.GetBytes(length);
+            var newBytes = new byte[length + header.Length];
+            Buffer.BlockCopy(header, 0, newBytes, 0, header.Length);
+            Buffer.BlockCopy(bytes.Buffer, 0, newBytes, header.Length, length);
+            onPacked(newBytes);
         }
 
-        /// <summary>
-        /// Unpack your message here(this is only an example)
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="packedHandler"></param>
-        public void Pack(IByteArray source, Action<byte[]> packedHandler)
+        protected override void Unpack(BlockBuffer<byte> bytes, Action<byte[]> onUnpacked)
         {
-            // Add head length to your message(use int, 4 byte as head)
-            var length = source.Length;
-            var head = BitConverter.GetBytes(length);
-            source.Insert(0, head);// add head bytes
-            var packed = source.Read(source.Length);
-            packedHandler(packed);
+            while (bytes.WritePosition > 4)
+            {
+                int length = BitConverter.ToInt32(bytes.Buffer, 0);
+                if (bytes.WritePosition >= 4 + length)
+                {
+                    bytes.MoveReadPostion(4);
+                    var data = bytes.Read(length);
+                    onUnpacked(data);
+                    bytes.ResetIndex();
+                }
+            }
         }
     }
 ```
