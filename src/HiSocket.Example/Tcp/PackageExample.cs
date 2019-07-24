@@ -5,8 +5,8 @@
  * Author: hiramtan@live.com
 ***************************************************************/
 
-using HiSocket;
 using System;
+using System.Collections.Generic;
 
 namespace HiSocket.Example
 {
@@ -15,26 +15,29 @@ namespace HiSocket.Example
     /// You should inheritance IPackage interface and implement your own logic
     /// </summary>
     public class PackageExample : IPackage
-    {  /// <summary>
-       /// Pack your message here(this is only an example)
-       /// </summary>
-       /// <param name="source"></param>
-       /// <param name="unpackedHandler"></param>
-        public void Unpack(IByteArray source, Action<byte[]> unpackedHandler)
+    {
+        private List<byte> _receiveBytes = new List<byte>();
+        /// <summary>
+        /// Pack your message here(this is only an example)
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="unpackedHandler"></param>
+        public void Unpack(byte[] source, Action<byte[]> unpackedHandler)
         {
+            _receiveBytes.AddRange(source);
             // Unpack your message(use int, 4 byte as head)
-            while (source.Length >= 4)
+            while (_receiveBytes.Count >= 4)
             {
-                var head = source.Read(4);
-                int bodyLength = BitConverter.ToInt32(head, 0);// get body's length
+                var headerBytes = new byte[4];
+                _receiveBytes.CopyTo(0, headerBytes, 0, 4);
+                int bodyLength = BitConverter.ToInt32(headerBytes, 0);// get body's length
                 if (source.Length >= bodyLength)
                 {
-                    var unpacked = source.Read(bodyLength);// get body
-                    unpackedHandler(unpacked);
-                }
-                else
-                {
-                    source.Insert(0, head);// rewrite in, used for next time
+                    _receiveBytes.RemoveRange(0, 4);
+                    var data = new byte[bodyLength];
+                    _receiveBytes.CopyTo(0, data, 0, bodyLength);
+                    unpackedHandler(data);
+                    _receiveBytes.RemoveRange(0, bodyLength);
                 }
             }
         }
@@ -44,14 +47,15 @@ namespace HiSocket.Example
         /// </summary>
         /// <param name="source"></param>
         /// <param name="packedHandler"></param>
-        public void Pack(IByteArray source, Action<byte[]> packedHandler)
+        public void Pack(byte[] source, Action<byte[]> packedHandler)
         {
             // Add head length to your message(use int, 4 byte as head)
-            var length = source.Length;
+            int length = source.Length;
             var head = BitConverter.GetBytes(length);
-            source.Insert(0, head);// add head bytes
-            var packed = source.Read(source.Length);
-            packedHandler(packed);
+            var data = new byte[source.Length + 4];
+            Array.Copy(head,0,data,0,4);
+            Array.Copy(source, 0, data, 4, source.Length);
+            packedHandler(data);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Net;
+using HiSocket.Tcp;
 
 namespace HiSocket.Test
 {
@@ -23,10 +24,8 @@ namespace HiSocket.Test
             Assert.IsTrue(tcp.IsConnected);
 
             //Test disconnect
-            tcp.DisConnect();
+            tcp.Disconnect();
             Assert.IsFalse(tcp.IsConnected);
-
-            tcp.Dispose();
         }
 
         /// <summary>
@@ -70,8 +69,8 @@ namespace HiSocket.Test
             tcp.OnConnecting += () => { isOnConnecting = true; };
             tcp.OnConnected += () => { isOnConnected = true; };
             tcp.OnDisconnected += () => { isOnDisconnected = true; };
-            tcp.OnSocketSend += (x) => { isOnSend = true; };
-            tcp.OnSocketReceive += (x) => { isOnReceive = true; };
+            tcp.OnSendBytes += (x) => { isOnSend = true; };
+            tcp.OnReceiveBytes += (x) => { isOnReceive = true; };
 
             tcp.Connect(Common.GetIpEndPoint());
             Assert.IsTrue(isOnConnecting);
@@ -86,7 +85,7 @@ namespace HiSocket.Test
             Common.WaitTrue(ref isOnReceive);
             Assert.IsTrue(isOnReceive);
 
-            tcp.DisConnect();
+            tcp.Disconnect();
             Assert.IsTrue(isOnDisconnected);
 
         }
@@ -101,13 +100,13 @@ namespace HiSocket.Test
             tcp.Connect(Common.GetIpEndPoint());
             Common.WaitConnected(tcp);
             int length = 0;
-            tcp.OnSocketReceive += (x) =>
+            tcp.OnReceiveBytes += (x) =>
             {
                 length = x.Length;
             };
             tcp.Send(new byte[10]);
             Common.WaitValue(ref length, 10);
-            tcp.DisConnect();
+            tcp.Disconnect();
             Assert.AreEqual(length, 10);
         }
 
@@ -121,13 +120,13 @@ namespace HiSocket.Test
             tcp.Connect(Common.GetIpEndPoint());
             Common.WaitConnected(tcp);
             int length = 0;
-            tcp.OnSocketReceive += (x) =>
+            tcp.OnReceiveBytes += (x) =>
             {
                 length += x.Length;
             };
             tcp.Send(new byte[1 << 10]);
             Common.WaitValue(ref length, 1 << 10, 10000);
-            tcp.DisConnect();
+            tcp.Disconnect();
             Console.WriteLine(length);
             Assert.AreEqual(length, 1 << 10);
         }

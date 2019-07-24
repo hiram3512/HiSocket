@@ -59,10 +59,6 @@
       <Project>{e6f2d630-41d9-48ca-835a-a82a8838aa68}</Project>
       <Name>HiSocket.Message</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HiSocket\HiSocket.csproj">
-      <Project>{0b0fe68d-eb3f-42e0-b151-bbe221cfa10c}</Project>
-      <Name>HiSocket</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

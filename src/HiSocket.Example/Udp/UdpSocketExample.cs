@@ -15,7 +15,7 @@ namespace HiSocket.Example
         void Main()
         {
             udp = new UdpConnection();
-            udp.OnReceive += (x => { Console.WriteLine("receive data length" + x.Length); });
+            udp.OnReceiveMessage += (x => { Console.WriteLine("receive data length" + x.Length); });
 
         }
 

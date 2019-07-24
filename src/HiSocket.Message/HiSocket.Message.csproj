@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HiFramework.Assert, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HiFramework.Assert.1.0.3\lib\net35\HiFramework.Assert.dll</HintPath>
+    </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\lib\protobuf-net.dll</HintPath>
     </Reference>
@@ -44,17 +47,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aes.cs" />
-    <Compile Include="MsgBase.cs" />
-    <Compile Include="MsgBytes.cs" />
-    <Compile Include="MsgProtobuf.cs" />
-    <Compile Include="MsgRegistBase.cs" />
-    <Compile Include="MsgRegister.cs" />
+    <Compile Include="BinaryMsgBase.cs" />
+    <Compile Include="BinaryMsgRegister.cs" />
+    <Compile Include="ChannelManager.cs" />
+    <Compile Include="BinaryRegistHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtobufMsgBase.cs" />
+    <Compile Include="ProtobufMsgRegister.cs" />
+    <Compile Include="ProtobufSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HiSocket\HiSocket.csproj">
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HiSocket.Tcp\HiSocket.Tcp.csproj">
       <Project>{0b0fe68d-eb3f-42e0-b151-bbe221cfa10c}</Project>
-      <Name>HiSocket</Name>
+      <Name>HiSocket.Tcp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

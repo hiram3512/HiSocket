@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading;
+using HiSocket.Tcp;
 
 namespace HiSocket.Test
 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using HiSocket.Tcp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HiSocket.Test
@@ -18,9 +19,9 @@ namespace HiSocket.Test
             bool isOnSend = false;
             bool isOnReceive = false;
 
-            TcpConnection tcp = new TcpConnection(new Package());
-            tcp.OnSend += (x) => { isOnSend = true; };
-            tcp.OnReceive += (x) => { isOnReceive = true; };
+            ITcpConnection tcp = new TcpConnection(new Package());
+            tcp.OnSendMessage += (x) => { isOnSend = true; };
+            tcp.OnReceiveMessage += (x) => { isOnReceive = true; };
             tcp.Connect(Common.GetIpEndPoint());
             Common.WaitConnected(tcp);
             tcp.Send(new byte[10]);
@@ -46,11 +47,11 @@ namespace HiSocket.Test
             List<int> sendList = new List<int>();
             List<int> receiveList = new List<int>();
             TcpConnection tcp = new TcpConnection(new Package());
-            tcp.OnSend += x =>
+            tcp.OnSendMessage += x =>
             {
                 Console.WriteLine("send:" + BitConverter.ToInt32(x, 0)); sendList.Add(BitConverter.ToInt32(x, 0));
             };
-            tcp.OnReceive += x =>
+            tcp.OnReceiveMessage += x =>
             {
                 Console.WriteLine("receive:" + BitConverter.ToInt32(x, 0)); receiveList.Add(BitConverter.ToInt32(x, 0));
             };
@@ -77,24 +78,23 @@ namespace HiSocket.Test
             /// 在此处理接收到服务器数据后的拆包粘包
             /// </summary>
             /// <param name="bytes"></param>
-            public void Unpack(IByteArray source, Action<byte[]> unpackedHandler)
+            public void Unpack(byte[] source, Action<byte[]> unpackedHandler)
             {
-                while (source.Length >= 4)
-                {
-                    //read a int
-                    var @byte = source.Read(4);
-                    unpackedHandler(@byte);
-                }
+                //while (source.Length >= 4)
+                //{
+                //    //read a int
+                //    var @byte = source.Read(4);
+                //    unpackedHandler(@byte);
+                //}
             }
 
             /// <summary>
             /// 在此处理将要发送的数据添加长度消息id等
             /// </summary>
             /// <param name="bytes"></param>
-            public void Pack(IByteArray source, Action<byte[]> packedHandler)
+            public void Pack(byte[] source, Action<byte[]> onPacked)
             {
-                var @byte = source.Read(4);
-                packedHandler(@byte);
+                throw new NotImplementedException();
             }
         }
 

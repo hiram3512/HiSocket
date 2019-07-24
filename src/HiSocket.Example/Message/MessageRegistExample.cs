@@ -15,7 +15,7 @@ namespace HiSocket.Example
         {
             MsgRegister.Regist("PlayDie", OnPlayerDie);
 
-            //when get bytes from socket(OnReceive)
+            //when get bytes from socket(OnReceiveMessage)
             {
                 string name = "PlayerDie";
                 IByteArray byteArray = new ByteArray();

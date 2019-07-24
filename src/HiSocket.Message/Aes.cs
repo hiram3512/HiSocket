@@ -6,11 +6,11 @@ using System;
 
 namespace HiSocket.Message
 {
-    public class Aes
+    public static class Aes
     {
-        private string _key;
+        private static string _key;
 
-        public Aes(string key)
+        public static void SetKey(string key)
         {
             if (_key.Length != 32)
                 throw new Exception("please check key, current length is: " + _key.Length);
@@ -22,7 +22,7 @@ namespace HiSocket.Message
         ///</summary>
         ///<param name="toEncrypt">需要被加密的数据</param>
         ///<returns></returns>
-        public byte[] Encrypt(byte[] toEncrypt)
+        public static byte[] Encrypt(byte[] toEncrypt)
         {
             Byte[] keyArray = System.Text.Encoding.UTF8.GetBytes(_key);
             System.Security.Cryptography.RijndaelManaged aes = new System.Security.Cryptography.RijndaelManaged();
@@ -39,7 +39,7 @@ namespace HiSocket.Message
         ///</summary>
         ///<param name="toDecrypt">需要被解密的数据</param>
         ///<returns></returns>
-        public byte[] Decrypt(byte[] toDecrypt)
+        public static byte[] Decrypt(byte[] toDecrypt)
         {
             Byte[] keyArray = System.Text.Encoding.UTF8.GetBytes(_key);
             System.Security.Cryptography.RijndaelManaged aes = new System.Security.Cryptography.RijndaelManaged();

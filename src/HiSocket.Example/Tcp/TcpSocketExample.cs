@@ -17,7 +17,7 @@ namespace HiSocket.Example
 
             PackageExample package = new PackageExample();
             tcp = new TcpConnection(package);
-            tcp.OnReceive += OnReceive;
+            tcp.OnReceiveMessage += OnReceive;
             tcp.OnConnecting += OnConnecting;
             //
             //
@@ -30,7 +30,7 @@ namespace HiSocket.Example
 
         void Button_Disconnect()
         {
-            tcp.DisConnect();
+            tcp.Close();
         }
 
         void Button_Send()
