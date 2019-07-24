@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="ITcpConnection.cs" />
     <Compile Include="IPlugin.cs" />
+    <Compile Include="PackageBase.cs" />
     <Compile Include="PingPlugin.cs" />
     <Compile Include="PluginBase.cs" />
     <Compile Include="StatisticalPlugin.cs" />

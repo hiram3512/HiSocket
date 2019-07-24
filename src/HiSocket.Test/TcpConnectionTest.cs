@@ -71,34 +71,6 @@ namespace HiSocket.Test
             tcp.Dispose();
         }
 
-
-        public class Package : IPackage
-        {
-            /// <summary>
-            /// 在此处理接收到服务器数据后的拆包粘包
-            /// </summary>
-            /// <param name="bytes"></param>
-            public void Unpack(byte[] source, Action<byte[]> unpackedHandler)
-            {
-                //while (source.Length >= 4)
-                //{
-                //    //read a int
-                //    var @byte = source.Read(4);
-                //    unpackedHandler(@byte);
-                //}
-            }
-
-            /// <summary>
-            /// 在此处理将要发送的数据添加长度消息id等
-            /// </summary>
-            /// <param name="bytes"></param>
-            public void Pack(byte[] source, Action<byte[]> onPacked)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-
         [TestInitialize]
         public void Init()
         {

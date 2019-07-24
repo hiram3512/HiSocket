@@ -66,7 +66,7 @@ namespace HiSocket.Tcp
         /// </summary>
         public IBlockBuffer<byte> ReceiveBuffer { get; private set; }
 
-        private readonly object locker = new object();
+        private readonly object _locker = new object();
 
         /// <summary>
         /// The default buffer is 1<<16, if small will automatically add buffer block
@@ -83,7 +83,7 @@ namespace HiSocket.Tcp
         /// </summary>
         public void Connect(IPEndPoint iep)
         {
-            lock (locker)
+            lock (_locker)
             {
                 AssertThat.IsFalse(IsConnected, "Already Connected");
                 AssertThat.IsNotNull(iep, "iep is null");
@@ -161,7 +161,7 @@ namespace HiSocket.Tcp
         /// <param name="bytes"></param>
         public void Send(byte[] bytes)
         {
-            lock (locker)
+            lock (SendBuffer)
             {
                 AssertThat.IsTrue(IsConnected, "From send : disconnected");
                 SendBuffer.Write(bytes);//use for geting havent send data
@@ -178,88 +178,99 @@ namespace HiSocket.Tcp
 
         public void Send(byte[] source, int index, int length)
         {
-            AssertThat.IsTrue(IsConnected, "From send : disconnected");
-            SendBuffer.Write(source, index, length);
-            try
+            lock (SendBuffer)
             {
-                Socket.BeginSend(source, index, length, SocketFlags.None, EndSend, Socket);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.ToString());
+                AssertThat.IsTrue(IsConnected, "From send : disconnected");
+                SendBuffer.Write(source, index, length);
+                try
+                {
+                    Socket.BeginSend(source, index, length, SocketFlags.None, EndSend, Socket);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.ToString());
+                }
             }
         }
 
         private void EndSend(IAsyncResult ar)
         {
-            //User disconnect tcpConnection proactively
-            if (!IsConnected)
+            lock (SendBuffer)
             {
-                return;
-            }
+                //User disconnect tcpConnection proactively
+                if (!IsConnected)
+                {
+                    return;
+                }
 
-            int length = 0;
-            try
-            {
-                var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                AssertThat.IsNotNull(socket);
-                length = socket.EndSend(ar);
+                int length = 0;
+                try
+                {
+                    var socket = ar.AsyncState as System.Net.Sockets.Socket;
+                    AssertThat.IsNotNull(socket);
+                    length = socket.EndSend(ar);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.ToString());
+                }
+                byte[] sendBytes = SendBuffer.Read(length);
+                SendBuffer.ResetIndex();
+                SocketSendEvent(sendBytes);
             }
-            catch (Exception e)
-            {
-                throw new Exception(e.ToString());
-            }
-            byte[] sendBytes = SendBuffer.Read(length);
-            SendBuffer.ResetIndex();
-            SocketSendEvent(sendBytes);
         }
 
         private void Receive()
         {
-            try
+            lock (ReceiveBuffer)
             {
-                var count = ReceiveBuffer.Size - ReceiveBuffer.WritePosition;
-                Socket.BeginReceive(ReceiveBuffer.Buffer, ReceiveBuffer.WritePosition, count, SocketFlags.None,
-                    EndReceive, Socket);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.ToString());
+                try
+                {
+                    var count = ReceiveBuffer.Size - ReceiveBuffer.WritePosition;
+                    Socket.BeginReceive(ReceiveBuffer.Buffer, ReceiveBuffer.WritePosition, count, SocketFlags.None,
+                        EndReceive, Socket);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.ToString());
+                }
             }
         }
 
         private void EndReceive(IAsyncResult ar)
         {
-            //User disconnect tcpConnection proactively
-            if (!IsConnected)
+            lock (ReceiveBuffer)
             {
-                return;
-            }
-            int length = 0;
-            try
-            {
-                var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                AssertThat.IsNotNull(socket);
-                length = socket.EndReceive(ar);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.ToString());
-            }
-            ReceiveBuffer.MoveWritePosition(length);
-            var count = ReceiveBuffer.Size - ReceiveBuffer.WritePosition;
-            var bytes = ReceiveBuffer.Read(count);
-            ReceiveBuffer.ResetIndex();
-            SocketReceiveEvent(bytes);
-            if (length > 0)
-            {
-                Receive();
+                //User disconnect tcpConnection proactively
+                if (!IsConnected)
+                {
+                    return;
+                }
+                int length = 0;
+                try
+                {
+                    var socket = ar.AsyncState as System.Net.Sockets.Socket;
+                    AssertThat.IsNotNull(socket);
+                    length = socket.EndReceive(ar);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.ToString());
+                }
+                ReceiveBuffer.MoveWritePosition(length);
+                var bytes = ReceiveBuffer.Read(ReceiveBuffer.WritePosition);
+                ReceiveBuffer.ResetIndex();
+                SocketReceiveEvent(bytes);
+                if (length > 0)
+                {
+                    Receive();
+                }
             }
         }
 
         public void Disconnect()
         {
-            lock (locker)
+            lock (_locker)
             {
                 if (IsConnected)
                 {
@@ -320,7 +331,7 @@ namespace HiSocket.Tcp
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
-            lock (locker)
+            lock (_locker)
             {
                 Disconnect();
                 Socket = null;

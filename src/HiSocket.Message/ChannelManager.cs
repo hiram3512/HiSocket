@@ -3,11 +3,10 @@
 // Author: hiramtan@live.com
 //***************************************************************************
 
-using System;
-using System.Collections;
 using HiFramework.Assert;
-using System.Collections.Generic;
 using HiSocket.Tcp;
+using System;
+using System.Collections.Generic;
 
 namespace HiSocket.Message
 {
@@ -88,9 +87,9 @@ namespace HiSocket.Message
             byte[] bytesNameLength = BitConverter.GetBytes(bytesName.Length);
             byte[] bytesBody = ProtobufSerializer.Serialize(obj);
             var bytes = new Byte[4 + bytesName.Length + bytesBody.Length];
-            Array.Copy(bytesNameLength, 0, bytes, 0, 4);
-            Array.Copy(bytesName, 0, bytes, 4, bytesName.Length);
-            Array.Copy(bytesBody, 0, bytes, 4 + bytesName.Length, bytesBody.Length);
+            Buffer.BlockCopy(bytesNameLength,0,bytes,0,4);
+            Buffer.BlockCopy(bytesName, 0, bytes, 4, bytesName.Length);
+            Buffer.BlockCopy(bytesBody, 0, bytes, 4 + bytesName.Length, bytesBody.Length);
             Send(bytes);
         }
     }
