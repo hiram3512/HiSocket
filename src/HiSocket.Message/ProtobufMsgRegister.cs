@@ -15,7 +15,7 @@ namespace HiSocket.Message
     {
         private static readonly object _locker = new object();
 
-        private static readonly Dictionary<string, Action<object>> _msgs = new Dictionary<string, Action<object>>();
+        private static readonly Dictionary<string, IProtobufMsgRegistInfo> _msgs = new Dictionary<string, IProtobufMsgRegistInfo>();
 
         /// <summary>
         /// This can quick regist all message
@@ -28,18 +28,19 @@ namespace HiSocket.Message
         /// <summary>
         /// Regist message by user
         /// </summary>
-        /// <param name="key"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="t"></param>
         /// <param name="onMsg"></param>
-        public static void Regist(Type type, Action<object> onMsg)
+        public static void Regist<T>(Action<T> onMsg) where T : class
         {
             lock (_locker)
             {
-                var key = type.FullName;
+                var key = typeof(T).FullName;
                 AssertThat.IsFalse(_msgs.ContainsKey(key), "Already regist this key:" + key);
-                _msgs.Add(key, onMsg);
+                var info = new ProtobufMsgRegistInfo<T>(onMsg);
+                _msgs.Add(key, info);
             }
         }
-
         /// <summary>
         /// Unregist by user
         /// </summary>
@@ -67,9 +68,7 @@ namespace HiSocket.Message
             {
                 AssertThat.IsNotNullOrEmpty(key);
                 AssertThat.IsTrue(_msgs.ContainsKey(key));
-                var type = Type.GetType(key);
-                var obj = ProtobufSerializer.Deserialize(type, bytes);
-                _msgs[key](obj);
+                _msgs[key].OnBytes(bytes);
             }
         }
     }

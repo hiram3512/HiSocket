@@ -5,27 +5,26 @@
  * Author: hiramtan@live.com
 ***************************************************************/
 
-using HiSocket;
 using HiSocketExample;
 using System;
 using System.Net;
+using HiSocket.Tcp;
 using UnityEngine;
 
 public class Example : MonoBehaviour
 {
     private TcpConnection _tcp;
 
-    private TestServer _server = new TestServer();
     private bool _isConnected;
     // Use this for initialization
     void Start()
     {
         var ip = IPAddress.Parse("127.0.0.1");
         var iep = new IPEndPoint(ip, 7777);
-        _tcp = new TcpConnection(new PackageExample());
+        _tcp = new TcpConnection(new Package());
         _tcp.OnConnecting += OnConnecting;
         _tcp.OnConnected += OnConnected;
-        _tcp.OnReceive += OnReceive;
+        _tcp.OnReceiveMessage += OnReceive;
 
         _tcp.Connect(iep); //start connect
     }
@@ -66,6 +65,5 @@ public class Example : MonoBehaviour
     void OnApplicationQuit()
     {
         _tcp.Dispose();
-        _server.Close();
     }
 }

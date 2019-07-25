@@ -1,9 +1,20 @@
-﻿using HiFramework;
+﻿/***************************************************************
+ * Description: 
+ *
+ * Documents: https://github.com/hiramtan/HiSocket
+ * Author: hiramtan@live.com
+***************************************************************/
+
+using HiFramework;
 using HiSocket.Tcp;
 using System;
 
-namespace HiSocket.Example
+namespace HiSocketExample
 {
+    /// <summary>
+    /// Example: Used to pack or unpack message
+    /// You should inheritance IPackage interface and implement your own logic
+    /// </summary>
     public class Package : PackageBase
     {
         protected override void Pack(BlockBuffer<byte> bytes, Action<byte[]> onPacked)

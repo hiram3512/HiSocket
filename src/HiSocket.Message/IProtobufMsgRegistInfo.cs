@@ -2,16 +2,15 @@
 // Description:
 // Author: hiramtan@live.com
 //***************************************************************************
-
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace HiSocket.Message
 {
-    public abstract class ProtobufMsgBase
+    public interface IProtobufMsgRegistInfo
     {
-        /// <summary>
-        /// User regist here
-        /// </summary>
-        public abstract void Regist();
+        void OnBytes(byte[] msg);
     }
 }

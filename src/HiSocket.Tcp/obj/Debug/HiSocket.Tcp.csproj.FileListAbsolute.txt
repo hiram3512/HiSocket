@@ -10,4 +10,3 @@ D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Debug\HiSocket.Tcp.csproj.CoreComp
 D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Debug\HiSocket.Tcp.csproj.CopyComplete
 D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Debug\HiSocket.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Debug\HiSocket.pdb
-D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Debug\HiSocket.Tcp.csprojAssemblyReference.cache

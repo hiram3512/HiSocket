@@ -51,9 +51,11 @@
     <Compile Include="BinaryMsgRegister.cs" />
     <Compile Include="ChannelManager.cs" />
     <Compile Include="BinaryRegistHelper.cs" />
+    <Compile Include="IProtobufMsgRegistInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtobufMsgBase.cs" />
     <Compile Include="ProtobufMsgRegister.cs" />
+    <Compile Include="ProtobufMsgRegistInfo.cs" />
     <Compile Include="ProtobufSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
