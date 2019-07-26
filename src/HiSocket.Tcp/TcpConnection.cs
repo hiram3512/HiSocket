@@ -28,8 +28,6 @@ namespace HiSocket.Tcp
 
         private Dictionary<string, IPlugin> _plugins = new Dictionary<string, IPlugin>();
 
-        private readonly object _locker = new object();
-
         public TcpConnection(IPackage package)
         {
             this._package = package;
@@ -38,19 +36,13 @@ namespace HiSocket.Tcp
 
         public new void Send(byte[] bytes)
         {
-            lock (_locker)
-            {
-                SendEvent(bytes);
-                _package.Pack(bytes, x => { base.Send(x); });
-            }
+            SendEvent(bytes);
+            _package.Pack(bytes, x => { base.Send(x); });
         }
 
         void OnSocketReceiveHandler(byte[] bytes)
         {
-            lock (_locker)
-            {
                 _package.Unpack(bytes, x => { ReceiveEvent(x); });
-            }
         }
 
         /// <summary>

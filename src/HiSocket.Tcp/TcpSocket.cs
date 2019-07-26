@@ -99,7 +99,7 @@ namespace HiSocket.Tcp
                 //Start connect
                 try
                 {
-                    Socket.BeginConnect(iep, delegate (IAsyncResult ar)
+                    Socket.BeginConnect(iep, delegate(IAsyncResult ar)
                     {
                         try
                         {
@@ -164,7 +164,7 @@ namespace HiSocket.Tcp
             lock (SendBuffer)
             {
                 AssertThat.IsTrue(IsConnected, "From send : disconnected");
-                SendBuffer.Write(bytes);//use for geting havent send data
+                SendBuffer.Write(bytes); //use for geting havent send data
                 try
                 {
                     Socket.BeginSend(bytes, 0, bytes.Length, SocketFlags.None, EndSend, Socket);
@@ -331,18 +331,15 @@ namespace HiSocket.Tcp
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
-            lock (_locker)
-            {
-                Disconnect();
-                Socket = null;
-                OnConnecting = null;
-                OnConnected = null;
-                OnDisconnected = null;
-                OnReceiveBytes = null;
-                OnSendBytes = null;
-                SendBuffer.Dispose();
-                ReceiveBuffer.Dispose();
-            }
+            Disconnect();
+            Socket = null;
+            OnConnecting = null;
+            OnConnected = null;
+            OnDisconnected = null;
+            OnReceiveBytes = null;
+            OnSendBytes = null;
+            SendBuffer.Dispose();
+            ReceiveBuffer.Dispose();
         }
     }
 }
