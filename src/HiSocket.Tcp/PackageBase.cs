@@ -19,9 +19,8 @@ namespace HiSocket.Tcp
         /// <param name="onUnpacked"></param>
         public void Unpack(byte[] source, Action<byte[]> onUnpacked)
         {
-            using (BlockBuffer<byte> buffer = new BlockBuffer<byte>())
+            using (BlockBuffer<byte> buffer = new BlockBuffer<byte>(source))
             {
-                buffer.Write(source);
                 Unpack(buffer, onUnpacked);
             }
         }
@@ -33,9 +32,8 @@ namespace HiSocket.Tcp
         /// <param name="onPacked"></param>
         public void Pack(byte[] source, Action<byte[]> onPacked)
         {
-            using (BlockBuffer<byte> buffer = new BlockBuffer<byte>())
+            using (BlockBuffer<byte> buffer = new BlockBuffer<byte>(source))
             {
-                buffer.Write(source);
                 Pack(buffer, onPacked);
             }
         }

@@ -4,6 +4,151 @@
         <name>Microsoft.VisualStudio.TestPlatform.TestFramework</name>
     </assembly>
     <members>
+        <member name="T:Microsoft.VisualStudio.TestTools.UnitTesting.DoNotParallelizeAttribute">
+            <summary>
+            Specification to disable parallelization.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataSourceType">
+            <summary>
+            Enum to specify whether the data is stored as property or in method.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataSourceType.Property">
+            <summary>
+            Data is declared as property.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataSourceType.Method">
+            <summary>
+            Data is declared in method.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataAttribute">
+            <summary>
+            Attribute to define dynamic data for a test method.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataAttribute.#ctor(System.String,Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataSourceType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataAttribute"/> class.
+            </summary>
+            <param name="dynamicDataSourceName">
+            The name of method or property having test data.
+            </param>
+            <param name="dynamicDataSourceType">
+            Specifies whether the data is stored as property or in method.
+            </param>
+        </member>
+        <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataAttribute.#ctor(System.String,System.Type,Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataSourceType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataAttribute"/> class when the test data is present in a class different
+            from test method's class.
+            </summary>
+            <param name="dynamicDataSourceName">
+            The name of method or property having test data.
+            </param>
+            <param name="dynamicDataDeclaringType">
+            The declaring type of property or method having data. Useful in cases when declaring type is present in a class different from
+            test method's class. If null, declaring type defaults to test method's class type.
+            </param>
+            <param name="dynamicDataSourceType">
+            Specifies whether the data is stored as property or in method.
+            </param>
+        </member>
+        <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataAttribute.DynamicDataDisplayName">
+            <summary>
+            Gets or sets the name of method used to customize the display name in test results.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataAttribute.DynamicDataDisplayNameDeclaringType">
+            <summary>
+            Gets or sets the declaring type used to customize the display name in test results.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataAttribute.GetData(System.Reflection.MethodInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.DynamicDataAttribute.GetDisplayName(System.Reflection.MethodInfo,System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.VisualStudio.TestTools.UnitTesting.ParallelizeAttribute">
+            <summary>
+            Specification for parallelization level for a test run.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.TestTools.UnitTesting.ParallelizeAttribute.DefaultExecutionScope">
+            <summary>
+            The default scope for the parallel run. Although method level gives maximum parallelization, the default is set to
+            class level to enable maximum number of customers to easily convert their tests to run in parallel. In most cases within
+            a class tests aren't thread safe.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.ParallelizeAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.ParallelizeAttribute"/> class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.ParallelizeAttribute.Workers">
+            <summary>
+            Gets or sets the number of workers to be used for the parallel run.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.ParallelizeAttribute.Scope">
+            <summary>
+            Gets or sets the scope of the parallel run.
+            </summary>
+            <remarks>
+            To enable all classes to run in parallel set this to <see cref="F:Microsoft.VisualStudio.TestTools.UnitTesting.ExecutionScope.ClassLevel"/>.
+            To get the maximum parallelization level set this to <see cref="F:Microsoft.VisualStudio.TestTools.UnitTesting.ExecutionScope.MethodLevel"/>.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.VisualStudio.TestTools.UnitTesting.ExecutionScope">
+            <summary>
+            Parallel execution mode.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.TestTools.UnitTesting.ExecutionScope.ClassLevel">
+            <summary>
+            Each thread of execution will be handed a TestClass worth of tests to execute.
+            Within the TestClass, the test methods will execute serially.
+            </summary>
+        </member>
+        <member name="F:Microsoft.VisualStudio.TestTools.UnitTesting.ExecutionScope.MethodLevel">
+            <summary>
+            Each thread of execution will be handed TestMethods to execute.
+            </summary>
+        </member>
+        <member name="T:Microsoft.VisualStudio.TestTools.UnitTesting.ITestDataSource">
+            <summary>
+            Test data source for data driven tests.
+            </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.ITestDataSource.GetData(System.Reflection.MethodInfo)">
+            <summary>
+            Gets the test data from custom test data source.
+            </summary>
+            <param name="methodInfo">
+            The method info of test method.
+            </param>
+            <returns>
+            Test data for calling test method.
+            </returns>
+        </member>
+        <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.ITestDataSource.GetDisplayName(System.Reflection.MethodInfo,System.Object[])">
+            <summary>
+            Gets the display name corresponding to test data row for displaying in TestResults.
+            </summary>
+            <param name="methodInfo">
+            The method info of test method.
+            </param>
+            <param name="data">
+            The test data which is passed to test method.
+            </param>
+            <returns>
+            The <see cref="T:System.String"/>.
+            </returns>
+        </member>
         <member name="T:Microsoft.VisualStudio.TestTools.UnitTesting.ITestMethod">
             <summary>
             TestMethod for execution.
@@ -22,6 +167,11 @@
         <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.ITestMethod.ReturnType">
             <summary>
             Gets the return type of test method.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.ITestMethod.Arguments">
+            <summary>
+            Gets the arguments with which test method is invoked.
             </summary>
         </member>
         <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.ITestMethod.ParameterTypes">
@@ -152,6 +302,12 @@
             <summary>
             Gets or sets display name in test results for customization.
             </summary>
+        </member>
+        <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.DataRowAttribute.GetData(System.Reflection.MethodInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.DataRowAttribute.GetDisplayName(System.Reflection.MethodInfo,System.Object[])">
+            <inheritdoc />
         </member>
         <member name="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertInconclusiveException">
             <summary>
@@ -1902,7 +2058,7 @@
             Thrown if <paramref name="action"/> does not throws exception of type <typeparamref name="T"/>.
             </exception>
             <returns>
-            The type of exception expected to be thrown.
+            The exception that was thrown.
             </returns>
         </member>
         <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowsException``1(System.Action,System.String)">
@@ -1928,7 +2084,7 @@
             Thrown if <paramref name="action"/> does not throws exception of type <typeparamref name="T"/>.
             </exception>
             <returns>
-            The type of exception expected to be thrown.
+            The exception that was thrown.
             </returns>
         </member>
         <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowsException``1(System.Func{System.Object})">
@@ -1950,7 +2106,7 @@
             Thrown if <paramref name="action"/> does not throws exception of type <typeparamref name="T"/>.
             </exception>
             <returns>
-            The type of exception expected to be thrown.
+            The exception that was thrown.
             </returns>
         </member>
         <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowsException``1(System.Func{System.Object},System.String)">
@@ -1976,7 +2132,7 @@
             Thrown if <paramref name="action"/> does not throws exception of type <typeparamref name="T"/>.
             </exception>
             <returns>
-            The type of exception expected to be thrown.
+            The exception that was thrown.
             </returns>
         </member>
         <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowsException``1(System.Func{System.Object},System.String,System.Object[])">
@@ -2005,7 +2161,7 @@
             Thrown if <paramref name="action"/> does not throw exception of type <typeparamref name="T"/>.
             </exception>
             <returns>
-            The type of exception expected to be thrown.
+            The exception that was thrown.
             </returns>
         </member>
         <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowsException``1(System.Action,System.String,System.Object[])">
@@ -2034,7 +2190,7 @@
             Thrown if <paramref name="action"/> does not throws exception of type <typeparamref name="T"/>.
             </exception>
             <returns>
-            The type of exception expected to be thrown.
+            The exception that was thrown.
             </returns>
         </member>
         <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowsExceptionAsync``1(System.Func{System.Threading.Tasks.Task})">
@@ -2169,7 +2325,7 @@
             </summary>
             <remarks>
             Users can use this to plug-in custom assertions through C# extension methods.
-            For instance, the signature of a custom assertion provider could be "public static void ContainsWords(this StringAssert cusomtAssert, string value, ICollection substrings)"
+            For instance, the signature of a custom assertion provider could be "public static void ContainsWords(this StringAssert customAssert, string value, ICollection substrings)"
             Users could then use a syntax similar to the default assertions which in this case is "StringAssert.That.ContainsWords(value, substrings);"
             More documentation is at "https://github.com/Microsoft/testfx-docs".
             </remarks>
@@ -2504,7 +2660,7 @@
             </summary>
             <remarks>
             Users can use this to plug-in custom assertions through C# extension methods.
-            For instance, the signature of a custom assertion provider could be "public static void AreEqualUnordered(this CollectionAssert cusomtAssert, ICollection expected, ICollection actual)"
+            For instance, the signature of a custom assertion provider could be "public static void AreEqualUnordered(this CollectionAssert customAssert, ICollection expected, ICollection actual)"
             Users could then use a syntax similar to the default assertions which in this case is "CollectionAssert.That.AreEqualUnordered(list1, list2);"
             More documentation is at "https://github.com/Microsoft/testfx-docs".
             </remarks>
@@ -3588,6 +3744,21 @@
               Looks up a localized string similar to Assert.Equals should not be used for Assertions. Please use Assert.AreEqual &amp; overloads instead..
             </summary>
         </member>
+        <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.FrameworkMessages.DynamicDataDisplayName">
+            <summary>
+              Looks up a localized string similar to Method {0} must match the expected signature: public static {1} {0}({2})..
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.FrameworkMessages.DynamicDataIEnumerableNull">
+            <summary>
+              Looks up a localized string similar to Property or method {0} on {1} does not return IEnumerable&lt;object[]&gt;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.FrameworkMessages.DynamicDataValueNull">
+            <summary>
+              Looks up a localized string similar to Value returned by property or method {0} shouldn&apos;t be null..
+            </summary>
+        </member>
         <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.FrameworkMessages.ElementNumbersDontMatch">
             <summary>
               Looks up a localized string similar to The number of elements in the collections do not match. Expected:&lt;{1}&gt;. Actual:&lt;{2}&gt;.{0}.
@@ -3660,7 +3831,7 @@
         </member>
         <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.FrameworkMessages.NoDataRow">
             <summary>
-              Looks up a localized string similar to No DataRowAttribute specified. Atleast one DataRowAttribute is required with DataTestMethodAttribute..
+              Looks up a localized string similar to No test data source specified. Atleast one TestDataSource is required with DataTestMethodAttribute..
             </summary>
         </member>
         <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.FrameworkMessages.NoExceptionThrown">
@@ -3785,6 +3956,11 @@
             Test is in an unknown state
             </summary>
         </member>
+        <member name="F:Microsoft.VisualStudio.TestTools.UnitTesting.UnitTestOutcome.NotRunnable">
+            <summary>
+            Test cannot be executed.
+            </summary>
+        </member>
         <member name="T:Microsoft.VisualStudio.TestTools.UnitTesting.UtfHelper">
             <summary>
             Provides helper functionality for the unit test framework
@@ -3834,6 +4010,11 @@
             <param name="testMethod">The test method to execute.</param>
             <returns>An array of TestResult objects that represent the outcome(s) of the test.</returns>
             <remarks>Extensions can override this method to customize running a TestMethod.</remarks>
+        </member>
+        <member name="T:Microsoft.VisualStudio.TestTools.UnitTesting.DataTestMethodAttribute">
+            <summary>
+            Attribute for data driven test where data can be specified inline.
+            </summary>
         </member>
         <member name="T:Microsoft.VisualStudio.TestTools.UnitTesting.TestInitializeAttribute">
             <summary>
@@ -4086,6 +4267,21 @@
             Gets or sets the debug traces by test code.
             </summary>
         </member>
+        <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.TestResult.ExecutionId">
+            <summary>
+            Gets or sets the execution id of the result.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.TestResult.ParentExecId">
+            <summary>
+            Gets or sets the parent execution id of the result.
+            </summary>
+        </member>
+        <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.TestResult.InnerResultsCount">
+            <summary>
+            Gets or sets the inner results count of the result.
+            </summary>
+        </member>
         <member name="P:Microsoft.VisualStudio.TestTools.UnitTesting.TestResult.Duration">
             <summary>
             Gets or sets the duration of test execution.
@@ -4190,30 +4386,6 @@
             <summary>
             Gets the name of a data source found in the &lt;microsoft.visualstudio.qualitytools&gt; section in the app.config file.
             </summary>
-        </member>
-        <member name="T:Microsoft.VisualStudio.TestTools.UnitTesting.DataTestMethodAttribute">
-            <summary>
-            Attribute for data driven test where data can be specified inline.
-            </summary>
-        </member>
-        <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.DataTestMethodAttribute.Execute(Microsoft.VisualStudio.TestTools.UnitTesting.ITestMethod)">
-            <summary>
-            Find all data rows and execute.
-            </summary>
-            <param name="testMethod">
-            The test Method.
-            </param>
-            <returns>
-            An array of <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.TestResult"/>.
-            </returns>
-        </member>
-        <member name="M:Microsoft.VisualStudio.TestTools.UnitTesting.DataTestMethodAttribute.RunDataDrivenTest(Microsoft.VisualStudio.TestTools.UnitTesting.ITestMethod,Microsoft.VisualStudio.TestTools.UnitTesting.DataRowAttribute[])">
-            <summary>
-            Run data driven test method.
-            </summary>
-            <param name="testMethod"> Test method to execute. </param>
-            <param name="dataRows"> Data Row. </param>
-            <returns> Results of execution. </returns>
         </member>
     </members>
 </doc>

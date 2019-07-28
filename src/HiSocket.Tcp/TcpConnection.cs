@@ -42,7 +42,7 @@ namespace HiSocket.Tcp
 
         void OnSocketReceiveHandler(byte[] bytes)
         {
-                _package.Unpack(bytes, x => { ReceiveEvent(x); });
+            _package.Unpack(bytes, x => { ReceiveEvent(x); });
         }
 
         /// <summary>

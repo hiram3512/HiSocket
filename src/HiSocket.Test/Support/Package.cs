@@ -10,10 +10,10 @@ namespace HiSocket.Test
         {
             int length = bytes.WritePosition;
             var header = BitConverter.GetBytes(length);
-            var newBytes = new byte[length + header.Length];
-            Buffer.BlockCopy(header, 0, newBytes, 0, header.Length);
-            Buffer.BlockCopy(bytes.Buffer, 0, newBytes, header.Length, length);
-            onPacked(newBytes);
+            var newBytes = new BlockBuffer<byte>(length + header.Length);
+            newBytes.Write(header);
+            newBytes.Write(bytes.Buffer);
+            onPacked(newBytes.Buffer);
         }
 
         protected override void Unpack(BlockBuffer<byte> bytes, Action<byte[]> onUnpacked)
