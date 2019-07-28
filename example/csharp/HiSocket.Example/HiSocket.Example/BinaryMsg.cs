@@ -22,8 +22,8 @@ namespace HiSocket.Example
 
         public void Send(int hp,int attack)
         {
-            Writer.Write(BitConverter.GetBytes(hp));
-            Writer.Write(BitConverter.GetBytes(attack));
+            Writer.Write(hp);
+            Writer.Write(attack);
             Flush();
         }
     }
