@@ -66,11 +66,11 @@ namespace HiSocket.Test
             bool isOnReceive = false;
 
             TcpSocket tcp = new TcpSocket();
-            tcp.OnConnecting += () => { isOnConnecting = true; };
-            tcp.OnConnected += () => { isOnConnected = true; };
-            tcp.OnDisconnected += () => { isOnDisconnected = true; };
-            tcp.OnSendBytes += (x) => { isOnSend = true; };
-            tcp.OnReceiveBytes += (x) => { isOnReceive = true; };
+            tcp.OnConnecting += (x) => { isOnConnecting = true; };
+            tcp.OnConnected += (x) => { isOnConnected = true; };
+            tcp.OnDisconnected += (x) => { isOnDisconnected = true; };
+            tcp.OnSendBytes += (x,y) => { isOnSend = true; };
+            tcp.OnReceiveBytes += (x,y) => { isOnReceive = true; };
 
             tcp.Connect(Common.GetIpEndPoint());
             Assert.IsTrue(isOnConnecting);
@@ -100,9 +100,9 @@ namespace HiSocket.Test
             tcp.Connect(Common.GetIpEndPoint());
             Common.WaitConnected(tcp);
             int length = 0;
-            tcp.OnReceiveBytes += (x) =>
+            tcp.OnReceiveBytes += (x,y) =>
             {
-                length = x.Length;
+                length = y.Length;
             };
             tcp.Send(new byte[10]);
             Common.WaitValue(ref length, 10);
@@ -120,9 +120,9 @@ namespace HiSocket.Test
             tcp.Connect(Common.GetIpEndPoint());
             Common.WaitConnected(tcp);
             int length = 0;
-            tcp.OnReceiveBytes += (x) =>
+            tcp.OnReceiveBytes += (x,y) =>
             {
-                length += x.Length;
+                length += y.Length;
             };
             tcp.Send(new byte[1 << 10]);
             Common.WaitValue(ref length, 1 << 10, 10000);

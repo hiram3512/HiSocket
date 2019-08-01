@@ -20,8 +20,8 @@ namespace HiSocket.Test
             bool isOnReceive = false;
 
             ITcpConnection tcp = new TcpConnection(new Package());
-            tcp.OnSendMessage += (x) => { isOnSend = true; };
-            tcp.OnReceiveMessage += (x) => { isOnReceive = true; };
+            tcp.OnSendMessage += (x,y) => { isOnSend = true; };
+            tcp.OnReceiveMessage += (x,y) => { isOnReceive = true; };
             tcp.Connect(Common.GetIpEndPoint());
             Common.WaitConnected(tcp);
             tcp.Send(new byte[10]);
@@ -47,13 +47,13 @@ namespace HiSocket.Test
             List<int> sendList = new List<int>();
             List<int> receiveList = new List<int>();
             TcpConnection tcp = new TcpConnection(new Package());
-            tcp.OnSendMessage += x =>
+            tcp.OnSendMessage += (x,y) =>
             {
-                Console.WriteLine("send:" + BitConverter.ToInt32(x, 0)); sendList.Add(BitConverter.ToInt32(x, 0));
+                Console.WriteLine("send:" + BitConverter.ToInt32(y, 0)); sendList.Add(BitConverter.ToInt32(y, 0));
             };
-            tcp.OnReceiveMessage += x =>
+            tcp.OnReceiveMessage += (x,y) =>
             {
-                Console.WriteLine("receive:" + BitConverter.ToInt32(x, 0)); receiveList.Add(BitConverter.ToInt32(x, 0));
+                Console.WriteLine("receive:" + BitConverter.ToInt32(y, 0)); receiveList.Add(BitConverter.ToInt32(y, 0));
             };
             tcp.Connect(Common.GetIpEndPoint());
             Common.WaitConnected(tcp);

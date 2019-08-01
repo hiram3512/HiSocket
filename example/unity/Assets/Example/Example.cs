@@ -29,12 +29,12 @@ public class Example : MonoBehaviour
         _tcp.Connect(iep); //start connect
     }
 
-    void OnConnecting()
+    void OnConnecting(ITcpSocket s)
     {
         Debug.Log("<color=green>connecting...</color>");
     }
 
-    void OnConnected()
+    void OnConnected(ITcpSocket s)
     {
         Debug.Log("<color=green>connected</color>");
         _isConnected = true;
@@ -56,7 +56,7 @@ public class Example : MonoBehaviour
     }
 
 
-    void OnReceive(byte[] bytes)
+    void OnReceive(ITcpConnection c, byte[] bytes)
     {
         var data = BitConverter.ToInt32(bytes, 0);
         Debug.Log("receive: " + data);

@@ -14,12 +14,12 @@ namespace HiSocket.Tcp
         /// <summary>
         /// Trigger when send message
         /// </summary>
-        event Action<byte[]> OnSendMessage;
+        event Action<ITcpConnection, byte[]> OnSendMessage;
 
         /// <summary>
         /// Trigger when recieve message
         /// </summary>
-        event Action<byte[]> OnReceiveMessage;
+        event Action<ITcpConnection, byte[]> OnReceiveMessage;
 
         /// <summary>
         /// Add plugin to extend logic
@@ -32,6 +32,12 @@ namespace HiSocket.Tcp
         /// </summary>
         /// <param name="name">plugin's name</param>
         void RemovePlugin(string name);
+
+        /// <summary>
+        /// If plugin exist
+        /// </summary>
+        /// <param name="name"></param>
+        bool IsPluginExist(string name);
 
         /// <summary>
         /// Get plugin by name

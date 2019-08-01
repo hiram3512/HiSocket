@@ -5,11 +5,11 @@
  * Author: hiramtan@live.com
 ***************************************************************/
 
+using HiFramework;
+using HiFramework.Assert;
 using System;
 using System.Net;
 using System.Net.Sockets;
-using HiFramework;
-using HiFramework.Assert;
 
 namespace HiSocket.Tcp
 {
@@ -31,29 +31,29 @@ namespace HiSocket.Tcp
         /// <summary>
         /// trigger when connecting
         /// </summary>
-        public event Action OnConnecting;
+        public event Action<ITcpSocket> OnConnecting;
 
         /// <summary>
         /// trigger when connected
         /// </summary>
-        public event Action OnConnected;
+        public event Action<ITcpSocket> OnConnected;
 
         /// <summary>
-        /// trigger when disconnected when user initiate close socket
+        /// Trigger when disconnected
         /// </summary>
-        public event Action OnDisconnected;
+        public event Action<ITcpSocket> OnDisconnected;
 
         /// <summary>
         /// trigger when get message from server, it havent unpacked
         /// use .net socket api
         /// </summary>
-        public event Action<byte[]> OnReceiveBytes;
+        public event Action<ITcpSocket, byte[]> OnReceiveBytes;
 
         /// <summary>
         /// trigger when send message to server, it already packed
         /// use .net socket api
         /// </summary>
-        public event Action<byte[]> OnSendBytes;
+        public event Action<ITcpSocket, byte[]> OnSendBytes;
 
         /// <summary>
         /// Send buffer
@@ -96,15 +96,14 @@ namespace HiSocket.Tcp
                 {
                     throw new Exception(e.ToString());
                 }
-                //Start connect
                 try
                 {
-                    Socket.BeginConnect(iep, delegate(IAsyncResult ar)
+                    Socket.BeginConnect(iep, delegate (IAsyncResult ar)
                     {
                         try
                         {
                             var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                            AssertThat.IsNotNull(socket);
+                            AssertThat.IsNotNull(socket, "Socket is null when end connect");
                             socket.EndConnect(ar);
                             if (IsConnected)
                             {
@@ -115,7 +114,6 @@ namespace HiSocket.Tcp
                             {
                                 AssertThat.Fail("Connect faild");
                             }
-
                         }
                         catch (Exception e)
                         {
@@ -138,9 +136,12 @@ namespace HiSocket.Tcp
         /// <param name="port"></param>
         public void Connect(string ip, int port)
         {
-            AssertThat.IsNotNullOrEmpty(ip);
-            var iep = new IPEndPoint(IPAddress.Parse(ip), port);
-            Connect(iep);
+            lock (_locker)
+            {
+                AssertThat.IsNotNullOrEmpty(ip, "ip is null or empty");
+                var iep = new IPEndPoint(IPAddress.Parse(ip), port);
+                Connect(iep);
+            }
         }
 
         /// <summary>
@@ -150,9 +151,28 @@ namespace HiSocket.Tcp
         /// <param name="port"></param>
         public void Connect(IPAddress ip, int port)
         {
-            AssertThat.IsNotNull(ip);
-            var iep = new IPEndPoint(ip, port);
-            Connect(iep);
+            lock (_locker)
+            {
+                AssertThat.IsNotNull(ip, "ip is null");
+                var iep = new IPEndPoint(ip, port);
+                Connect(iep);
+            }
+        }
+
+        /// <summary>
+        /// Connect to server
+        /// </summary>
+        /// <param name="www"></param>
+        /// <param name="port"></param>
+        public void ConnectWWW(string www, int port)
+        {
+            var hostEntry = Dns.GetHostEntry(www);
+
+            foreach (IPAddress address in hostEntry.AddressList)
+            {
+                IPEndPoint ipe = new IPEndPoint(address, port);
+                Connect(ipe);
+            }
         }
 
         /// <summary>
@@ -163,28 +183,19 @@ namespace HiSocket.Tcp
         {
             lock (SendBuffer)
             {
-                AssertThat.IsTrue(IsConnected, "From send : disconnected");
-                SendBuffer.Write(bytes); //use for geting havent send data
-                try
-                {
-                    Socket.BeginSend(bytes, 0, bytes.Length, SocketFlags.None, EndSend, Socket);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.ToString());
-                }
+                Send(bytes, 0, bytes.Length);
             }
         }
 
-        public void Send(byte[] source, int index, int length)
+        public void Send(byte[] bytes, int index, int length)
         {
             lock (SendBuffer)
             {
                 AssertThat.IsTrue(IsConnected, "From send : disconnected");
-                SendBuffer.Write(source, index, length);
+                SendBuffer.Write(bytes, index, length);
                 try
                 {
-                    Socket.BeginSend(source, index, length, SocketFlags.None, EndSend, Socket);
+                    Socket.BeginSend(bytes, index, length, SocketFlags.None, EndSend, Socket);
                 }
                 catch (Exception e)
                 {
@@ -197,26 +208,23 @@ namespace HiSocket.Tcp
         {
             lock (SendBuffer)
             {
-                //User disconnect tcpConnection proactively
-                if (!IsConnected)
+                if (IsConnected)//User disconnect tcpConnection proactively
                 {
-                    return;
+                    int length = 0;
+                    try
+                    {
+                        var socket = ar.AsyncState as System.Net.Sockets.Socket;
+                        AssertThat.IsNotNull(socket, "Socket is null when end send");
+                        length = socket.EndSend(ar);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.ToString());
+                    }
+                    byte[] sendBytes = SendBuffer.Read(length);
+                    SendBuffer.ResetIndex();
+                    SocketSendEvent(sendBytes);
                 }
-
-                int length = 0;
-                try
-                {
-                    var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                    AssertThat.IsNotNull(socket);
-                    length = socket.EndSend(ar);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.ToString());
-                }
-                byte[] sendBytes = SendBuffer.Read(length);
-                SendBuffer.ResetIndex();
-                SocketSendEvent(sendBytes);
             }
         }
 
@@ -224,15 +232,18 @@ namespace HiSocket.Tcp
         {
             lock (ReceiveBuffer)
             {
-                try
+                if (IsConnected)
                 {
-                    var count = ReceiveBuffer.Size - ReceiveBuffer.WritePosition;
-                    Socket.BeginReceive(ReceiveBuffer.Buffer, ReceiveBuffer.WritePosition, count, SocketFlags.None,
-                        EndReceive, Socket);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.ToString());
+                    try
+                    {
+                        var count = ReceiveBuffer.Size - ReceiveBuffer.WritePosition;
+                        Socket.BeginReceive(ReceiveBuffer.Buffer, ReceiveBuffer.WritePosition, count, SocketFlags.None,
+                            EndReceive, Socket);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.ToString());
+                    }
                 }
             }
         }
@@ -241,29 +252,31 @@ namespace HiSocket.Tcp
         {
             lock (ReceiveBuffer)
             {
-                //User disconnect tcpConnection proactively
-                if (!IsConnected)
+                if (IsConnected) //User disconnect tcpConnection proactively
                 {
-                    return;
-                }
-                int length = 0;
-                try
-                {
-                    var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                    AssertThat.IsNotNull(socket);
-                    length = socket.EndReceive(ar);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.ToString());
-                }
-                ReceiveBuffer.MoveWritePosition(length);
-                var bytes = ReceiveBuffer.Read(ReceiveBuffer.WritePosition);
-                ReceiveBuffer.ResetIndex();
-                SocketReceiveEvent(bytes);
-                if (length > 0)
-                {
-                    Receive();
+                    int length = 0;
+                    try
+                    {
+                        var socket = ar.AsyncState as System.Net.Sockets.Socket;
+                        AssertThat.IsNotNull(socket, "Socket is null when end receive");
+                        length = socket.EndReceive(ar);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.ToString());
+                    }
+                    ReceiveBuffer.MoveWritePosition(length);
+                    var bytes = ReceiveBuffer.Read(ReceiveBuffer.WritePosition);
+                    ReceiveBuffer.ResetIndex();
+                    SocketReceiveEvent(bytes);
+                    if (length > 0)
+                    {
+                        Receive();
+                    }
+                    else
+                    {
+                        DisconnectedEvnet();
+                    }
                 }
             }
         }
@@ -284,7 +297,6 @@ namespace HiSocket.Tcp
                         throw new Exception(e.ToString());
                     }
                 }
-                DisconnectedEvnet();
             }
         }
 
@@ -292,7 +304,7 @@ namespace HiSocket.Tcp
         {
             if (OnConnecting != null)
             {
-                OnConnecting();
+                OnConnecting(this);
             }
         }
 
@@ -300,7 +312,7 @@ namespace HiSocket.Tcp
         {
             if (OnConnected != null)
             {
-                OnConnected();
+                OnConnected(this);
             }
         }
 
@@ -308,7 +320,7 @@ namespace HiSocket.Tcp
         {
             if (OnReceiveBytes != null)
             {
-                OnReceiveBytes(bytes);
+                OnReceiveBytes(this, bytes);
             }
         }
 
@@ -316,7 +328,7 @@ namespace HiSocket.Tcp
         {
             if (OnDisconnected != null)
             {
-                OnDisconnected();
+                OnDisconnected(this);
             }
         }
 
@@ -324,22 +336,25 @@ namespace HiSocket.Tcp
         {
             if (OnSendBytes != null)
             {
-                OnSendBytes(bytes);
+                OnSendBytes(this, bytes);
             }
         }
 
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
-            Disconnect();
-            Socket = null;
-            OnConnecting = null;
-            OnConnected = null;
-            OnDisconnected = null;
-            OnReceiveBytes = null;
-            OnSendBytes = null;
-            SendBuffer.Dispose();
-            ReceiveBuffer.Dispose();
+            lock (_locker)
+            {
+                Disconnect();
+                Socket = null;
+                OnConnecting = null;
+                OnConnected = null;
+                OnDisconnected = null;
+                OnReceiveBytes = null;
+                OnSendBytes = null;
+                SendBuffer.Dispose();
+                ReceiveBuffer.Dispose();
+            }
         }
     }
 }

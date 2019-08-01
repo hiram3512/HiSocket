@@ -16,12 +16,12 @@ namespace HiSocket.Tcp
         /// <summary>
         /// Trigger when send message
         /// </summary>
-        public event Action<byte[]> OnSendMessage;
+        public event Action<ITcpConnection, byte[]> OnSendMessage;
 
         /// <summary>
         /// Trigger when recieve message
         /// </summary>
-        public event Action<byte[]> OnReceiveMessage;
+        public event Action<ITcpConnection, byte[]> OnReceiveMessage;
 
 
         private readonly IPackage _package;
@@ -31,7 +31,7 @@ namespace HiSocket.Tcp
         public TcpConnection(IPackage package)
         {
             this._package = package;
-            OnReceiveBytes += OnSocketReceiveHandler;
+            OnReceiveBytes += SocketReceiveHandler;
         }
 
         public new void Send(byte[] bytes)
@@ -40,7 +40,7 @@ namespace HiSocket.Tcp
             _package.Pack(bytes, x => { base.Send(x); });
         }
 
-        void OnSocketReceiveHandler(byte[] bytes)
+        void SocketReceiveHandler(ITcpSocket sender, byte[] bytes)
         {
             _package.Unpack(bytes, x => { ReceiveEvent(x); });
         }
@@ -51,7 +51,7 @@ namespace HiSocket.Tcp
         /// <param name="plugin"></param>
         public void AddPlugin(IPlugin plugin)
         {
-            AssertThat.IsNotNull(plugin);
+            AssertThat.IsNotNull(plugin, "Plugin is null");
             plugin.TcpConnection = this;
             _plugins.Add(plugin.Name, plugin);
         }
@@ -63,8 +63,14 @@ namespace HiSocket.Tcp
         /// <returns>plugin</returns>
         public IPlugin GetPlugin(string name)
         {
-            AssertThat.IsNotNullOrEmpty(name);
+            AssertThat.IsNotNullOrEmpty(name, "Name is null or empty");
             return _plugins[name];
+        }
+
+        public bool IsPluginExist(string name)
+        {
+            AssertThat.IsNotNullOrEmpty(name, "Name is null or empty");
+            return _plugins.ContainsKey(name);
         }
 
         /// <summary>
@@ -73,7 +79,7 @@ namespace HiSocket.Tcp
         /// <param name="name">plugin's name</param>
         public void RemovePlugin(string name)
         {
-            AssertThat.IsNotNullOrEmpty(name);
+            AssertThat.IsNotNullOrEmpty(name, "Name is null or empty");
             _plugins.Remove(name);
         }
 
@@ -81,7 +87,7 @@ namespace HiSocket.Tcp
         {
             if (OnSendMessage != null)
             {
-                OnSendMessage(bytes);
+                OnSendMessage(this, bytes);
             }
         }
 
@@ -89,7 +95,7 @@ namespace HiSocket.Tcp
         {
             if (OnReceiveMessage != null)
             {
-                OnReceiveMessage(bytes);
+                OnReceiveMessage(this, bytes);
             }
         }
     }

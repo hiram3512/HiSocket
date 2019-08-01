@@ -4,3 +4,9 @@ D:\MyGit\github\HiSocket\visual\HiSocket.Tcp\obj\Release\HiSocket.Tcp.csproj.Cor
 D:\MyGit\github\HiSocket\visual\HiSocket.Tcp\obj\Release\HiSocket.Tcp.dll
 D:\MyGit\github\HiSocket\visual\HiSocket.Tcp\obj\Release\HiSocket.Tcp.pdb
 D:\MyGit\github\HiSocket\visual\HiSocket.Tcp\obj\Release\HiSocket.Tcp.csprojResolveAssemblyReference.cache
+D:\MyGit\github\HiSocket\src\release\HiSocket.dll
+D:\MyGit\github\HiSocket\src\release\HiSocket.pdb
+D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Release\HiSocket.Tcp.csproj.CoreCompileInputs.cache
+D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Release\HiSocket.Tcp.csproj.CopyComplete
+D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Release\HiSocket.dll
+D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Release\HiSocket.pdb
