@@ -15,3 +15,5 @@ D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\HiSocket.Example.p
 D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\HiSocket.Message.pdb
 D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\HiSocket.pdb
 D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\obj\Debug\HiSocket.Example_Unity.csproj.CopyComplete
+D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\HiFramework.Unity.dll
+D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\UnityEngine.dll

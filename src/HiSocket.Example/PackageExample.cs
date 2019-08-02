@@ -1,4 +1,10 @@
-﻿using HiFramework;
+﻿/***************************************************************
+ * Description: 
+ *
+ * Documents: https://github.com/hiramtan/HiSocket
+ * Author: hiramtan@live.com
+***************************************************************/
+using HiFramework;
 using HiSocket.Tcp;
 using System;
 

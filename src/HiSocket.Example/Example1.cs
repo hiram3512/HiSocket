@@ -1,4 +1,10 @@
-﻿using HiSocket.Tcp;
+﻿/***************************************************************
+ * Description: 
+ *
+ * Documents: https://github.com/hiramtan/HiSocket
+ * Author: hiramtan@live.com
+***************************************************************/
+using HiSocket.Tcp;
 
 namespace HiSocket.Example
 {
