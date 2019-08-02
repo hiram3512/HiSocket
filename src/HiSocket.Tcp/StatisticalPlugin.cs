@@ -15,11 +15,11 @@ namespace HiSocket.Tcp
         /// <summary>
         /// How many bytes total send
         /// </summary>
-        private int howManyBytesSend;
+        public int HowManyBytesSend;
 
         public StatisticalPlugin(string name) : base(name)
         {
-            TcpConnection.OnSendMessage += (x, y) => { howManyBytesSend += y.Length; };
+            TcpConnection.OnSendMessage += (x) => { HowManyBytesSend += x.Length; };
         }
     }
 }

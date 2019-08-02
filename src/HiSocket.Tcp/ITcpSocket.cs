@@ -41,29 +41,29 @@ namespace HiSocket.Tcp
         /// <summary>
         /// trigger when connecting
         /// </summary>
-        event Action<ITcpSocket> OnConnecting;
+        event Action OnConnecting;
 
         /// <summary>
         /// trigger when connected
         /// </summary>
-        event Action<ITcpSocket> OnConnected;
+        event Action OnConnected;
 
         /// <summary>
         /// Trigger when disconnecte
         /// </summary>
-        event Action<ITcpSocket> OnDisconnected;
+        event Action OnDisconnected;
 
         /// <summary>
         /// trigger when get bytes from server
         /// use .net socket api
         /// </summary>
-        event Action<ITcpSocket, byte[]> OnReceiveBytes;
+        event Action<byte[]> OnReceiveBytes;
 
         /// <summary>
         /// trigger when send bytes to server
         /// use .net socket api
         /// </summary>
-        event Action<ITcpSocket, byte[]> OnSendBytes;
+        event Action<byte[]> OnSendBytes;
 
         /// <summary>
         /// Connect to server

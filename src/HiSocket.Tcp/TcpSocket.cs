@@ -31,29 +31,29 @@ namespace HiSocket.Tcp
         /// <summary>
         /// trigger when connecting
         /// </summary>
-        public event Action<ITcpSocket> OnConnecting;
+        public event Action OnConnecting;
 
         /// <summary>
         /// trigger when connected
         /// </summary>
-        public event Action<ITcpSocket> OnConnected;
+        public event Action OnConnected;
 
         /// <summary>
         /// Trigger when disconnected
         /// </summary>
-        public event Action<ITcpSocket> OnDisconnected;
+        public event Action OnDisconnected;
 
         /// <summary>
         /// trigger when get message from server, it havent unpacked
         /// use .net socket api
         /// </summary>
-        public event Action<ITcpSocket, byte[]> OnReceiveBytes;
+        public event Action<byte[]> OnReceiveBytes;
 
         /// <summary>
         /// trigger when send message to server, it already packed
         /// use .net socket api
         /// </summary>
-        public event Action<ITcpSocket, byte[]> OnSendBytes;
+        public event Action<byte[]> OnSendBytes;
 
         /// <summary>
         /// Send buffer
@@ -304,7 +304,7 @@ namespace HiSocket.Tcp
         {
             if (OnConnecting != null)
             {
-                OnConnecting(this);
+                OnConnecting();
             }
         }
 
@@ -312,7 +312,7 @@ namespace HiSocket.Tcp
         {
             if (OnConnected != null)
             {
-                OnConnected(this);
+                OnConnected();
             }
         }
 
@@ -320,7 +320,7 @@ namespace HiSocket.Tcp
         {
             if (OnReceiveBytes != null)
             {
-                OnReceiveBytes(this, bytes);
+                OnReceiveBytes(bytes);
             }
         }
 
@@ -328,7 +328,7 @@ namespace HiSocket.Tcp
         {
             if (OnDisconnected != null)
             {
-                OnDisconnected(this);
+                OnDisconnected();
             }
         }
 
@@ -336,7 +336,7 @@ namespace HiSocket.Tcp
         {
             if (OnSendBytes != null)
             {
-                OnSendBytes(this, bytes);
+                OnSendBytes(bytes);
             }
         }
 

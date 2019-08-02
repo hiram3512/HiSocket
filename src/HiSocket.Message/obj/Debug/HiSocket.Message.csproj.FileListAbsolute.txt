@@ -17,3 +17,5 @@ D:\MyGit\github\HiSocket\src\HiSocket.Message\obj\Debug\HiSocket.Message.csproj.
 D:\MyGit\github\HiSocket\src\HiSocket.Message\obj\Debug\HiSocket.Message.csproj.CopyComplete
 D:\MyGit\github\HiSocket\src\HiSocket.Message\obj\Debug\HiSocket.Message.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Message\obj\Debug\HiSocket.Message.pdb
+D:\MyGit\github\HiSocket\HiSocket\HiSocket.Message.dll
+D:\MyGit\github\HiSocket\HiSocket\HiSocket.Message.pdb

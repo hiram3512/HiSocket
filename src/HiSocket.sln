@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiSocket.Test", "HiSocket.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiSocket.Tcp", "HiSocket.Tcp\HiSocket.Tcp.csproj", "{0B0FE68D-EB3F-42E0-B151-BBE221CFA10C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiSocket.Example", "HiSocket.Example\HiSocket.Example.csproj", "{5DCAF536-883E-4336-ADED-32F7566D809E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiSocket.Example_Unity", "HiSocket.Example_Unity\HiSocket.Example_Unity.csproj", "{78476562-2F48-4216-9C5F-87E77C25EE56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{0B0FE68D-EB3F-42E0-B151-BBE221CFA10C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B0FE68D-EB3F-42E0-B151-BBE221CFA10C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B0FE68D-EB3F-42E0-B151-BBE221CFA10C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DCAF536-883E-4336-ADED-32F7566D809E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DCAF536-883E-4336-ADED-32F7566D809E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DCAF536-883E-4336-ADED-32F7566D809E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DCAF536-883E-4336-ADED-32F7566D809E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78476562-2F48-4216-9C5F-87E77C25EE56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78476562-2F48-4216-9C5F-87E77C25EE56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78476562-2F48-4216-9C5F-87E77C25EE56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78476562-2F48-4216-9C5F-87E77C25EE56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

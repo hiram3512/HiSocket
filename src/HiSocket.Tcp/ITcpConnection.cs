@@ -14,12 +14,12 @@ namespace HiSocket.Tcp
         /// <summary>
         /// Trigger when send message
         /// </summary>
-        event Action<ITcpConnection, byte[]> OnSendMessage;
+        event Action<byte[]> OnSendMessage;
 
         /// <summary>
         /// Trigger when recieve message
         /// </summary>
-        event Action<ITcpConnection, byte[]> OnReceiveMessage;
+        event Action<byte[]> OnReceiveMessage;
 
         /// <summary>
         /// Add plugin to extend logic

@@ -39,8 +39,8 @@
         }
 ```
 更多示例:
-- C#项目示例:[示例](/example/csharp)
-- Unity项目示例:[示例](/example/unity)
+- C#项目示例:[示例](src/HiSocket.Example)
+- Unity项目示例:[示例](src/HiSocket.Example_Unity)
 
 -----
 
@@ -75,11 +75,11 @@
 - Ping: 源码包含一个Ping插件可以使用,但是如果用在unity3d工程中会报错(因为mono的问题,在.net2.0会报错.net4.6可以正常使用)
 
 ### 高级功能
-- 如果对Socket很熟悉,也可以使用TcpSocket(UdpSocket)来实现功能,但是还是推荐使用TcpConnection(UdpConnection)的方式.
+- 如果对Socket很熟悉,也可以使用TcpSocket来实现功能,但是还是推荐使用TcpConnection的方式.
 - 通过接口可以访问底层Socket对象扩展逻辑,比如修改超时时间.
 - 通过接口可以获得发送接收缓冲区,比如断开连接时用户如何处理缓冲区数据?直接清空还是重连后继续发送.n
 - OnSocketReceive和OnReceive是不同的,比如当OnSocketReceive接受大小是100字节,当用户解包时不做操作,OnReceive大小是100字节,当用户解包时做解压缩(解密等)操作后,OnReceive大小不再是100.
-- 可以向TcpConnection(UdpConnection)添加不同的插件完成所需的功能,
+- 可以向TcpConnection添加不同的插件完成所需的功能,
 - 注册基类可以方便快速注册消息(基于反射)
 - 加密采用AES的方式,如果想使用加密可以调用这部分的接口加密字节数据.
 - .etc
@@ -138,27 +138,33 @@ Udp协议提供不可靠的报文消息,用户无法知道当前连接状态,但
 
 Package example:
 ```csharp
-public class Package : PackageBase
+public class PackageExample:PackageBase
     {
         protected override void Pack(BlockBuffer<byte> bytes, Action<byte[]> onPacked)
         {
+            //Use int as header
             int length = bytes.WritePosition;
             var header = BitConverter.GetBytes(length);
-            var newBytes = new byte[length + header.Length];
-            Buffer.BlockCopy(header, 0, newBytes, 0, header.Length);
-            Buffer.BlockCopy(bytes.Buffer, 0, newBytes, header.Length, length);
-            onPacked(newBytes);
+            var newBytes = new BlockBuffer<byte>(length + header.Length);
+            //Write header and body to buffer
+            newBytes.Write(header);
+            newBytes.Write(bytes.Buffer);
+            //Notice pack funished
+            onPacked(newBytes.Buffer);
         }
 
         protected override void Unpack(BlockBuffer<byte> bytes, Action<byte[]> onUnpacked)
         {
+            //Because header is int and cost 4 byte
             while (bytes.WritePosition > 4)
             {
                 int length = BitConverter.ToInt32(bytes.Buffer, 0);
+                //If receive body
                 if (bytes.WritePosition >= 4 + length)
                 {
                     bytes.MoveReadPostion(4);
                     var data = bytes.Read(length);
+                    //Notice unpack finished
                     onUnpacked(data);
                     bytes.ResetIndex();
                 }
@@ -168,40 +174,53 @@ public class Package : PackageBase
 ```
 
 ```csharp
-private IPackage package = new PackageExample();
-        private TcpConnection tcp;
-        static void Main(string[] args)
+TcpConnection tcp;
+        void Connect()
         {
+            tcp = new TcpConnection(new PackageExample());
+            tcp.OnDisconnected += OnDisconnect;
+            tcp.Connect("127.0.0.1", 999);
+            tcp.Socket.NoDelay = true;
+            tcp.Socket.SendTimeout = 100;
+            tcp.Socket.ReceiveTimeout = 200;
+            //...
 
-        }
-        void Init()
-        {
-            tcp = new TcpConnection(package);
-            tcp.OnConnected += OnConnected;
-            tcp.OnReceive += Receive;
-            //_tcp.OnError
-            //_tcp.OnDisconnected
-        }
-        void OnConnected()
-        {
-            //connect success
-            tcp.Send(new byte[10]);//send message
-            tcp.DisConnect();//disconnect
+
+            // you can add plugin sub from IPlugins
+            tcp.AddPlugin(new StatisticalPlugin("Statistical"));//this plugin calculate how many send
         }
 
-        void Receive(byte[] bytes)
+        void OnDisconnect()
         {
-            //get message from server
+            var length = tcp.SendBuffer.WritePosition;
+            Console.WriteLine("Still have {0} not send to server when abnormal shutdown");
+            var data = tcp.SendBuffer.Read(length);
+            tcp.SendBuffer.ResetIndex();
+
+            //use can handle these data, for example maybe can send next time when connect again
+            //tcp.Send(data);
         }
 ```
 
 ```csharp
- void Init()
+/// <summary>
+    /// The recommend is use TcpConnection 
+    /// </summary>
+    class Example3
+    {
+        TcpSocket tcp; //The recommend is use TcpConnection 
+        void Connect()
         {
-            var tcp = new TcpConnection(new PackageExample());
-            tcp.AddPlugin(new PingPlugin("ping", tcp));
-            //tcp.GetPlugin("ping");
+            tcp = new TcpSocket(1024);//set buffer size
+            tcp.OnReceiveBytes += OnReceive;
+            tcp.Connect("127.0.0.1", 999);
         }
+
+        void OnReceive(byte[] bytes)
+        {
+            //split bytes here
+        }
+    }
 ```
 
 

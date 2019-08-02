@@ -58,7 +58,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Support\Package.cs" />
     <Compile Include="Support\Common.cs" />
     <Compile Include="Support\TcpServer.cs" />
     <Compile Include="TcpConnectionTest.cs" />
@@ -69,6 +68,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HiSocket.Example\HiSocket.Example.csproj">
+      <Project>{5dcaf536-883e-4336-aded-32f7566d809e}</Project>
+      <Name>HiSocket.Example</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HiSocket.Message\HiSocket.Message.csproj">
       <Project>{e6f2d630-41d9-48ca-835a-a82a8838aa68}</Project>
       <Name>HiSocket.Message</Name>

@@ -16,12 +16,12 @@ namespace HiSocket.Tcp
         /// <summary>
         /// Trigger when send message
         /// </summary>
-        public event Action<ITcpConnection, byte[]> OnSendMessage;
+        public event Action<byte[]> OnSendMessage;
 
         /// <summary>
         /// Trigger when recieve message
         /// </summary>
-        public event Action<ITcpConnection, byte[]> OnReceiveMessage;
+        public event Action<byte[]> OnReceiveMessage;
 
 
         private readonly IPackage _package;
@@ -40,7 +40,7 @@ namespace HiSocket.Tcp
             _package.Pack(bytes, x => { base.Send(x); });
         }
 
-        void SocketReceiveHandler(ITcpSocket sender, byte[] bytes)
+        void SocketReceiveHandler(byte[] bytes)
         {
             _package.Unpack(bytes, x => { ReceiveEvent(x); });
         }
@@ -87,7 +87,7 @@ namespace HiSocket.Tcp
         {
             if (OnSendMessage != null)
             {
-                OnSendMessage(this, bytes);
+                OnSendMessage(bytes);
             }
         }
 
@@ -95,7 +95,7 @@ namespace HiSocket.Tcp
         {
             if (OnReceiveMessage != null)
             {
-                OnReceiveMessage(this, bytes);
+                OnReceiveMessage(bytes);
             }
         }
     }
