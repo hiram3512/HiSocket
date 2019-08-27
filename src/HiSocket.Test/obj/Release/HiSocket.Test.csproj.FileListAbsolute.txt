@@ -28,8 +28,6 @@ D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Release\zh-Hans\Microsoft.VisualS
 D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Release\zh-Hans\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Release\HiSocket.Test.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Release\HiSocket.Test.pdb
-D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Release\HiFramework.Assert.dll
-D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Release\HiFramework.Core.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Release\HiFramework.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Release\HiSocket.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Release\HiSocket.Message.dll
@@ -45,3 +43,5 @@ D:\MyGit\github\HiSocket\src\HiSocket.Test\obj\Release\HiSocket.Test.csproj.Core
 D:\MyGit\github\HiSocket\src\HiSocket.Test\obj\Release\HiSocket.Test.csproj.CopyComplete
 D:\MyGit\github\HiSocket\src\HiSocket.Test\obj\Release\HiSocket.Test.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Test\obj\Release\HiSocket.Test.pdb
+D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Release\HiSocket.Example.exe
+D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Release\HiSocket.Example.pdb

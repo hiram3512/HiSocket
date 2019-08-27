@@ -6,7 +6,6 @@
 ***************************************************************/
 
 using HiFramework;
-using HiFramework.Assert;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -85,8 +84,8 @@ namespace HiSocket.Tcp
         {
             lock (_locker)
             {
-                AssertThat.IsFalse(IsConnected, "Already Connected");
-                AssertThat.IsNotNull(iep, "iep is null");
+                Assert.IsFalse(IsConnected, "Already Connected");
+                Assert.IsNotNull(iep, "iep is null");
                 ConnectingEvent();
                 try
                 {
@@ -103,7 +102,7 @@ namespace HiSocket.Tcp
                         try
                         {
                             var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                            AssertThat.IsNotNull(socket, "Socket is null when end connect");
+                            Assert.IsNotNull(socket, "Socket is null when end connect");
                             socket.EndConnect(ar);
                             if (IsConnected)
                             {
@@ -112,7 +111,7 @@ namespace HiSocket.Tcp
                             }
                             else
                             {
-                                AssertThat.Fail("Connect faild");
+                                Assert.Fail("Connect faild");
                             }
                         }
                         catch (Exception e)
@@ -138,7 +137,7 @@ namespace HiSocket.Tcp
         {
             lock (_locker)
             {
-                AssertThat.IsNotNullOrEmpty(ip, "ip is null or empty");
+                Assert.IsNotNullOrEmpty(ip, "ip is null or empty");
                 var iep = new IPEndPoint(IPAddress.Parse(ip), port);
                 Connect(iep);
             }
@@ -153,7 +152,7 @@ namespace HiSocket.Tcp
         {
             lock (_locker)
             {
-                AssertThat.IsNotNull(ip, "ip is null");
+                Assert.IsNotNull(ip, "ip is null");
                 var iep = new IPEndPoint(ip, port);
                 Connect(iep);
             }
@@ -191,7 +190,7 @@ namespace HiSocket.Tcp
         {
             lock (SendBuffer)
             {
-                AssertThat.IsTrue(IsConnected, "From send : disconnected");
+                Assert.IsTrue(IsConnected, "From send : disconnected");
                 SendBuffer.Write(bytes, index, length);
                 try
                 {
@@ -214,7 +213,7 @@ namespace HiSocket.Tcp
                     try
                     {
                         var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                        AssertThat.IsNotNull(socket, "Socket is null when end send");
+                        Assert.IsNotNull(socket, "Socket is null when end send");
                         length = socket.EndSend(ar);
                     }
                     catch (Exception e)
@@ -258,7 +257,7 @@ namespace HiSocket.Tcp
                     try
                     {
                         var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                        AssertThat.IsNotNull(socket, "Socket is null when end receive");
+                        Assert.IsNotNull(socket, "Socket is null when end receive");
                         length = socket.EndReceive(ar);
                     }
                     catch (Exception e)
@@ -287,6 +286,7 @@ namespace HiSocket.Tcp
             {
                 if (IsConnected)
                 {
+                    DisconnectedEvnet();
                     try
                     {
                         Socket.Shutdown(SocketShutdown.Both);

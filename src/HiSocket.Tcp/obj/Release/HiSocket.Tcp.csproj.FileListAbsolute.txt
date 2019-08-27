@@ -10,3 +10,5 @@ D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Release\HiSocket.Tcp.csproj.CoreCo
 D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Release\HiSocket.Tcp.csproj.CopyComplete
 D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Release\HiSocket.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Release\HiSocket.pdb
+D:\MyGit\github\HiSocket\HiSocket\HiSocket.dll
+D:\MyGit\github\HiSocket\HiSocket\HiSocket.pdb

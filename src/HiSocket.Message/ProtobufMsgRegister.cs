@@ -2,7 +2,7 @@
 // Description:
 // Author: hiramtan@live.com
 //***************************************************************************
-using HiFramework.Assert;
+using HiFramework;
 using System;
 using System.Collections.Generic;
 
@@ -32,7 +32,7 @@ namespace HiSocket.Message
         public static void Regist<T>(Action<T> onMsg) where T : class
         {
             var key = typeof(T).FullName;
-            AssertThat.IsFalse(_msgs.ContainsKey(key), "Already regist this key:" + key);
+            Assert.IsFalse(_msgs.ContainsKey(key), "Already regist this key:" + key);
             var info = new ProtobufMsgRegistInfo<T>(onMsg);
             _msgs.Add(key, info);
         }
@@ -45,7 +45,7 @@ namespace HiSocket.Message
         public static void Unregist(Type type)
         {
             var key = type.FullName;
-            AssertThat.IsTrue(_msgs.ContainsKey(key));
+            Assert.IsTrue(_msgs.ContainsKey(key));
             _msgs.Remove(key);
         }
 
@@ -56,8 +56,8 @@ namespace HiSocket.Message
         /// <param name="bytes"></param>
         public static void Dispatch(string key, byte[] bytes)
         {
-            AssertThat.IsNotNullOrEmpty(key);
-            AssertThat.IsTrue(_msgs.ContainsKey(key));
+            Assert.IsNotNullOrEmpty(key);
+            Assert.IsTrue(_msgs.ContainsKey(key));
             _msgs[key].OnBytes(bytes);
         }
     }

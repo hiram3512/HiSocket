@@ -34,14 +34,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HiFramework, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HiFramework.1.0.6\lib\net35\HiFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="HiFramework.Assert, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HiFramework.Assert.1.0.3\lib\net35\HiFramework.Assert.dll</HintPath>
-    </Reference>
-    <Reference Include="HiFramework.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HiFramework.Core.1.0.0\lib\net35\HiFramework.Core.dll</HintPath>
+    <Reference Include="HiFramework, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HiFramework.1.0.8\lib\net35\HiFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

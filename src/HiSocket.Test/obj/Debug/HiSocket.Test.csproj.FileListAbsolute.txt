@@ -42,8 +42,6 @@ D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Debug\Microsoft.VisualStudio.Test
 D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Debug\zh-Hans\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
-D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Debug\HiFramework.Assert.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Debug\HiFramework.dll
-D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Debug\HiFramework.Core.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Debug\HiSocket.Example.exe
 D:\MyGit\github\HiSocket\src\HiSocket.Test\bin\Debug\HiSocket.Example.pdb

@@ -12,4 +12,3 @@ D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Debug\HiSocket.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Debug\HiSocket.pdb
 D:\MyGit\github\HiSocket\HiSocket\HiSocket.dll
 D:\MyGit\github\HiSocket\HiSocket\HiSocket.pdb
-D:\MyGit\github\HiSocket\src\HiSocket.Tcp\obj\Debug\HiSocket.Tcp.csprojAssemblyReference.cache

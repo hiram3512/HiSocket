@@ -1,0 +1,13 @@
+D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Release\HiSocket.Example.exe
+D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Release\HiSocket.Example.pdb
+D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Release\HiFramework.dll
+D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Release\HiSocket.dll
+D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Release\HiSocket.Message.dll
+D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Release\protobuf-net.dll
+D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Release\HiSocket.Message.pdb
+D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Release\HiSocket.pdb
+D:\MyGit\github\HiSocket\src\HiSocket.Example\obj\Release\HiSocket.Example.csprojAssemblyReference.cache
+D:\MyGit\github\HiSocket\src\HiSocket.Example\obj\Release\HiSocket.Example.csproj.CoreCompileInputs.cache
+D:\MyGit\github\HiSocket\src\HiSocket.Example\obj\Release\HiSocket.Example.csproj.CopyComplete
+D:\MyGit\github\HiSocket\src\HiSocket.Example\obj\Release\HiSocket.Example.exe
+D:\MyGit\github\HiSocket\src\HiSocket.Example\obj\Release\HiSocket.Example.pdb

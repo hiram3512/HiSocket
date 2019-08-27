@@ -7,7 +7,7 @@
 
 using System;
 using System.Collections.Generic;
-using HiFramework.Assert;
+using HiFramework;
 
 namespace HiSocket.Tcp
 {
@@ -51,7 +51,7 @@ namespace HiSocket.Tcp
         /// <param name="plugin"></param>
         public void AddPlugin(IPlugin plugin)
         {
-            AssertThat.IsNotNull(plugin, "Plugin is null");
+            Assert.IsNotNull(plugin, "Plugin is null");
             plugin.TcpConnection = this;
             _plugins.Add(plugin.Name, plugin);
         }
@@ -63,13 +63,13 @@ namespace HiSocket.Tcp
         /// <returns>plugin</returns>
         public IPlugin GetPlugin(string name)
         {
-            AssertThat.IsNotNullOrEmpty(name, "Name is null or empty");
+            Assert.IsNotNullOrEmpty(name, "Name is null or empty");
             return _plugins[name];
         }
 
         public bool IsPluginExist(string name)
         {
-            AssertThat.IsNotNullOrEmpty(name, "Name is null or empty");
+            Assert.IsNotNullOrEmpty(name, "Name is null or empty");
             return _plugins.ContainsKey(name);
         }
 
@@ -79,7 +79,7 @@ namespace HiSocket.Tcp
         /// <param name="name">plugin's name</param>
         public void RemovePlugin(string name)
         {
-            AssertThat.IsNotNullOrEmpty(name, "Name is null or empty");
+            Assert.IsNotNullOrEmpty(name, "Name is null or empty");
             _plugins.Remove(name);
         }
 

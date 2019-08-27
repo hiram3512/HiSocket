@@ -4,8 +4,6 @@ D:\MyGit\github\HiSocket\src\HiSocket.Example\obj\Debug\HiSocket.Example.csprojA
 D:\MyGit\github\HiSocket\src\HiSocket.Example\obj\Debug\HiSocket.Example.csproj.CoreCompileInputs.cache
 D:\MyGit\github\HiSocket\src\HiSocket.Example\obj\Debug\HiSocket.Example.exe
 D:\MyGit\github\HiSocket\src\HiSocket.Example\obj\Debug\HiSocket.Example.pdb
-D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Debug\HiFramework.Assert.dll
-D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Debug\HiFramework.Core.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Debug\HiFramework.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Debug\HiSocket.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Example\bin\Debug\HiSocket.Message.dll

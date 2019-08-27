@@ -8,9 +8,7 @@ D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\HiSocket.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\HiSocket.Example.exe
 D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\HiSocket.Message.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\HiFramework.dll
-D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\HiFramework.Assert.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\protobuf-net.dll
-D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\HiFramework.Core.dll
 D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\HiSocket.Example.pdb
 D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\HiSocket.Message.pdb
 D:\MyGit\github\HiSocket\src\HiSocket.Example_Unity\bin\Debug\HiSocket.pdb

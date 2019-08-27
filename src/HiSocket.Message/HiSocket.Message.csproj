@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HiFramework.Assert, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HiFramework.Assert.1.0.3\lib\net35\HiFramework.Assert.dll</HintPath>
+    <Reference Include="HiFramework, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HiFramework.1.0.8\lib\net35\HiFramework.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\lib\protobuf-net.dll</HintPath>

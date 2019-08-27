@@ -7,7 +7,7 @@
 
 using System;
 using System.Reflection;
-using HiFramework.Assert;
+using HiFramework;
 
 namespace HiSocket.Message
 {
@@ -26,7 +26,7 @@ namespace HiSocket.Message
                 if (types[i].IsSubclassOf(baseType))
                 {
                     var ins = Activator.CreateInstance(types[i]) as BinaryMsgBase;
-                    AssertThat.IsNotNull(ins);
+                    Assert.IsNotNull(ins);
                     ins.Regist();
                 }
             }

@@ -3,7 +3,7 @@
 // Author: hiramtan@live.com
 //***************************************************************************
 
-using HiFramework.Assert;
+using HiFramework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +32,7 @@ namespace HiSocket.Message
         /// <param name="onMsg"></param>
         public static void Regist(int key, Action<BinaryReader> onMsg)
         {
-            AssertThat.IsFalse(_msgs.ContainsKey(key), "Already regist this key:" + key);
+            Assert.IsFalse(_msgs.ContainsKey(key), "Already regist this key:" + key);
             _msgs.Add(key, onMsg);
         }
 
@@ -42,7 +42,7 @@ namespace HiSocket.Message
         /// <param name="key"></param>
         public static void Unregist(int key)
         {
-            AssertThat.IsTrue(_msgs.ContainsKey(key));
+            Assert.IsTrue(_msgs.ContainsKey(key));
             _msgs.Remove(key);
         }
 
@@ -53,7 +53,7 @@ namespace HiSocket.Message
         /// <param name="bytes"></param>
         public static void Dispatch(int key, byte[] bytes)
         {
-            AssertThat.IsTrue(_msgs.ContainsKey(key));
+            Assert.IsTrue(_msgs.ContainsKey(key));
             var ms = new MemoryStream(bytes);
             var reader = new BinaryReader(ms);
             _msgs[key](reader);

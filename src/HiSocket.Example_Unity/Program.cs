@@ -4,7 +4,7 @@
  * Documents: https://github.com/hiramtan/HiSocket
  * Author: hiramtan@live.com
 ***************************************************************/
-using HiFramework.Core;
+using HiFramework;
 using HiFramework.Unity;
 using HiSocket.Example;
 using HiSocket.Tcp;
@@ -25,7 +25,7 @@ namespace HiSocket.Example_Unity
         // Use this for initialization
         void Start()
         {
-            Center.Init();
+            Center.Init(new UnityBinder());
             tick = Center.Get<ITickComponent>();
             Connect();
         }
