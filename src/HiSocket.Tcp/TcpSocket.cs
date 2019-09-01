@@ -84,8 +84,8 @@ namespace HiSocket.Tcp
         {
             lock (_locker)
             {
-                Assert.IsFalse(IsConnected, "Already Connected");
-                Assert.IsNotNull(iep, "iep is null");
+                AssertThat.IsFalse(IsConnected, "Already Connected");
+                AssertThat.IsNotNull(iep, "iep is null");
                 ConnectingEvent();
                 try
                 {
@@ -102,7 +102,7 @@ namespace HiSocket.Tcp
                         try
                         {
                             var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                            Assert.IsNotNull(socket, "Socket is null when end connect");
+                            AssertThat.IsNotNull(socket, "Socket is null when end connect");
                             socket.EndConnect(ar);
                             if (IsConnected)
                             {
@@ -111,7 +111,7 @@ namespace HiSocket.Tcp
                             }
                             else
                             {
-                                Assert.Fail("Connect faild");
+                                AssertThat.Fail("Connect faild");
                             }
                         }
                         catch (Exception e)
@@ -137,7 +137,7 @@ namespace HiSocket.Tcp
         {
             lock (_locker)
             {
-                Assert.IsNotNullOrEmpty(ip, "ip is null or empty");
+                AssertThat.IsNotNullOrEmpty(ip, "ip is null or empty");
                 var iep = new IPEndPoint(IPAddress.Parse(ip), port);
                 Connect(iep);
             }
@@ -152,7 +152,7 @@ namespace HiSocket.Tcp
         {
             lock (_locker)
             {
-                Assert.IsNotNull(ip, "ip is null");
+                AssertThat.IsNotNull(ip, "ip is null");
                 var iep = new IPEndPoint(ip, port);
                 Connect(iep);
             }
@@ -166,11 +166,14 @@ namespace HiSocket.Tcp
         public void ConnectWWW(string www, int port)
         {
             var hostEntry = Dns.GetHostEntry(www);
-
-            foreach (IPAddress address in hostEntry.AddressList)
+            if (hostEntry.AddressList != null && hostEntry.AddressList.Length > 0)
             {
-                IPEndPoint ipe = new IPEndPoint(address, port);
+                IPEndPoint ipe = new IPEndPoint(hostEntry.AddressList[0], port);
                 Connect(ipe);
+            }
+            else
+            {
+                AssertThat.Fail("Check host"); 
             }
         }
 
@@ -190,7 +193,7 @@ namespace HiSocket.Tcp
         {
             lock (SendBuffer)
             {
-                Assert.IsTrue(IsConnected, "From send : disconnected");
+                AssertThat.IsTrue(IsConnected, "From send : disconnected");
                 SendBuffer.Write(bytes, index, length);
                 try
                 {
@@ -213,7 +216,7 @@ namespace HiSocket.Tcp
                     try
                     {
                         var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                        Assert.IsNotNull(socket, "Socket is null when end send");
+                        AssertThat.IsNotNull(socket, "Socket is null when end send");
                         length = socket.EndSend(ar);
                     }
                     catch (Exception e)
@@ -257,7 +260,7 @@ namespace HiSocket.Tcp
                     try
                     {
                         var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                        Assert.IsNotNull(socket, "Socket is null when end receive");
+                        AssertThat.IsNotNull(socket, "Socket is null when end receive");
                         length = socket.EndReceive(ar);
                     }
                     catch (Exception e)

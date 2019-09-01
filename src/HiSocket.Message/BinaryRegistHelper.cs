@@ -26,7 +26,7 @@ namespace HiSocket.Message
                 if (types[i].IsSubclassOf(baseType))
                 {
                     var ins = Activator.CreateInstance(types[i]) as BinaryMsgBase;
-                    Assert.IsNotNull(ins);
+                    AssertThat.IsNotNull(ins);
                     ins.Regist();
                 }
             }

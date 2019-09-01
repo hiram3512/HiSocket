@@ -26,7 +26,7 @@ namespace HiSocket.Message
         /// <param name="tcpConnection"></param>
         public static void AddConnection(string name, ITcpConnection tcpConnection)
         {
-            Assert.IsFalse(_connections.ContainsKey(name));
+            AssertThat.IsFalse(_connections.ContainsKey(name));
             _connections.Add(name, tcpConnection);
         }
 
@@ -36,7 +36,7 @@ namespace HiSocket.Message
         /// <param name="name"></param>
         public static void RemoveConnection(string name)
         {
-            Assert.IsTrue(_connections.ContainsKey(name));
+            AssertThat.IsTrue(_connections.ContainsKey(name));
             _connections.Remove(name);
         }
 
@@ -46,7 +46,7 @@ namespace HiSocket.Message
         /// <param name="name"></param>
         public static void SwitchChannel(string name)
         {
-            Assert.IsTrue(_connections.ContainsKey(name));
+            AssertThat.IsTrue(_connections.ContainsKey(name));
             _tcpConnection = _connections[name];
         }
 
