@@ -1,0 +1,3 @@
+is_global = true
+build_property.RootNamespace = HiSocket.Udp
+build_property.ProjectDir = D:\HiGit\GitHub\HiSocket\src\HiSocket.Udp\

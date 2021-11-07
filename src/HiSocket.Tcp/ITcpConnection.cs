@@ -1,49 +1,19 @@
-﻿/***************************************************************
- * Description: 
- *
- * Documents: https://github.com/hiramtan/HiSocket
- * Author: hiramtan@live.com
-***************************************************************/
-
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace HiSocket.Tcp
 {
-    public interface ITcpConnection : ITcpSocket
+    interface ITcpConnection
     {
         /// <summary>
         /// Trigger when send message
         /// </summary>
-        event Action<byte[]> OnSendMessage;
+        event Action<byte[]> OnSend;
 
         /// <summary>
         /// Trigger when recieve message
         /// </summary>
-        event Action<byte[]> OnReceiveMessage;
-
-        /// <summary>
-        /// Add plugin to extend logic
-        /// </summary>
-        /// <param name="plugin"></param>
-        void AddPlugin(IPlugin plugin);
-
-        /// <summary>
-        /// Remove plugin 
-        /// </summary>
-        /// <param name="name">plugin's name</param>
-        void RemovePlugin(string name);
-
-        /// <summary>
-        /// If plugin exist
-        /// </summary>
-        /// <param name="name"></param>
-        bool IsPluginExist(string name);
-
-        /// <summary>
-        /// Get plugin by name
-        /// </summary>
-        /// <param name="name">plugin's name</param>
-        /// <returns>plugin</returns>
-        IPlugin GetPlugin(string name);
+        event Action<byte[]> OnReceive;
     }
 }

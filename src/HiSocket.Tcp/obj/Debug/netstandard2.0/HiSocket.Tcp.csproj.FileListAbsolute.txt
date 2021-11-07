@@ -1,0 +1,14 @@
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\obj\Debug\netstandard2.0\HiSocket.Tcp.csproj.AssemblyReference.cache
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\obj\Debug\netstandard2.0\HiSocket.Tcp.GeneratedMSBuildEditorConfig.editorconfig
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\obj\Debug\netstandard2.0\HiSocket.Tcp.AssemblyInfoInputs.cache
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\obj\Debug\netstandard2.0\HiSocket.Tcp.AssemblyInfo.cs
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\obj\Debug\netstandard2.0\HiSocket.Tcp.csproj.CoreCompileInputs.cache
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\bin\Debug\netstandard2.0\HiSocket.Tcp.deps.json
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\bin\Debug\netstandard2.0\HiSocket.Tcp.dll
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\bin\Debug\netstandard2.0\HiSocket.Tcp.pdb
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\bin\Debug\netstandard2.0\CircularBuffer.dll
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\bin\Debug\netstandard2.0\CircularBuffer.pdb
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\bin\Debug\netstandard2.0\CircularBuffer.xml
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\obj\Debug\netstandard2.0\HiSocket.Tcp.dll
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\obj\Debug\netstandard2.0\HiSocket.Tcp.pdb
+D:\HiGit\GitHub\HiSocket\src\HiSocket.Tcp\obj\Debug\netstandard2.0\HiSocket.Tcp.csproj.CopyComplete

@@ -1,26 +1,12 @@
-﻿/***************************************************************
- * Description: pack and unpack message
- *
- * Documents: https://github.com/hiramtan/HiSocket
- * Author: hiramtan@live.com
-***************************************************************/
-
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace HiSocket.Tcp
 {
-    public interface IPackage
+    interface IPackage
     {
-        /// <summary>
-        /// Handle data receive from server
-        /// </summary>
-        /// <param name="bytes"></param>
-        void Unpack(byte[] source, Action<byte[]> onUnpacked);
-
-        /// <summary>
-        /// handle data will send to server
-        /// </summary>
-        /// <param name="bytes"></param>
-        void Pack(byte[] source, Action<byte[]> onPacked);
+        void Pack(byte[] data, IBlockBuffer<byte> buffer);
+        void Unpack(IBlockBuffer<byte> buffer, byte[] data);
     }
 }

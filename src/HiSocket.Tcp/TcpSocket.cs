@@ -1,31 +1,17 @@
-﻿/***************************************************************
- * Description: Note: the recommand is use tcpconnection
- * This is the baisc logic of socket
- * Documents: https://github.com/hiramtan/HiSocket
- * Author: hiramtan@live.com
-***************************************************************/
-
-using HiFramework;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 
 namespace HiSocket.Tcp
 {
-    public class TcpSocket : ITcpSocket
+    class TcpSocket : ITcpSocket
     {
-        /// <summary>
-        /// Get socket and modify it(for example: set timeout)
-        /// </summary>
+
         public System.Net.Sockets.Socket Socket { get; private set; }
 
-        /// <summary>
-        /// if connected(should use heart beat check if server disconnect)
-        /// </summary>
-        public bool IsConnected
-        {
-            get { return Socket != null && Socket.Connected; }
-        }
+        //CircularBuffer<byte[]> SendBuffer { get; }
+
+        //CircularBuffer<byte[]> ReceiveBuffer { get; }
 
         /// <summary>
         /// trigger when connecting
@@ -38,272 +24,298 @@ namespace HiSocket.Tcp
         public event Action OnConnected;
 
         /// <summary>
-        /// Trigger when disconnected
+        /// Trigger when disconnecte
         /// </summary>
         public event Action OnDisconnected;
 
+
+        public event Action<Exception> OnError;
+
+        public IBlockBuffer<byte> SendBuffer { get;  set; }
+
+        public IBlockBuffer<byte> ReceiveBuffer { get;  set; }
+
         /// <summary>
-        /// trigger when get message from server, it havent unpacked
+        /// trigger when get bytes from server
         /// use .net socket api
         /// </summary>
-        public event Action<byte[]> OnReceiveBytes;
+        public event Action<IBlockBuffer<byte>, int, int> OnReceiveBytes;
 
         /// <summary>
-        /// trigger when send message to server, it already packed
+        /// trigger when send bytes to server
         /// use .net socket api
         /// </summary>
-        public event Action<byte[]> OnSendBytes;
+        public event Action<IBlockBuffer<byte>, int, int> OnSendBytes;
 
-        /// <summary>
-        /// Send buffer
-        /// If disconnect, user can operate the remain data
-        /// </summary>
-        public IBlockBuffer<byte> SendBuffer { get; private set; }
-
-        /// <summary>
-        /// Receive buffer
-        /// </summary>
-        public IBlockBuffer<byte> ReceiveBuffer { get; private set; }
-
-        private readonly object _locker = new object();
-
-        /// <summary>
-        /// The default buffer is 1<<16, if small will automatically add buffer block
-        /// </summary>
-        /// <param name="bufferSize"></param>
         public TcpSocket(int bufferSize = 1 << 16)
         {
             SendBuffer = new BlockBuffer<byte>(bufferSize);
             ReceiveBuffer = new BlockBuffer<byte>(bufferSize);
         }
 
-        /// <summary>
-        /// Connect to server
-        /// </summary>
         public void Connect(IPEndPoint iep)
         {
-            lock (_locker)
+            if (iep == null)
             {
-                AssertThat.IsFalse(IsConnected, "Already Connected");
-                AssertThat.IsNotNull(iep, "iep is null");
-                ConnectingEvent();
-                try
-                {
-                    Socket = new System.Net.Sockets.Socket(iep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.ToString());
-                }
-                try
-                {
-                    Socket.BeginConnect(iep, delegate (IAsyncResult ar)
-                    {
-                        try
-                        {
-                            var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                            AssertThat.IsNotNull(socket, "Socket is null when end connect");
-                            socket.EndConnect(ar);
-                            if (IsConnected)
-                            {
-                                ConnectedEvent();
-                                Receive();
-                            }
-                            else
-                            {
-                                AssertThat.Fail("Connect faild");
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(e.ToString());
-                        }
-
-                    }, Socket);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.ToString());
-                }
+                ErrorEvent(new ArgumentNullException("iep is null"));
+                return;
+            }
+            ConnectingEvent();
+            try
+            {
+                Socket = new System.Net.Sockets.Socket(iep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                Socket.BeginConnect(iep, EndConnect, Socket);
+            }
+            catch (Exception e)
+            {
+                ErrorEvent(e);
+                return;
             }
         }
 
-        /// <summary>
-        /// Connect to server
-        /// </summary>
-        /// <param name="ip">ipv4/ipv6</param>
-        /// <param name="port"></param>
+        private void EndConnect(IAsyncResult ar)
+        {
+            var socket = ar.AsyncState as System.Net.Sockets.Socket;
+            if (socket == null)
+            {
+                ErrorEvent(new ArgumentNullException("socket is null"));
+                return;
+            }
+            try
+            {
+                socket.EndConnect(ar);
+            }
+            catch (Exception e)
+            {
+                ErrorEvent(e);
+                return;
+            }
+            ConnectedEvent();
+            ReceiveBytes();
+        }
+
+
         public void Connect(string ip, int port)
         {
-            lock (_locker)
+            if (String.IsNullOrEmpty(ip))
             {
-                AssertThat.IsNotNullOrEmpty(ip, "ip is null or empty");
-                var iep = new IPEndPoint(IPAddress.Parse(ip), port);
-                Connect(iep);
+                ErrorEvent(new ArgumentNullException("ip is null or empty"));
+                return;
             }
+            var iep = new IPEndPoint(IPAddress.Parse(ip), port);
+            Connect(iep);
         }
 
-        /// <summary>
-        /// Connect to server
-        /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
         public void Connect(IPAddress ip, int port)
         {
-            lock (_locker)
+            if (ip == null)
             {
-                AssertThat.IsNotNull(ip, "ip is null");
-                var iep = new IPEndPoint(ip, port);
-                Connect(iep);
+                ErrorEvent(new ArgumentNullException("iep is null"));
+                return;
             }
+            var iep = new IPEndPoint(ip, port);
+            Connect(iep);
         }
 
-        /// <summary>
-        /// Connect to server
-        /// </summary>
-        /// <param name="www"></param>
-        /// <param name="port"></param>
         public void ConnectWWW(string www, int port)
         {
+            if (String.IsNullOrEmpty(www))
+            {
+                ErrorEvent(new ArgumentNullException("www is null or empty"));
+                return;
+            }
             var hostEntry = Dns.GetHostEntry(www);
-            if (hostEntry.AddressList != null && hostEntry.AddressList.Length > 0)
+            if (hostEntry.AddressList == null)
             {
-                IPEndPoint ipe = new IPEndPoint(hostEntry.AddressList[0], port);
-                Connect(ipe);
+                ErrorEvent(new ArgumentNullException("AddressList is null"));
+                return;
             }
-            else
+            if (hostEntry.AddressList.Length == 0)
             {
-                AssertThat.Fail("Check host"); 
+                ErrorEvent(new ArgumentException("AddressList length is 0"));
+                return;
             }
+            IPEndPoint ipe = new IPEndPoint(hostEntry.AddressList[0], port);
+            Connect(ipe);
         }
 
-        /// <summary>
-        /// Send bytes to server
-        /// </summary>
-        /// <param name="bytes"></param>
-        public void Send(byte[] bytes)
+        public void SendBytes(byte[] bytes)
         {
-            lock (SendBuffer)
+            if (bytes == null)
             {
-                Send(bytes, 0, bytes.Length);
+                ErrorEvent(new ArgumentNullException("bytes is null"));
+                return;
             }
+            SendBytes(bytes, 0, bytes.Length);
         }
 
-        public void Send(byte[] bytes, int index, int length)
+        public void SendBytes(byte[] bytes, int index, int length)
         {
-            lock (SendBuffer)
+            if (bytes == null)
             {
-                AssertThat.IsTrue(IsConnected, "From send : disconnected");
-                SendBuffer.Write(bytes, index, length);
+                ErrorEvent(new ArgumentNullException("bytes is null"));
+                return;
+            }
+            if (index < 0)
+            {
+                ErrorEvent(new ArgumentException("index<0"));
+                return;
+            }
+            if (length > bytes.Length)
+            {
+                ErrorEvent(new ArgumentException("length>bytes.Length"));
+                return;
+            }
+            if (Socket == null)
+            {
+                ErrorEvent(new ArgumentNullException("socket is null"));
+                return;
+            }
+            if (Socket.Connected)
+            {
                 try
                 {
+                    //write into buffer, maybe cannot finish send all at one time, resend them
+                    SendBuffer.WriteEnd(bytes, index, length);
                     Socket.BeginSend(bytes, index, length, SocketFlags.None, EndSend, Socket);
                 }
                 catch (Exception e)
                 {
-                    throw new Exception(e.ToString());
+                    ErrorEvent(e);
                 }
             }
+            else
+            {
+                DisconnectedEvent();
+            }
         }
-
         private void EndSend(IAsyncResult ar)
         {
-            lock (SendBuffer)
+            if (Socket.Connected)
             {
-                if (IsConnected)//User disconnect tcpConnection proactively
+                var socket = ar.AsyncState as System.Net.Sockets.Socket;
+                if (socket == null)
                 {
-                    int length = 0;
-                    try
+                    ErrorEvent(new ArgumentNullException("socket is null"));
+                    return;
+                }
+                int length = 0;
+                try
+                {
+                    length = socket.EndSend(ar);
+                }
+                catch (Exception e)
+                {
+                    ErrorEvent(e);
+                    return;
+                }
+                if (length > 0)
+                {
+                    SendBytesEvent(0, length);
+                    SendBuffer.RemoveFront(length);
+                    int remain = SendBuffer.GetCurrentCapcity();
+                    if (remain > 0)
                     {
-                        var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                        AssertThat.IsNotNull(socket, "Socket is null when end send");
-                        length = socket.EndSend(ar);
+                        int index = SendBuffer.Index;
+                        int capcity = SendBuffer.GetCurrentCapcity();
+                        SendBytes(SendBuffer.Buffer, index, capcity);
                     }
-                    catch (Exception e)
-                    {
-                        throw new Exception(e.ToString());
-                    }
-                    byte[] sendBytes = SendBuffer.Read(length);
-                    SendBuffer.ResetIndex();
-                    SocketSendEvent(sendBytes);
+                }
+                else
+                {
+                    DisconnectedEvent();
                 }
             }
-        }
-
-        private void Receive()
-        {
-            lock (ReceiveBuffer)
+            else
             {
-                if (IsConnected)
-                {
-                    try
-                    {
-                        var count = ReceiveBuffer.Size - ReceiveBuffer.WritePosition;
-                        Socket.BeginReceive(ReceiveBuffer.Buffer, ReceiveBuffer.WritePosition, count, SocketFlags.None,
-                            EndReceive, Socket);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(e.ToString());
-                    }
-                }
-            }
-        }
-
-        private void EndReceive(IAsyncResult ar)
-        {
-            lock (ReceiveBuffer)
-            {
-                if (IsConnected) //User disconnect tcpConnection proactively
-                {
-                    int length = 0;
-                    try
-                    {
-                        var socket = ar.AsyncState as System.Net.Sockets.Socket;
-                        AssertThat.IsNotNull(socket, "Socket is null when end receive");
-                        length = socket.EndReceive(ar);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(e.ToString());
-                    }
-                    ReceiveBuffer.MoveWritePosition(length);
-                    var bytes = ReceiveBuffer.Read(ReceiveBuffer.WritePosition);
-                    ReceiveBuffer.ResetIndex();
-                    SocketReceiveEvent(bytes);
-                    if (length > 0)
-                    {
-                        Receive();
-                    }
-                    else
-                    {
-                        DisconnectedEvnet();
-                    }
-                }
+                DisconnectedEvent();
             }
         }
 
         public void Disconnect()
         {
-            lock (_locker)
+            if (Socket == null)
             {
-                if (IsConnected)
+                ErrorEvent(new ArgumentNullException("socket is null"));
+                return;
+            }
+            try
+            {
+                Socket.Shutdown(SocketShutdown.Both);
+                Socket.Close();
+            }
+            catch (Exception e)
+            {
+                ErrorEvent(e);
+            }
+            DisconnectedEvent();
+        }
+
+        public void Dispose()
+        {
+            Disconnect();
+        }
+
+        private void ReceiveBytes()
+        {
+            if (Socket.Connected)
+            {
+                try
                 {
-                    DisconnectedEvnet();
-                    try
-                    {
-                        Socket.Shutdown(SocketShutdown.Both);
-                        Socket.Close();
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(e.ToString());
-                    }
+                    int index = ReceiveBuffer.Index;
+                    int count = ReceiveBuffer.GetCurrentCapcity();
+                    Socket.BeginReceive(ReceiveBuffer.Buffer, index, count, SocketFlags.None, EndReceive, Socket);
                 }
+                catch (Exception e)
+                {
+                    ErrorEvent(e);
+                    return;
+                }
+            }
+            else
+            {
+                DisconnectedEvent();
             }
         }
 
-        void ConnectingEvent()
+        private void EndReceive(IAsyncResult ar)
+        {
+            if (Socket.Connected)
+            {
+                var socket = ar.AsyncState as System.Net.Sockets.Socket;
+                if (socket == null)
+                {
+                    ErrorEvent(new ArgumentNullException("socket is null"));
+                    return;
+                }
+                int length = 0;
+                try
+                {
+                    length = socket.EndReceive(ar);
+                }
+                catch (Exception e)
+                {
+                    ErrorEvent(e);
+                    return;
+                }
+                if (length > 0)
+                {
+                    ReceiveBuffer.IncreaseIndex(length);
+                    ReceiveBytesEvent(0, ReceiveBuffer.Index);
+                    ReceiveBytes();
+                }
+                else
+                {
+                    DisconnectedEvent();
+                }
+            }
+            else
+            {
+                DisconnectedEvent();
+            }
+        }
+
+        private void ConnectingEvent()
         {
             if (OnConnecting != null)
             {
@@ -311,7 +323,7 @@ namespace HiSocket.Tcp
             }
         }
 
-        void ConnectedEvent()
+        private void ConnectedEvent()
         {
             if (OnConnected != null)
             {
@@ -319,15 +331,7 @@ namespace HiSocket.Tcp
             }
         }
 
-        void SocketReceiveEvent(byte[] bytes)
-        {
-            if (OnReceiveBytes != null)
-            {
-                OnReceiveBytes(bytes);
-            }
-        }
-
-        private void DisconnectedEvnet()
+        private void DisconnectedEvent()
         {
             if (OnDisconnected != null)
             {
@@ -335,28 +339,27 @@ namespace HiSocket.Tcp
             }
         }
 
-        private void SocketSendEvent(byte[] bytes)
+        private void ErrorEvent(Exception ex)
         {
-            if (OnSendBytes != null)
+            if (OnError != null)
             {
-                OnSendBytes(bytes);
+                OnError(ex);
             }
         }
 
-        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-        public void Dispose()
+        private void SendBytesEvent(int index, int length)
         {
-            lock (_locker)
+            if (OnSendBytes != null)
             {
-                Disconnect();
-                Socket = null;
-                OnConnecting = null;
-                OnConnected = null;
-                OnDisconnected = null;
-                OnReceiveBytes = null;
-                OnSendBytes = null;
-                SendBuffer.Dispose();
-                ReceiveBuffer.Dispose();
+                OnSendBytes(SendBuffer, index, length);
+            }
+        }
+
+        private void ReceiveBytesEvent(int index, int length)
+        {
+            if (OnReceiveBytes != null)
+            {
+                OnReceiveBytes(ReceiveBuffer, index, length);
             }
         }
     }

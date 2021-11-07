@@ -1,7 +1,0 @@
-D:\MyGit\github\HiSocket\src\release\HiSocket.dll
-D:\MyGit\github\HiSocket\src\release\HiSocket.pdb
-D:\MyGit\github\HiSocket\src\HiSocket.Connection\obj\Debug\HiSocket.Connection.csprojAssemblyReference.cache
-D:\MyGit\github\HiSocket\src\HiSocket.Connection\obj\Debug\HiSocket.Connection.csproj.CoreCompileInputs.cache
-D:\MyGit\github\HiSocket\src\HiSocket.Connection\obj\Debug\HiSocket.Connection.csproj.CopyComplete
-D:\MyGit\github\HiSocket\src\HiSocket.Connection\obj\Debug\HiSocket.dll
-D:\MyGit\github\HiSocket\src\HiSocket.Connection\obj\Debug\HiSocket.pdb

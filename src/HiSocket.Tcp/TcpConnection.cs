@@ -1,102 +1,40 @@
-﻿/***************************************************************
- * Description: This class for user simply use tcp socket in project
- *
- * Documents: https://github.com/hiramtan/HiSocket
- * Author: hiramtan@live.com
-***************************************************************/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using HiFramework;
+using System.Text;
 
 namespace HiSocket.Tcp
 {
-    public class TcpConnection : TcpSocket, ITcpConnection
+    class TcpConnection : TcpSocket, ITcpConnection
     {
         /// <summary>
         /// Trigger when send message
         /// </summary>
-        public event Action<byte[]> OnSendMessage;
+        public event Action<byte[]> OnSend;
 
         /// <summary>
         /// Trigger when recieve message
         /// </summary>
-        public event Action<byte[]> OnReceiveMessage;
+        public event Action<byte[]> OnReceive;
 
 
-        private readonly IPackage _package;
-
-        private Dictionary<string, IPlugin> _plugins = new Dictionary<string, IPlugin>();
-
+        private IPackage _package;
         public TcpConnection(IPackage package)
         {
-            this._package = package;
-            OnReceiveBytes += SocketReceiveHandler;
-        }
-
-        public new void Send(byte[] bytes)
-        {
-            SendEvent(bytes);
-            _package.Pack(bytes, x => { base.Send(x); });
-        }
-
-        void SocketReceiveHandler(byte[] bytes)
-        {
-            _package.Unpack(bytes, x => { ReceiveEvent(x); });
-        }
-
-        /// <summary>
-        /// Add plugin to extend logic
-        /// </summary>
-        /// <param name="plugin"></param>
-        public void AddPlugin(IPlugin plugin)
-        {
-            AssertThat.IsNotNull(plugin, "Plugin is null");
-            plugin.TcpConnection = this;
-            _plugins.Add(plugin.Name, plugin);
-        }
-
-        /// <summary>
-        /// Get plugin by name
-        /// </summary>
-        /// <param name="name">plugin's name</param>
-        /// <returns>plugin</returns>
-        public IPlugin GetPlugin(string name)
-        {
-            AssertThat.IsNotNullOrEmpty(name, "Name is null or empty");
-            return _plugins[name];
-        }
-
-        public bool IsPluginExist(string name)
-        {
-            AssertThat.IsNotNullOrEmpty(name, "Name is null or empty");
-            return _plugins.ContainsKey(name);
-        }
-
-        /// <summary>
-        /// Remove plugin 
-        /// </summary>
-        /// <param name="name">plugin's name</param>
-        public void RemovePlugin(string name)
-        {
-            AssertThat.IsNotNullOrEmpty(name, "Name is null or empty");
-            _plugins.Remove(name);
-        }
-
-        void SendEvent(byte[] bytes)
-        {
-            if (OnSendMessage != null)
+            if (package == null)
             {
-                OnSendMessage(bytes);
+                throw new ArgumentNullException("package is null");
             }
+            _package = package;
         }
 
-        void ReceiveEvent(byte[] bytes)
+        public void Send(byte[] data)
         {
-            if (OnReceiveMessage != null)
+            if (data == null || data.Length == 0)
             {
-                OnReceiveMessage(bytes);
+                throw new ArgumentException("data error");
             }
+            _package.Pack(data, SendBuffer);
+            SendBytes(SendBuffer.Buffer, 0, SendBuffer.Index);
         }
     }
 }

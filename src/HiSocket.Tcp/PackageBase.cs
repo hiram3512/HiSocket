@@ -1,55 +1,20 @@
-﻿/***************************************************************
- * Description: pack and unpack message
- *
- * Documents: https://github.com/hiramtan/HiSocket
- * Author: hiramtan@live.com
-***************************************************************/
-
-using HiFramework;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace HiSocket.Tcp
 {
-    public abstract class PackageBase : IPackage
+    public abstract class PackageBase:IPackage
     {
-        /// <summary>
-        /// Unpack
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="onUnpacked"></param>
-        public void Unpack(byte[] source, Action<byte[]> onUnpacked)
+        public void Pack(byte[] data, IBlockBuffer<byte> buffer)
         {
-            using (BlockBuffer<byte> buffer = new BlockBuffer<byte>(source))
-            {
-                Unpack(buffer, onUnpacked);
-            }
+            buffer.WriteHead(data, 0, data.Length);
+            buffer.WriteHead(new byte[2],0,2);
         }
 
-        /// <summary>
-        /// Pack
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="onPacked"></param>
-        public void Pack(byte[] source, Action<byte[]> onPacked)
+        public void Unpack(IBlockBuffer<byte> buffer, byte[] data)
         {
-            using (BlockBuffer<byte> buffer = new BlockBuffer<byte>(source))
-            {
-                Pack(buffer, onPacked);
-            }
+            buffer.Read(2);
         }
-
-        /// <summary>
-        /// Sub class achive this methond
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="onUnpacked"></param>
-        protected abstract void Unpack(BlockBuffer<byte> bytes, Action<byte[]> onUnpacked);
-
-        /// <summary>
-        /// Sub class achive this methond
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="onPacked"></param>
-        protected abstract void Pack(BlockBuffer<byte> bytes, Action<byte[]> onPacked);
     }
 }
