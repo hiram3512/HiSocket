@@ -186,11 +186,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\HiGit\\GitHub\\HiSocket\\src\\HiSocket.Udp\\HiSocket.Udp.csproj",
+      "projectUniqueName": "F:\\HiGit\\GitHub\\HiSocket\\src\\HiSocket.Udp\\HiSocket.Udp.csproj",
       "projectName": "HiSocket.Udp",
-      "projectPath": "D:\\HiGit\\GitHub\\HiSocket\\src\\HiSocket.Udp\\HiSocket.Udp.csproj",
+      "projectPath": "F:\\HiGit\\GitHub\\HiSocket\\src\\HiSocket.Udp\\HiSocket.Udp.csproj",
       "packagesPath": "C:\\Users\\hiramtan\\.nuget\\packages\\",
-      "outputPath": "D:\\HiGit\\GitHub\\HiSocket\\src\\HiSocket.Udp\\obj\\",
+      "outputPath": "F:\\HiGit\\GitHub\\HiSocket\\src\\HiSocket.Udp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -205,7 +205,8 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://github.com/OWNER/REPOSITORY": {}
       },
       "frameworks": {
         "netstandard2.0": {

@@ -1,2 +1,3 @@
 .vs
-TestResults
+bin
+obj

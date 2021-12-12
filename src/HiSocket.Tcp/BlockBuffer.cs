@@ -1,79 +1,76 @@
-﻿using System;
+﻿/***************************************************************
+ * Description: Block buffer for reuse array
+ * 
+ * Documents: https://github.com/hiram3512/HiSocket
+ * Support: hiramtan@live.com
+***************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace HiSocket.Tcp
 {
-    class BlockBuffer<T> : IBlockBuffer<T>
+
+    public class BlockBuffer<T> : IBlockBuffer<T>
     {
-        public T[] Buffer { get; }
+        public T[] Buffer { get; private set; }
         public int TotalCapcity { get; }
         public int Index { get; private set; }
-
         public BlockBuffer(int capcity)
         {
             if (capcity <= 0)
             {
-                throw new ArgumentException("capcity<=0");
+                throw new Exception("capcity<=0");
             }
             Index = 0;
+            TotalCapcity = capcity;
             Buffer = new T[capcity];
         }
 
-        public T[] Read(int count) { throw new NotImplementedException(); }
-
-        public void WriteHead(T[] data, int sourceIndex, int sourceLength)
+        public T[] ReadFromHead(int count)
         {
-            if (data == null)
-            {
-                throw new ArgumentNullException("data is null");
-            }
-            if (data.Length <= 0)
-            {
-                throw new ArgumentNullException("data.Length<=0");
-            }
-            if (sourceIndex < 0 || sourceIndex > data.Length)
-            {
-                throw new ArgumentNullException("sourceIndex error");
-            }
-            if (sourceLength < 0 || sourceLength > data.Length - sourceIndex)
-            {
-                throw new ArgumentNullException("sourceLength error");
-            }
-            int currentLength = Index + sourceLength;
-            if (currentLength >= TotalCapcity)
-            {
-                throw new Exception("buffer full, make a larger buffer");
-            }
-            //for avoid over write data, first move second segment
-            if (Index > 0)
-            {
-                Array.Copy(Buffer, 0, Buffer, sourceLength, Index);
-            }
-            Array.Copy(data, sourceIndex, Buffer, 0, sourceLength);
-            IncreaseIndex(sourceLength);
+            var data = TryReadFromHead(count);
+            DecreaseIndex(count);
+            return data;
         }
 
-        public void WriteEnd(T[] data, int sourceIndex, int sourceLength)
+        public T[] TryReadFromHead(int count)
         {
-            if (data == null)
+            if (count <= 0)
             {
-                throw new ArgumentNullException("data is null");
+                throw new Exception("count<=0");
             }
-            if (data.Length <= 0)
+            if (count > Index)
             {
-                throw new ArgumentNullException("data.Length<=0");
+                throw new Exception("have no so many data");
             }
-            if (sourceIndex < 0 || sourceIndex > data.Length)
+            T[] data = new T[count];
+            Array.Copy(Buffer, 0, data, 0, count);
+            int remain = Index - count;
+            if (remain > 0)
             {
-                throw new ArgumentNullException("sourceIndex error");
+                Array.Copy(Buffer, count, Buffer, 0, remain);
+            }
+            return data;
+        }
+
+        public void WriteAtEnd(T[] data, int sourceIndex, int sourceLength)
+        {
+            if (data == null || data.Length <= 0)
+            {
+                throw new Exception("data null or empty");
+            }
+            if (sourceIndex < 0 || sourceIndex >= data.Length)
+            {
+                throw new Exception("sourceIndex error");
             }
             if (sourceLength < 0 || sourceLength > data.Length - sourceIndex)
             {
-                throw new ArgumentNullException("sourceLength error");
+                throw new Exception("sourceLength error");
             }
-            int currentLength = Index + sourceLength;
-            if (currentLength >= TotalCapcity)
+            int finalLength = Index + sourceLength;
+            if (finalLength > TotalCapcity)
             {
                 throw new Exception("buffer full, make a larger buffer");
             }
@@ -94,12 +91,12 @@ namespace HiSocket.Tcp
         public void IncreaseIndex(int length)
         {
             Index += length;
-            if (Index >= TotalCapcity)
+            if (Index > TotalCapcity)
             {
                 throw new Exception("buffer full, make a larger buffer");
             }
         }
-        public void DecreaseIndex(int length)
+        private void DecreaseIndex(int length)
         {
             Index -= length;
             if (Index < 0)
@@ -108,15 +105,18 @@ namespace HiSocket.Tcp
             }
         }
 
-        public void RemoveFront(int length)
+        public void WriteAtEnd(T[] data)
         {
-            int currentIndex = Index - length;
-            if (currentIndex < 0)
+            if (data == null || data.Length <= 0)
             {
-                throw new Exception("no so many data to remove");
+                throw new Exception("data null or empty");
             }
-            Array.Copy(Buffer, Index, Buffer, 0, length);
-            DecreaseIndex(length);
+            WriteAtEnd(data, 0, data.Length);
+        }
+
+        public void Dispose()
+        {
+            Buffer = null;
         }
     }
 }

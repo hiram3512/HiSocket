@@ -3,15 +3,15 @@
 It is a lightweight client socket solution, you can used it in Unity3d or C# project
 
 
-![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   ![](https://github.com/hiramtan/hisocket/workflows/CI/badge.svg?branch=master)   [![Build Status](https://travis-ci.org/hiramtan/HiSocket.svg?branch=master)](https://travis-ci.org/hiramtan/HiSocket)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)
+![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   ![](https://github.com/hiramtan/hisocket/workflows/CI/badge.svg?branch=master)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)   [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
 
 -----
-[中文说明](https://github.com/hiramtan/HiSocket/blob/master/README_zh.md) 
+[中文说明](https://github.com/hiram3512/HiSocket/blob/master/README_zh.md) 
 
 ### How to use
 
 - Use source code: [source code](/src)
-- Download dll from release path: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
+- Download dll from release path: [Github Releases](https://github.com/hiramtan/HiSocket/releases) 
 - Use Nuget: [HiSocket NuGet package](https://www.nuget.org/packages/HiSocket)
 
  Quick Start:
@@ -69,7 +69,6 @@ This project contains:
 - Support protobuf message
 - AES encryption
 
-
 ### Details
 - Use async connection in main thread(avoid thread blocking).
 - Using [Circular_buffer](https://en.wikipedia.org/wiki/Circular_buffer) to avoid memory allocation every time, and reduce garbage collection.
@@ -77,6 +76,8 @@ This project contains:
 - If you use Tcp socket, you should implement IPackage interface to pack or unpack message.
 - Ping: there is a ping plugin you can used, but if you are used in unity3d because of the bug of mono, it will throw an error on .net2.0(.net 4.6 will be fine, also you can use unity's api to get ping time)
 
+### Framework
+![framework](/others/fwsZp3Arrs.png)
 
 ### Advanced
 - If you are clear about socket, you also can use TcpSocket to achieve your logic, anyway the recommend is TcpConnection.
@@ -87,7 +88,6 @@ This project contains:
 - There are a message register base class help user to quick register id and callback(based on reflection)
 - The encryption is use AES, if you want to use encryption you can use the API to encrypte your bytes.
 - .etc
-
 
 ### Instructions
 - Tcp 

@@ -1,51 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CircularBuffer;
+﻿/***************************************************************
+ * Description: Block buffer for reuse array
+ * 
+ * Documents: https://github.com/hiram3512/HiSocket
+ * Support: hiramtan@live.com
+***************************************************************/
+
+using System;
 using System.Net;
 
 namespace HiSocket.Tcp
 {
-    interface ITcpSocket : IDisposable
+    /// <summary>
+    /// Tcp socket interface
+    /// </summary>
+    public interface ITcpSocket : IDisposable
     {
+        /// <summary>
+        /// Socket instance
+        /// </summary>
         System.Net.Sockets.Socket Socket { get; }
 
         /// <summary>
-        /// trigger when connecting
+        /// when connecting
         /// </summary>
         event Action OnConnecting;
 
         /// <summary>
-        /// trigger when connected
+        /// when connected
         /// </summary>
         event Action OnConnected;
 
         /// <summary>
-        /// Trigger when disconnecte
+        /// when disconnecte
         /// </summary>
         event Action OnDisconnected;
 
-         IBlockBuffer<byte> SendBuffer { get; set; }
+        /// <summary>
+        /// when exception
+        /// </summary>
+        event Action<Exception> OnException;
 
-         IBlockBuffer<byte> ReceiveBuffer { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        IBlockBuffer<byte> SendBuffer { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IBlockBuffer<byte> ReceiveBuffer { get; set; }
 
         /// <summary>
         /// trigger when get bytes from server
         /// use .net socket api
         /// </summary>
-        event Action<IBlockBuffer<byte>, int, int> OnReceiveBytes;
+        event Action<IBlockBuffer<byte>> OnReceiveBytes;
 
         /// <summary>
         /// trigger when send bytes to server
         /// use .net socket api
         /// </summary>
-        event Action<IBlockBuffer<byte>, int, int> OnSendBytes;
+        event Action<byte[]> OnSendBytes;
 
         /// <summary>
         /// Connect to server
         /// </summary>
         /// <param name="iep">server</param>
-        void Connect(IPEndPoint iep);
+        void Connect(EndPoint iep);
 
         /// <summary>
         /// Connect to server
@@ -67,6 +88,12 @@ namespace HiSocket.Tcp
         /// <param name="www"></param>
         /// <param name="port"></param>
         void ConnectWWW(string www, int port);
+
+
+        /// <summary>
+        /// Send buffer data
+        /// </summary>
+        void SendBytesInBuffer();
 
         /// <summary>
         /// Send bytes to server

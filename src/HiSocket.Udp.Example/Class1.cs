@@ -5,7 +5,7 @@
  * Support: hiramtan@live.com
 ***************************************************************/
 
-namespace HiSocket.Udp
+namespace HiSocket.Udp.Example
 {
     public class Class1
     {

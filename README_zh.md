@@ -2,14 +2,14 @@
 
 客户端轻量Socket通信逻辑,可以在C#项目或Unity3d项目中使用.
 
-![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   [![Build Status](https://travis-ci.org/hiramtan/HiSocket.svg?branch=master)](https://travis-ci.org/hiramtan/HiSocket)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)
+![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)   ![](https://github.com/hiramtan/hisocket/workflows/CI/badge.svg?branch=master)   [![GitHub release](https://img.shields.io/github/release/hiramtan/HiSocket.svg)](https://github.com/hiramtan/HiSocket/releases)   [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
 
 -----
 
 ### 如何使用
 
 - 使用源码: [source code](/src)
-- 发布页下载dll: [![Github Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/hiramtan/HiSocket/releases) 
+- 发布页下载dll: [Github Releases](https://github.com/hiramtan/HiSocket/releases)
 - 使用 Nuget: [HiSocket NuGet package](https://www.nuget.org/packages/HiSocket)
   
 
@@ -73,6 +73,9 @@
 - 可以添加一系列的事件监听获取当前的连接状态.
 - 如果使用Tcp协议需要实现IPackage接口处理粘包拆包.
 - Ping: 源码包含一个Ping插件可以使用,但是如果用在unity3d工程中会报错(因为mono的问题,在.net2.0会报错.net4.6可以正常使用)
+
+### 结构
+![framework](/others/fwsZp3Arrs.png)
 
 ### 高级功能
 - 如果对Socket很熟悉,也可以使用TcpSocket来实现功能,但是还是推荐使用TcpConnection的方式.
